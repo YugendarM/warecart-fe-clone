@@ -1,10 +1,12 @@
 import { Button, Modal } from 'antd'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const WarehouseDeleteModal = ({warehouse, isDeleteModalOpen, handleDeleteCancel}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(isDeleteModalOpen)
+    const navigate = useNavigate()
 
     const handleDeleteConform = async() => {
         try{
@@ -13,6 +15,7 @@ const WarehouseDeleteModal = ({warehouse, isDeleteModalOpen, handleDeleteCancel}
           if(response.status === 200){
             alert("Warehouse deleted successfully")
             setIsModalOpen(false)
+            navigate("/admin/warehouse")
           }
           
         }
@@ -21,7 +24,7 @@ const WarehouseDeleteModal = ({warehouse, isDeleteModalOpen, handleDeleteCancel}
             if (error.response.status === 404) {
               alert("Warehouse does not exists");
             } else if (error.response.status === 500) {
-              alert("An error occurred while adding the warehouse");
+              alert("An error occurred while deleting the warehouse");
             } else {
               alert(`An error occurred: ${error.response.status}`);
             }

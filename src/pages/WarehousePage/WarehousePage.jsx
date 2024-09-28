@@ -63,7 +63,7 @@ const WarehousePage = () => {
                   if (error.response.status === 404) {
                     alert("Warehouse Not Found");
                   } else if (error.response.status === 500) {
-                    alert("An error occurred while adding the warehouse");
+                    alert("An error occurred while fetching the warehouse");
                   } else {
                     alert(`An error occurred: ${error.response.status}`);
                   }

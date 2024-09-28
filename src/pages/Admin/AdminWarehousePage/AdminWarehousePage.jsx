@@ -188,7 +188,7 @@ const AdminWarehousePage = () => {
       </div>
 
       <Modal 
-        title="Add new Vendor" 
+        title="Add new Warehouse" 
         open={isModalOpen} 
         onOk={handleOk} 
         onCancel={handleCancel}

@@ -5,6 +5,7 @@ import AdminWarehousePage from '../AdminWarehousePage/AdminWarehousePage'
 import AdminProductsPage from '../AdminProductsPage/AdminProductsPage'
 import AdminDashboardPage from '../AdminDashboardPage/AdminDashboardPage'
 import WarehousePage from '../../WarehousePage/WarehousePage'
+import ProductPage from '../../ProductPage/ProductPage'
 
 const AdminPageComponent = () => {
   return (
@@ -18,7 +19,7 @@ const AdminPageComponent = () => {
             <Route path='/warehouse' element={<AdminWarehousePage/>}/>
             <Route path='/warehouse/:warehouseId' element={<WarehousePage/>}/>
             <Route path='/products' element={<AdminProductsPage/>}/>
-            <Route path='/product/:productId' element={<div>This is admin product id</div>}/>
+            <Route path='/product/:productId' element={<ProductPage/>}/>
           </Routes>
         </div>
       </div>

@@ -1,0 +1,148 @@
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import InventoryCardComponent from '../../components/InventoryCardComponent/InventoryCardComponent'
+import { Breadcrumb, Button } from 'antd'
+import { FaEdit, FaPlus } from 'react-icons/fa'
+import { MdDelete, MdOutlineDeleteOutline } from 'react-icons/md'
+import WarehouseEditModal from '../../components/Modals/WarehouseEditModal/WarehouseEditModal'
+import WarehouseDeleteModal from '../../components/Modals/WarehouseDeleteModal/WarehouseDeleteModal'
+import { TbLayoutDashboardFilled } from 'react-icons/tb'
+import AddInventoryModal from '../../components/Modals/AddInventoryModal/AddInventoryModal'
+
+const WarehousePage = () => {
+
+    const [warehouseData, setWarehouseData] = useState(null)
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+
+    const {warehouseId} = useParams()
+
+    const handleEditCancel = () => {
+      setIsEditModalOpen(false)
+    }
+
+    const handleDeleteCancel = () => {
+      setIsDeleteModalOpen(false)
+    }
+
+    const handleAddCancel = () => {
+      setIsAddModalOpen(false)
+    }
+    
+    useEffect(() => {
+        const getWarehouseData = async() => {
+            try{
+                const response = await axios.get(`/warehouse/${warehouseId}`)
+                console.log(response)
+                if(response.status === 200){
+                    setWarehouseData(response.data)
+                }
+            }
+            catch (error) {
+                if (error.response) {
+                  if (error.response.status === 404) {
+                    alert("Warehouse Not Found");
+                  } else if (error.response.status === 500) {
+                    alert("An error occurred while adding the warehouse");
+                  } else {
+                    alert(`An error occurred: ${error.response.status}`);
+                  }
+                } else if (error.request) {
+                  console.log(error.request);
+                  alert("No response from server. Please try again.");
+                } else {
+                  console.log('Error', error.message);
+                  alert("An unexpected error occurred. Please try again.");
+                }
+              }
+        }
+        getWarehouseData()
+        console.log(warehouseData)
+    },[])
+
+  return (
+    <div>
+      <Breadcrumb className='text-headerText text-base'
+              items={[
+                {
+                  title: <Link to={"/admin/dashboard"}><TbLayoutDashboardFilled className='text-xl'/></Link>,
+                },
+                {
+                  title: <Link to={"/admin/warehouse"}>Warehouse</Link>,
+                },
+                {
+                  title: warehouseData && warehouseData.warehouseData && warehouseData.warehouseData.warehouseName,
+                },
+              ]}
+            />
+      {
+        warehouseData !== null ? 
+        <div className='shadow-custom-medium rounded-md w-full flex flex-col min-h-[78vh] px-5 py-5'>
+            
+            <div className='flex items-center justify-between '>
+                <div className='flex flex-col gap-2'>
+                    <h1 className='text-3xl font-bold text-gray-800'>{warehouseData.warehouseData.warehouseName}</h1>
+                    <h3 className='text-gray-600'>{warehouseData.warehouseData.location.city + "," + warehouseData.warehouseData.location.state + "," + warehouseData.warehouseData.location.country}</h3>
+                </div>
+                <div className='flex items-center gap-3'>
+                  <Button><FaEdit className='text-base' onClick={() => setIsEditModalOpen(true)}/>Edit</Button>
+                  <Button type='primary' onClick={() => setIsAddModalOpen(true)}><FaPlus className='text-base' />Add Products</Button>
+                  <Button color='danger' variant='solid'><MdDelete className='text-base' onClick={() => setIsDeleteModalOpen(true)}/>Delete</Button>
+                </div>
+                
+            </div>
+
+            <div className='flex gap-20 py-5'>
+              <div className='flex items-end gap-2'>
+                  <h4 className='text-base text-gray-700 font-medium'>Capacity: </h4>
+                  <span className='text-3xl font-semibold'>{warehouseData.warehouseData.capacity}<span className='text-base text-gray-600 font-medium'>Products</span></span>
+              </div>
+              <div className='flex items-end gap-2'>
+                  <h4 className='text-base text-gray-700 font-medium'>InStock:</h4>
+                  <span className='text-3xl font-semibold'>{warehouseData.inStock}<span className='text-base text-gray-600 font-medium'>Products</span></span>
+              </div>
+              <div className='flex items-end gap-2'>
+                  <h4 className='text-base text-gray-700 font-medium'>Available Space:</h4>
+                  <span className='text-3xl font-semibold'>{warehouseData.warehouseData.capacity - warehouseData.inStock}<span className='text-base text-gray-600 font-medium'>Products</span></span>
+              </div>
+            </div>
+
+            <div className='pt-5'>
+                <h1 className='text-2xl font-bold text-gray-800'>Stocked Products</h1>
+                <div className='flex items-center border-b border-b-gray-400'>
+                    <h1 className='w-1/6 py-3 px-4 text-sm font-semibold'>Product</h1>
+                    <h1 className='w-1/6 py-3 px-4 text-sm font-semibold'>Category</h1>
+                    <h1 className='w-1/6 py-3 px-4 text-sm font-semibold'>Stock Level</h1>
+                    <h1 className='w-1/6 py-3 px-4 text-sm font-semibold'>Reserved Stock</h1>
+                    <h1 className='w-1/6 py-3 px-4 text-sm font-semibold'>Stock Threshold</h1>
+                </div>
+                <div className='overflow-y-scroll no-scrollbar'>
+                    {
+                        warehouseData.availableProducts && warehouseData.availableProducts.length !== 0 ?
+                        warehouseData.availableProducts.map((inventory, index) => (
+                            <InventoryCardComponent inventory={inventory} key={index} index={index}/>
+                        ))
+                        :
+                        <div>No product stocked in this warehouse</div>
+                    }
+                </div>
+            </div>
+        </div>
+        :
+        <div className='h-full w-full flex items-center justify-center text-2xl font-semibold'>Warehouse Not found</div>
+      }
+      {
+        warehouseData && warehouseData.warehouseData &&
+        <div>
+          <WarehouseEditModal warehouse={warehouseData.warehouseData} isModalOpen={isEditModalOpen} handleCancel={handleEditCancel}/>
+          <WarehouseDeleteModal warehouse={warehouseData.warehouseData} isDeleteModalOpen={isDeleteModalOpen} handleDeleteCancel={handleDeleteCancel}/>
+          <AddInventoryModal warehouse={warehouseData.warehouseData._id} spaceAvailable={warehouseData.warehouseData.capacity - warehouseData.inStock} isAddModalOpen={isAddModalOpen} handleAddCancel={handleAddCancel}/>
+        </div>
+      }
+    </div>
+  )
+}
+
+export default WarehousePage

@@ -6,9 +6,6 @@ const WarehouseEditModal = ({warehouse, isModalOpen, handleCancel}) => {
 
     const [isEditModelOpen, setIsEditModelOpen] = useState(isModalOpen)
 
-    console.log("from " + isEditModelOpen)
-    console.log("from nn" + isModalOpen)
-
   const initialValues = {
     warehouseName: warehouse.warehouseName,
     city: warehouse.location.city,
@@ -24,7 +21,6 @@ const WarehouseEditModal = ({warehouse, isModalOpen, handleCancel}) => {
   };
 
   const handleSubmit = async(values) => {
-    console.log('Success:', values);
     const warehouseInputData = {
       warehouseName: values.warehouseName,
       location: {
@@ -50,15 +46,13 @@ const WarehouseEditModal = ({warehouse, isModalOpen, handleCancel}) => {
         if (error.response.status === 404) {
           alert("Warehouse does not exists");
         } else if (error.response.status === 500) {
-          alert("An error occurred while adding the warehouse");
+          alert("An error occurred while editing the warehouse");
         } else {
           alert(`An error occurred: ${error.response.status}`);
         }
       } else if (error.request) {
-        console.log(error.request);
         alert("No response from server. Please try again.");
       } else {
-        console.log('Error', error.message);
         alert("An unexpected error occurred. Please try again.");
       }
     }
@@ -76,7 +70,7 @@ const WarehouseEditModal = ({warehouse, isModalOpen, handleCancel}) => {
   return (
     <div>
       <Modal 
-        title="Add new Vendor" 
+        title={`Edit ${warehouse.warehouseName}`} 
         open={isEditModelOpen} 
         onOk={handleOk} 
         onCancel={handleCancel}

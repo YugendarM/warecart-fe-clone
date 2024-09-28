@@ -7,7 +7,6 @@ const WarehouseDeleteModal = ({warehouse, isDeleteModalOpen, handleDeleteCancel}
     const [isModalOpen, setIsModalOpen] = useState(isDeleteModalOpen)
 
     const handleDeleteConform = async() => {
-        console.log("handleconform")
         try{
           const response = await axios.delete(`warehouse/delete/${warehouse._id}`)
     
@@ -27,10 +26,8 @@ const WarehouseDeleteModal = ({warehouse, isDeleteModalOpen, handleDeleteCancel}
               alert(`An error occurred: ${error.response.status}`);
             }
           } else if (error.request) {
-            console.log(error.request);
             alert("No response from server. Please try again.");
           } else {
-            console.log('Error', error.message);
             alert("An unexpected error occurred. Please try again.");
           }
         }

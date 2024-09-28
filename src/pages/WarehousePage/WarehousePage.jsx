@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import InventoryCardComponent from '../../components/InventoryCardComponent/InventoryCardComponent'
 import { Breadcrumb, Button } from 'antd'
 import { FaEdit, FaPlus } from 'react-icons/fa'
@@ -18,6 +18,7 @@ const WarehousePage = () => {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
     const {warehouseId} = useParams()
+    const location = useLocation()
 
     const handleEditCancel = () => {
       setIsEditModalOpen(false)
@@ -32,10 +33,27 @@ const WarehousePage = () => {
     }
     
     useEffect(() => {
+      if(location.state && location.state.openAddModal){
+        setIsAddModalOpen(true)
+      }
+      else{
+        setIsAddModalOpen(false)
+      }
+      if(location.state && location.state.openEditModal){
+        setIsEditModalOpen(true)
+      }
+      else{
+        setIsEditModalOpen(false)
+      }
+      if(location.state && location.state.openDeleteModal){
+        setIsDeleteModalOpen(true)
+      }
+      else{
+        setIsDeleteModalOpen(false)
+      }
         const getWarehouseData = async() => {
             try{
                 const response = await axios.get(`/warehouse/${warehouseId}`)
-                console.log(response)
                 if(response.status === 200){
                     setWarehouseData(response.data)
                 }
@@ -50,17 +68,14 @@ const WarehousePage = () => {
                     alert(`An error occurred: ${error.response.status}`);
                   }
                 } else if (error.request) {
-                  console.log(error.request);
                   alert("No response from server. Please try again.");
                 } else {
-                  console.log('Error', error.message);
                   alert("An unexpected error occurred. Please try again.");
                 }
               }
         }
         getWarehouseData()
-        console.log(warehouseData)
-    },[])
+    },[location.state])
 
   return (
     <div>
@@ -87,9 +102,9 @@ const WarehousePage = () => {
                     <h3 className='text-gray-600'>{warehouseData.warehouseData.location.city + "," + warehouseData.warehouseData.location.state + "," + warehouseData.warehouseData.location.country}</h3>
                 </div>
                 <div className='flex items-center gap-3'>
-                  <Button><FaEdit className='text-base' onClick={() => setIsEditModalOpen(true)}/>Edit</Button>
+                  <Button onClick={() => setIsEditModalOpen(true)}><FaEdit className='text-base' />Edit</Button>
                   <Button type='primary' onClick={() => setIsAddModalOpen(true)}><FaPlus className='text-base' />Add Products</Button>
-                  <Button color='danger' variant='solid'><MdDelete className='text-base' onClick={() => setIsDeleteModalOpen(true)}/>Delete</Button>
+                  <Button onClick={() => setIsDeleteModalOpen(true)} color='danger' variant='solid'><MdDelete className='text-base' />Delete</Button>
                 </div>
                 
             </div>

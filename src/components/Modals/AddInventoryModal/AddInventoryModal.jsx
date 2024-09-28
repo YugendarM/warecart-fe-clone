@@ -15,14 +15,12 @@ const AddInventoryModal = ({warehouse, isAddModalOpen, handleAddCancel, spaceAva
   };
 
   const handleSubmit = async(values) => {
-    console.log('Success:', values);
     const inventoryInputData = {
       stockLevel: values.stockLevel,
       stockThreshold: values.stockThreshold,
       productId: values.product,
       warehouseId: warehouse
     }
-    console.log(inventoryInputData)
     try{
       const response = await axios.post(
         `inventory/add`,
@@ -42,10 +40,8 @@ const AddInventoryModal = ({warehouse, isAddModalOpen, handleAddCancel, spaceAva
           alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
         }
       } else if (error.request) {
-        console.log(error.request);
         alert("No response from server. Please try again.");
       } else {
-        console.log('Error', error.message);
         alert("An unexpected error occurred. Please try again.");
       }
     }
@@ -63,11 +59,9 @@ const AddInventoryModal = ({warehouse, isAddModalOpen, handleAddCancel, spaceAva
   useEffect(() => {
     const getProductData = async() => {
         const response = await axios.get("/product")
-        console.log(response)
         const productDetails = response.data.map((product) => {
             return {productName: product.productName, productType: product.productType, _id: product._id}
         })
-        console.log(productDetails)
         setProductList(productDetails)
     }
     getProductData()
@@ -105,8 +99,8 @@ const AddInventoryModal = ({warehouse, isAddModalOpen, handleAddCancel, spaceAva
                 >
                     {
                         productList.length > 0 && 
-                        productList.map((product) => (
-                            <Option value={product._id}><div className='text-sm font-semibold flex  items-center w-full'><p className='w-1/2'>{product.productName} </p><span className='text-xs text-gray-500 w-1/2'>Category:  <span className='capitalize text-gray-800 text-sm'>{product.productType}</span></span></div></Option>
+                        productList.map((product, index) => (
+                            <Option  value={product._id}><div className='text-sm font-semibold flex  items-center w-full' key={index}><p className='w-1/2'>{product.productName} </p><span className='text-xs text-gray-500 w-1/2'>Category:  <span className='capitalize text-gray-800 text-sm'>{product.productType}</span></span></div></Option>
                         ))
                     }
                 </Select>

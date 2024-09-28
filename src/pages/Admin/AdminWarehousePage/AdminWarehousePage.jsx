@@ -30,7 +30,6 @@ const AdminWarehousePage = () => {
   };
 
   const handleSubmit = async(values) => {
-    console.log('Success:', values);
     const warehouseInputData = {
       warehouseName: values.warehouseName,
       location: {
@@ -61,10 +60,8 @@ const AdminWarehousePage = () => {
           alert(`An error occurred: ${error.response.status}`);
         }
       } else if (error.request) {
-        console.log(error.request);
         alert("No response from server. Please try again.");
       } else {
-        console.log('Error', error.message);
         alert("An unexpected error occurred. Please try again.");
       }
     }
@@ -72,7 +69,6 @@ const AdminWarehousePage = () => {
 
   const handleFormChange = (changedValues, allValues) => {
     setWarehouseInputData(allValues);
-    console.log(warehouseInputData); 
   };
 
   const handleFormClear = () => {
@@ -88,7 +84,6 @@ const AdminWarehousePage = () => {
     const getWarehousesData = async() => {
       try{
         const response = await axios.get("warehouse/")
-        // console.log(response.data)
         setFilteredWarehouseData(response.data)
         setWarehousesData(response.data)
       }

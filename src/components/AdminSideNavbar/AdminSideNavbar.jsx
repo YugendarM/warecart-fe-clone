@@ -10,10 +10,6 @@ import { RiShoppingBag4Fill, RiShoppingBag4Line } from 'react-icons/ri';
 const AdminSideNavbar = () => {
 
   const {pathname} = useLocation()
-  console.log(pathname)
-
-//   const param = useParams()
-//   console.log(useParams())
 
   return (
     <div className='w-[350px] md:flex justify-center h-[88vh]'>

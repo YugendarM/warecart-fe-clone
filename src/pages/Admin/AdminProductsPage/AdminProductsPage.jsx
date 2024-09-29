@@ -35,7 +35,12 @@ const AdminProductsPage = () => {
   useEffect(() => {
     const getProductsData = async() => {
       try{
-        const response = await axios.get("product/")
+        const response = await axios.get(
+          "product/",
+          {
+            withCredentials: true
+          }
+        )
         setFilteredProductData(response.data)
         setProductsData(response.data)
       }

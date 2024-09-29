@@ -30,7 +30,11 @@ const ProductEditModal = ({product, isEditModelOpen, handleEditCancel}) => {
         try{
           const response = await axios.put(
             `product/update/${product._id}`,
-            productInputData)
+            productInputData,
+            {
+              withCredentials: true
+            }
+          )
     
           if(response.status === 200){
             alert("Product updated successfully")

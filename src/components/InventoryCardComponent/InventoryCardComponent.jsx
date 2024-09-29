@@ -37,7 +37,11 @@ const InventoryCardComponent = ({inventory, index}) => {
       try{
         const response = await axios.put(
           `inventory/update/${inventory._id}`,
-          inventoryInputData)
+          inventoryInputData,
+          {
+            withCredentials: true
+          }
+        )
 
         if(response.status === 200){
           alert("Inventory updated successfully")
@@ -74,7 +78,12 @@ const InventoryCardComponent = ({inventory, index}) => {
 
     const handleDeleteConform = async() => {
       try{
-        const response = await axios.delete(`inventory/delete/${inventory._id}`)
+        const response = await axios.delete(
+          `inventory/delete/${inventory._id}`,
+          {
+            withCredentials: true
+          }
+        )
 
         if(response.status === 200){
           alert("Inventory deleted successfully")

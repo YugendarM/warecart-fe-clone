@@ -1,33 +1,14 @@
-import React, { useEffect, useState } from 'react'
-import { CiSquarePlus } from 'react-icons/ci'
+import React from 'react'
 import { FaRegPlusSquare } from 'react-icons/fa'
 import { FiEdit } from 'react-icons/fi'
 import { MdDeleteOutline } from 'react-icons/md'
-import { Link, useAsyncError, useNavigate } from 'react-router-dom'
-import { Breadcrumb, Button, Dropdown, Form, Input, Menu, Modal, Space, Tooltip } from 'antd';
-import axios from 'axios'
-import WarehouseEditModal from '../Modals/WarehouseEditModal/WarehouseEditModal'
-import WarehouseDeleteModal from '../Modals/WarehouseDeleteModal/WarehouseDeleteModal'
+import { Link, useNavigate } from 'react-router-dom'
+import { Tooltip } from 'antd';
 
 
 const WarehouseCardComponent = ({warehouse, index}) => {
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
   const navigate = useNavigate()
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-  
-  const handleDeleteCancel = () => {
-    setIsDeleteModalOpen(false)
-  }
 
   const handleEditWarehouse = (event) => {
     event.preventDefault()
@@ -69,8 +50,6 @@ const WarehouseCardComponent = ({warehouse, index}) => {
           </Tooltip> 
         </div>
       </Link>
-      {/* <WarehouseEditModal warehouse={warehouse} isModalOpen={isModalOpen} handleCancel={handleCancel}/>
-      <WarehouseDeleteModal warehouse={warehouse} isDeleteModalOpen={isDeleteModalOpen} handleDeleteCancel={handleDeleteCancel}/> */}
     </React.Fragment>
     
   )

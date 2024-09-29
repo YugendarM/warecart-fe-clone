@@ -44,7 +44,12 @@ const ProductPage = () => {
 
         const getProductData = async() => {
             try{
-                const response = await axios.get(`/product/${productId}`)
+                const response = await axios.get(
+                    `/product/${productId}`,
+                    {
+                        withCredentials: true
+                    }
+                )
                 if(response.status === 200){
                     setProductData(response.data)
                 }

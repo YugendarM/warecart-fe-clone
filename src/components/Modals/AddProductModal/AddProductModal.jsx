@@ -36,7 +36,11 @@ const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
         try{
           const response = await axios.post(
             "product/add",
-            productInputData)
+            productInputData,
+            {
+              withCredentials: true
+            }
+          )
     
           if(response.status === 201){
             alert("Product added successfully")

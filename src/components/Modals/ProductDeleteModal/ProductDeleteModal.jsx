@@ -11,7 +11,12 @@ const ProductDeleteModal = ({isDeleteModalOpen, handleDeleteCancel, product}) =>
 
     const handleDeleteConform = async() => {
         try{
-            const response = await axios.delete(`product/delete/${product._id}`)
+            const response = await axios.delete(
+              `product/delete/${product._id}`,
+              {
+                withCredentials: true
+              }
+            )
       
             if(response.status === 200){
               alert("Product deleted successfully")

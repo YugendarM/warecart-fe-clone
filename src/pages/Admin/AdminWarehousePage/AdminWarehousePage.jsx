@@ -43,7 +43,11 @@ const AdminWarehousePage = () => {
     try{
       const response = await axios.post(
         "warehouse/add",
-        warehouseInputData)
+        warehouseInputData,
+        {
+          withCredentials: true
+        }
+      )
 
       if(response.status === 201){
         alert("Warehouse added successfully")
@@ -84,7 +88,12 @@ const AdminWarehousePage = () => {
   useEffect(() => {
     const getWarehousesData = async() => {
       try{
-        const response = await axios.get("warehouse/")
+        const response = await axios.get(
+          "warehouse/",
+          {
+            withCredentials: true
+          }
+        )
         setFilteredWarehouseData(response.data)
         setWarehousesData(response.data)
       }

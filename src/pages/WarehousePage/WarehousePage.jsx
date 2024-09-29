@@ -54,7 +54,12 @@ const WarehousePage = () => {
       }
         const getWarehouseData = async() => {
             try{
-                const response = await axios.get(`/warehouse/${warehouseId}`)
+                const response = await axios.get(
+                  `/warehouse/${warehouseId}`,
+                  {
+                    withCredentials: true
+                  }
+                )
                 if(response.status === 200){
                     setWarehouseData(response.data)
                 }

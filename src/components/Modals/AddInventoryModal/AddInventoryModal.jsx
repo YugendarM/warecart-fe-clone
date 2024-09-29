@@ -24,7 +24,11 @@ const AddInventoryModal = ({warehouse, isAddModalOpen, handleAddCancel, spaceAva
     try{
       const response = await axios.post(
         `inventory/add`,
-        inventoryInputData)
+        inventoryInputData,
+        {
+          withCredentials: true
+        }
+      )
 
       if(response.status === 201){
         alert("Inventory added successfully")
@@ -59,7 +63,12 @@ const AddInventoryModal = ({warehouse, isAddModalOpen, handleAddCancel, spaceAva
 
   useEffect(() => {
     const getProductData = async() => {
-        const response = await axios.get("/product")
+        const response = await axios.get(
+          "/product", 
+          {
+            withCredentials: true
+          }
+        )
         const productDetails = response.data.map((product) => {
             return {productName: product.productName, productType: product.productType, _id: product._id}
         })

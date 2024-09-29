@@ -15,7 +15,13 @@ const LoginPage = () => {
             password: values.password
         }
         try{
-            const response = await axios.post("/user/login", userData)
+            const response = await axios.post(
+              "/user/login", 
+              userData,
+              {
+                withCredentials: true
+              }
+            )
 
             if(response.status === 200){
                 alert("User logged In")

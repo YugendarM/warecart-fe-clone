@@ -10,7 +10,12 @@ const WarehouseDeleteModal = ({warehouse, isDeleteModalOpen, handleDeleteCancel}
 
     const handleDeleteConform = async() => {
         try{
-          const response = await axios.delete(`warehouse/delete/${warehouse._id}`)
+          const response = await axios.delete(
+            `warehouse/delete/${warehouse._id}`,
+            {
+              withCredentials: true
+            }
+          )
     
           if(response.status === 200){
             alert("Warehouse deleted successfully")

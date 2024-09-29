@@ -17,7 +17,13 @@ const SignupPage = () => {
             password: values.password
         }
         try{
-            const response = await axios.post("/user/signup", userData)
+            const response = await axios.post(
+              "/user/signup",
+              userData,
+              {
+                withCredentials: true
+              }
+            )
 
             if(response.status === 201){
                 alert("User Signed Up")

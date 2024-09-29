@@ -33,7 +33,11 @@ const WarehouseEditModal = ({warehouse, isModalOpen, handleCancel}) => {
     try{
       const response = await axios.put(
         `warehouse/update/${warehouse._id}`,
-        warehouseInputData)
+        warehouseInputData, 
+        {
+          withCredentials: true
+        }
+      )
 
       if(response.status === 200){
         alert("Warehouse updated successfully")

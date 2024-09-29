@@ -28,7 +28,8 @@ const AddInventoryModal = ({warehouse, isAddModalOpen, handleAddCancel, spaceAva
 
       if(response.status === 201){
         alert("Inventory added successfully")
-        setIsModalOpen(false)
+        form.resetFields()
+        handleAddCancel()
       }
       
     }

@@ -37,7 +37,7 @@ const WarehouseEditModal = ({warehouse, isModalOpen, handleCancel}) => {
 
       if(response.status === 200){
         alert("Warehouse updated successfully")
-        setIsEditModelOpen(false)
+        handleCancel()
       }
       
     }

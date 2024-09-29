@@ -6,7 +6,8 @@ import { FaPlus } from 'react-icons/fa6';
 import { IoChevronDown, IoSearch } from 'react-icons/io5';
 import WarehouseCardComponent from '../../../components/WarehouseCardComponent/WarehouseCardComponent';
 import axios from 'axios';
-
+import {io} from "socket.io-client"
+import { getSocket, initiateSocketConnection } from '../../../utilities/socketService';
 
 const AdminWarehousePage = () => {
 
@@ -96,7 +97,7 @@ const AdminWarehousePage = () => {
   },[])
 
   useEffect(() => {
-    const searchQuery = warehouseSearch.trim().toLowerCase();
+    const searchQuery = warehouseSearch.toLowerCase();
     if(warehouseSearch.length !== 0){
       setIsSortOrFilterApplied(true)
     }
@@ -112,6 +113,27 @@ const AdminWarehousePage = () => {
     );
     setFilteredWarehouseData(filteredData);
   }, [warehouseSearch, warehousesData])
+
+  useEffect(() => {
+    initiateSocketConnection()
+    const socket = getSocket()
+
+    socket.on('newWarehouse', (addedWarehouse) => {
+      setWarehousesData((prevWarehouses) => [...prevWarehouses, addedWarehouse]);
+    });
+
+    socket.on("warehouseUpdated", (updatedWarehouse) => {
+      setWarehousesData((prevWarehouses) => 
+        prevWarehouses.map(warehouse => 
+          warehouse._id === updatedWarehouse._id ? updatedWarehouse : warehouse
+        )
+      );
+    })
+
+    return () => {
+      socket.disconnect()
+    }
+  },[])
 
   return (
     <div className='w-full'>

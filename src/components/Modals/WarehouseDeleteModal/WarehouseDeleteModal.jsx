@@ -14,7 +14,7 @@ const WarehouseDeleteModal = ({warehouse, isDeleteModalOpen, handleDeleteCancel}
     
           if(response.status === 200){
             alert("Warehouse deleted successfully")
-            setIsModalOpen(false)
+            handleDeleteCancel()
             navigate("/admin/warehouse")
           }
           

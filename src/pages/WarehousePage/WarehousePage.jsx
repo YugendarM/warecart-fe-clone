@@ -9,6 +9,7 @@ import WarehouseEditModal from '../../components/Modals/WarehouseEditModal/Wareh
 import WarehouseDeleteModal from '../../components/Modals/WarehouseDeleteModal/WarehouseDeleteModal'
 import { TbLayoutDashboardFilled } from 'react-icons/tb'
 import AddInventoryModal from '../../components/Modals/AddInventoryModal/AddInventoryModal'
+import { getSocket, initiateSocketConnection } from '../../utilities/socketService'
 
 const WarehousePage = () => {
 
@@ -75,7 +76,50 @@ const WarehousePage = () => {
               }
         }
         getWarehouseData()
-    },[location.state])
+      },[location.state])
+      
+    useEffect(() => {
+      initiateSocketConnection()
+      const socket = getSocket()
+  
+      socket.on("warehouseUpdated", (updatedWarehouse) => {
+        setWarehouseData(prevState => ({
+          ...prevState,  
+          warehouseData: updatedWarehouse
+      }));
+      })
+
+      socket.on("inventoryAdded", (addedProductWithDetail) => {
+        setWarehouseData(prevState => ({
+          ...prevState,  
+          availableProducts:[...prevState.availableProducts, addedProductWithDetail]  
+        }));
+      })
+
+      socket.on("inventoryDeleted", (deletedInventory) => {
+        setWarehouseData(prevState => ({
+          ...prevState,  
+          availableProducts: prevState.availableProducts.filter((inventory) => 
+            inventory._id !== deletedInventory._id
+          )  
+        }));
+      })
+
+      socket.on("inventoryUpdated", (updatedInventoryWithDetail) => {
+        setWarehouseData(prevState => ({
+          ...prevState,
+          availableProducts: prevState.availableProducts.map(inventory => 
+            inventory._id === updatedInventoryWithDetail._id
+              ? updatedInventoryWithDetail 
+              : inventory 
+          )
+        }));
+      });
+  
+      return () => {
+        socket.disconnect()
+      }
+    },[])
 
   return (
     <div>

@@ -136,7 +136,7 @@ const InventoryCardComponent = ({inventory, index}) => {
         </div>
       </div>
       <Modal 
-        title="Add new Vendor" 
+        title="Update inventory" 
         open={isEditModalOpen} 
         onOk={handleEditOk} 
         onCancel={handleEditCancel}

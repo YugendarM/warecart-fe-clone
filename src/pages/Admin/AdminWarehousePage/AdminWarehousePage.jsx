@@ -130,6 +130,14 @@ const AdminWarehousePage = () => {
       );
     })
 
+    socket.on("warehouseDeleted", (deletedWarehouse) => {
+      setWarehousesData((prevWarehouses) => 
+        prevWarehouses.filter((warehouse) => 
+          warehouse._id !== deletedWarehouse._id
+        )
+      )
+    })
+
     return () => {
       socket.disconnect()
     }

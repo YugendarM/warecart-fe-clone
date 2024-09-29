@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Button, Dropdown, Form, Input, Menu, Modal, Space } from 'antd';
+import { Breadcrumb } from 'antd';
 import { Link } from 'react-router-dom';
 import { TbLayoutDashboardFilled } from 'react-icons/tb';
 import { FaPlus } from 'react-icons/fa6';
-import { IoChevronDown, IoSearch } from 'react-icons/io5';
-import WarehouseCardComponent from '../../../components/WarehouseCardComponent/WarehouseCardComponent';
 import axios from 'axios';
 import ProductCardComponent from '../../../components/ProductCardComponent/ProductCardComponent';
 import AddProductModal from '../../../components/Modals/AddProductModal/AddProductModal';
+import { getSocket, initiateSocketConnection } from '../../../utilities/socketService';
+import { IoSearch } from 'react-icons/io5';
 
 
 const AdminProductsPage = () => {
@@ -17,9 +17,6 @@ const AdminProductsPage = () => {
   const [productsData, setProductsData] = useState([])
   const [filteredProductData, setFilteredProductData] = useState([])
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const [warehouseInputData, setWarehouseInputData] = useState({})
-
-  const [form] = Form.useForm();
 
   const showModal = () => {
     setIsAddModalOpen(true);
@@ -66,6 +63,24 @@ const AdminProductsPage = () => {
     );
     setFilteredProductData(filteredData);
   }, [productSearch, productsData])
+  
+
+  useEffect(() => {
+    initiateSocketConnection()
+    const socket = getSocket()
+
+    socket.on("productAdded", (addedProduct) => {
+      setProductsData((prevState) => [...prevState, addedProduct])
+    })
+
+    socket.on("productDeleted", (deletedProduct) => {
+      setProductsData((prevState) => prevState.filter((product) => product._id !== deletedProduct._id))
+    })
+
+    return () => {
+      socket.disconnect()
+    }
+  }, [])
 
   return (
     <div className='w-full'>

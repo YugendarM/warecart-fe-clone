@@ -8,6 +8,7 @@ import { Link, useLocation, useParams } from 'react-router-dom'
 import ProductPageWarehouseCard from '../../components/ProductPageWarehouseCard/ProductPageWarehouseCard'
 import ProductEditModal from '../../components/Modals/ProductEditModal/ProductEditModal'
 import ProductDeleteModal from '../../components/Modals/ProductDeleteModal/ProductDeleteModal'
+import { getSocket, initiateSocketConnection } from '../../utilities/socketService'
 
 const ProductPage = () => {
     
@@ -65,6 +66,22 @@ const ProductPage = () => {
               }
         }
         getProductData()
+    }, [])
+
+    useEffect(() => {
+        initiateSocketConnection()
+        const socket = getSocket()
+
+        socket.on("productUpdated", (updatedProduct) => {
+            setProductData((prevState) => ({
+                ...prevState,
+                productData: updatedProduct
+            }))
+        })
+
+        return () => {
+            socket.disconnect()
+        }
     }, [])
 
   return (

@@ -34,7 +34,7 @@ const ProductEditModal = ({product, isEditModelOpen, handleEditCancel}) => {
     
           if(response.status === 200){
             alert("Product updated successfully")
-            setIsModalOpen(false)
+            handleEditCancel()
           }
           
         }

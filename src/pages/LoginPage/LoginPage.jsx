@@ -1,12 +1,27 @@
 import React from 'react'
 import { Button, Form, Input } from 'antd';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
 
     const [form] = Form.useForm()
     const navigate = useNavigate()
+    const location = useLocation()
+
+    const handleSignUpButton = (event) => {
+      event.preventDefault()
+      if(location.state){
+        navigate("/signup", {
+          state: {
+            products: location.state.products 
+          }
+        })
+      }
+      else{
+        navigate("/signup")
+      }
+    }
 
     const handleSubmit = async(values) => {
         console.log(values)
@@ -25,7 +40,16 @@ const LoginPage = () => {
 
             if(response.status === 200){
                 alert("User logged In")
-                navigate("/")
+                if(location.state){
+                  navigate("/checkout", {
+                    state: {
+                      products: location.state.products
+                    }
+                  })
+                }
+                else{
+                  navigate("/")
+                }
             }
         }
         catch (error) {
@@ -43,7 +67,7 @@ const LoginPage = () => {
           }
     }
   return (
-    <div className='w-screen h-[80vh] flex justify-center items-center bg-gray-100'>
+    <div className='w-screen h-[89vh] flex justify-center items-center bg-gray-100'>
       <div className='p-10 shadow-lg bg-white rounded-lg text-lg w-[400px]'>
         <h2 className='text-3xl mb-8 font-semibold text-center'>Login</h2>
         <Form
@@ -90,6 +114,10 @@ const LoginPage = () => {
             </Button>
           </Form.Item>
         </Form>
+        <div className='flex text-xs w-full justify-center gap-1'>
+          <p>Don't have an account!</p>
+          <button onClick={(event) => handleSignUpButton(event)} to={"/signup"} className='text-blue-500 hover:text-blue-400 underline'>Signup</button>
+        </div>
       </div>
     </div>
   )

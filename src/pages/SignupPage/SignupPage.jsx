@@ -1,12 +1,13 @@
 import React from 'react'
 import { Button, Form, Input } from 'antd';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const SignupPage = () => {
 
     const [form] = Form.useForm()
     const navigate = useNavigate()
+    const location = useLocation()
 
     const handleSubmit = async(values) => {
         console.log(values)
@@ -27,7 +28,16 @@ const SignupPage = () => {
 
             if(response.status === 201){
                 alert("User Signed Up")
-                navigate("/")
+                if(location.state){
+                  navigate("/checkout", {
+                    state: {
+                      products: location.state.products
+                    }
+                  })
+                }
+                else{
+                  navigate("/")
+                }
             }
         }
         catch (error) {
@@ -45,7 +55,7 @@ const SignupPage = () => {
           }
     }
   return (
-    <div className='w-screen h-[80vh] flex justify-center items-center bg-gray-100'>
+    <div className='w-screen h-[89vh] flex justify-center items-center bg-gray-100'>
       <div className='p-10 shadow-lg bg-white rounded-lg text-lg w-[400px]'>
         <h2 className='text-3xl mb-8 font-semibold text-center'>Signup</h2>
         <Form
@@ -113,6 +123,10 @@ const SignupPage = () => {
             </Button>
           </Form.Item>
         </Form>
+        <div className='flex text-xs w-full justify-center gap-1'>
+          <p>Already have an account!</p>
+          <Link to={"/login"} className='text-blue-500 hover:text-blue-400 underline'>Login</Link>
+        </div>
       </div>
     </div>
   )

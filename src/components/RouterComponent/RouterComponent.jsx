@@ -10,6 +10,7 @@ import UserCheckOutPage from '../../pages/UserCheckOutPage/UserCheckOutPage'
 import UserWishlistPage from '../../pages/UserWishlistPage/UserWishlistPage'
 import UserProfilePage from '../../pages/UserProfilePage/UserProfilePage'
 import UserOrdersPage from '../../pages/UserOrdersPage/UserOrdersPage'
+import UserCartPage from '../../pages/UserCartPage/UserCartPage'
 
 const RouterComponent = () => {
   return (
@@ -22,6 +23,7 @@ const RouterComponent = () => {
         <Route path='/wishlist' element={<UserWishlistPage/>}/> 
         <Route path='/profile' element={<UserProfilePage/>}/> 
         <Route path='/orders' element={<UserOrdersPage/>}/> 
+        <Route path='/cart' element={<UserCartPage/>}/> 
         <Route path='/checkout' element={<UserCheckOutPage/>}/>
         <Route path='/admin/*' element={<AdminPageComponent/>}/>
       </Routes>

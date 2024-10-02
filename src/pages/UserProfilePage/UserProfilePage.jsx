@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const UserProfilePage = () => {
 
@@ -43,6 +43,7 @@ const UserProfilePage = () => {
       UserProfilePage
 
       <button onClick={handleLogout}>Logout</button>
+      <Link to={"/cart"}>Cart</Link>
     </div>
   )
 }

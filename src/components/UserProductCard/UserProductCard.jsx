@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { Button, Modal } from 'antd'
 
-const UserProductCard = ({product, isProductWishListed}) => {
+const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) => {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false)
@@ -45,6 +45,37 @@ const UserProductCard = ({product, isProductWishListed}) => {
             }
           }
 
+    }
+
+    const handleAddToCart = async(event) => {
+      event.preventDefault()
+      try{
+          const response = await axios.put(
+            `/user/addProductToCart/${product._id}`,
+            {},
+            {
+              withCredentials: true
+            }
+          )
+    
+          if(response.status === 200){
+            // console.log("added")
+          }
+          
+        }
+        catch (error) {
+          if (error.response) {
+            if (error.response.status === 500) {
+              alert(`An error occurred while adding to cart: ${error.response.status} ${error.response.data.message}`);
+            } else {
+              alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+            }
+          } else if (error.request) {
+            alert("No response from server. Please try again.");
+          } else {
+            alert("An unexpected error occurred. Please try again.");
+          }
+        }
     }
 
     const openRemoveModal = (event) => {
@@ -168,7 +199,12 @@ const UserProductCard = ({product, isProductWishListed}) => {
 
         <div className='flex justify-between items-center w/full gap-3'>
             <button onClick={(event) => handleBuyNow(event)} className='bg-green-500 py-1 rounded-md text-white w-1/2 hover:bg-green-400'>Buy now</button>
-            <button className='bg-blue-500 py-1 rounded-md text-white w-1/2 hover:bg-blue-400'>Add to cart</button>
+            {
+              isProductAddedInCart ? 
+              <Link to={"/cart"} className='text-center bg-blue-500 py-1 rounded-md text-white w-1/2 hover:bg-blue-400'>Go to cart</Link>
+              :
+              <button onClick={(event) => handleAddToCart(event)} className='bg-blue-500 py-1 rounded-md text-white w-1/2 hover:bg-blue-400'>Add to cart</button>
+            }
         </div>
       </div>
       <Modal 

@@ -1,9 +1,14 @@
+import axios from 'axios'
 import React, { useMemo, useState } from 'react'
 import { FaCircleInfo, FaMinus, FaPlus, FaStar } from 'react-icons/fa6'
+import { useLocation } from 'react-router-dom'
 
 const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, onQuantityChange}) => {
 
     const [quantity, setQuantity] = useState(productData && productData.quantity)
+    const [isOffersTabOpen, setIsOffersTabOpen] = useState(false)
+
+    const {pathname} = useLocation()
 
     const handleIncrease = () => {
         const newQuantity = Math.min(quantity + 1, 30); // Max limit
@@ -24,6 +29,36 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
         minimumFractionDigits: 0, // Adjust if you want decimals
     }).format(amount);
     };
+
+    const handleCartItemRemove = async() => {
+      try{
+          const response = await axios.put(
+            `/user/removeProductFromCart/${productData.productDetails._id}`,
+            {},
+            {
+              withCredentials: true
+            }
+          )
+    
+          if(response.status === 200){
+            // console.log("removed")
+          }
+          
+        }
+        catch (error) {
+          if (error.response) {
+            if (error.response.status === 500) {
+              alert(`An error occurred while Removing Product from cart: ${error.response.status} ${error.response.data.message}`);
+            } else {
+              alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+            }
+          } else if (error.request) {
+            alert("No response from server. Please try again.");
+          } else {
+            alert("An unexpected error occurred. Please try again.");
+          }
+        }
+    }
 
     const totalDiscountedPrice = useMemo(() => {
         if (productData && productData.productDetails && quantity) {
@@ -80,31 +115,40 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
                 </p>
                 {
                     productData && productData.appliedRule.length > 0 &&
-                    <div className='flex-col parent relative group'>
-                        <div className='flex items-center gap-1 cursor-pointer'>
-                            <p className='text-green-600 text-sm font-medium'>{productData && productData.appliedRule.length} offer applied</p>
-                            <FaCircleInfo className='text-sm text-green-600' />
+                    <div className='flex-col parent relative w-full'>
+                        <div className='flex items-center justify-between w-full'>
+                            <div className='flex items-center gap-1 cursor-pointer' onMouseEnter={() => setIsOffersTabOpen(true)} onMouseLeave={() => setIsOffersTabOpen(false)}>
+                                <p className='text-green-600 text-sm font-medium'>{productData && productData.appliedRule.length} offer applied</p>
+                                <FaCircleInfo className='text-sm text-green-600' />
+                            </div>
+                            {
+                                pathname === "/cart" &&
+                                <button onClick={handleCartItemRemove} className='text-blue-500 hover:text-blue-300 font-medium'>REMOVE</button>
+                            }
                         </div>
-                        <div className='absolute top-8 z-20 bg-white text-xs font-medium text-gray-500 w-72 shadow-custom-medium px-3 py-2 rounded-sm hidden group-hover:block transition-opacity duration-200'>
-                            <div className='child flex items-center justify-between w-full py-3'>
-                                <p>Selling Price</p>
-                                <p className='text-black'>{formatRupees((productData && productData.productDetails && productData.productDetails.price)*quantity)}/-</p>
+                        {
+                            isOffersTabOpen &&
+                            <div className='absolute top-8 z-20 bg-white text-xs font-medium text-gray-500 w-72 shadow-custom-medium px-3 py-2 rounded-sm  transition-opacity duration-200'>
+                                <div className='child flex items-center justify-between w-full py-3'>
+                                    <p>Selling Price</p>
+                                    <p className='text-black'>{formatRupees((productData && productData.productDetails && productData.productDetails.price)*quantity)}/-</p>
+                                </div>
+                                <div className='flex flex-col gap-3 py-3'>
+                                    {
+                                        productData && productData.appliedRule && productData.appliedRule.map((rule, index) => (
+                                            <div key={index} className='flex justify-between items-center gap-2'>
+                                                <p className='overflow-hidden text-ellipsis flex items-center gap-2'>{rule.name}<span className='text-black'>{rule.discountPercentage}% off</span></p>
+                                                <p className='text-green-600'>- {formatRupees(((productData && productData.productDetails && productData.productDetails.price) * (rule.discountPercentage / 100))*quantity)}/-</p>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                                <div className='child flex items-center justify-between w-full border-y border-y-gray-200 py-3'>
+                                    <p>Total</p>
+                                    <p className='text-black'>{formatRupees((productData && productData.productDetails && productData.productDetails.price)*quantity - (productData && productData.discountPrice))}/-</p>
+                                </div>
                             </div>
-                            <div className='flex flex-col gap-3 py-3'>
-                                {
-                                    productData && productData.appliedRule && productData.appliedRule.map((rule, index) => (
-                                        <div key={index} className='flex justify-between items-center gap-2'>
-                                            <p className='overflow-hidden text-ellipsis flex items-center gap-2'>{rule.name}<span className='text-black'>{rule.discountPercentage}% off</span></p>
-                                            <p className='text-green-600'>- {formatRupees(((productData && productData.productDetails && productData.productDetails.price) * (rule.discountPercentage / 100))*quantity)}/-</p>
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                            <div className='child flex items-center justify-between w-full border-y border-y-gray-200 py-3'>
-                                <p>Total</p>
-                                <p className='text-black'>{formatRupees((productData && productData.productDetails && productData.productDetails.price)*quantity - (productData && productData.discountPrice))}/-</p>
-                            </div>
-                        </div>
+                        }
                     </div>
 
 

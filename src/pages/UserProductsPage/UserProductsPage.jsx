@@ -11,6 +11,7 @@ const UserProductsPage = () => {
     const [productsData, setProductsData] = useState([])
     const [filteredProductData, setFilteredProductData] = useState([])
     const [wishlistData, setWishlistData] = useState([])
+    const [cartItemData, setCartItemData] = useState([])
 
     const handleClear = () => {
         setProductSearch("")
@@ -18,8 +19,12 @@ const UserProductsPage = () => {
     }
 
     const isProductWishListed = (productId) => {
-      return wishlistData?.some((list) => list._id === productId) || false;
-    };
+      return wishlistData?.some((list) => list._id === productId) || false
+    }
+
+    const isProductAddedInCart = (productId) => {
+      return cartItemData?.some((item) => item._id === productId) || false
+    }
     
 
     useEffect(() => {
@@ -83,6 +88,35 @@ const UserProductsPage = () => {
         }
       }
 
+      const getAllCartItems = async() => {
+        try{
+          const response = await axios.get(
+            "/user/cartItems",
+            {
+              withCredentials: true
+            }
+          )
+          if(response.status === 200){
+            setCartItemData(response.data.data)
+          }
+          
+        }
+        catch (error) {
+          if (error.response) {
+            if (error.response.status === 500) {
+              alert("An error occurred while fetching Cart data");
+            } else {
+              alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+            }
+          } else if (error.request) {
+            alert("No response from server. Please try again.");
+          } else {
+            alert("An unexpected error occurred. Please try again.");
+          }
+        }
+      }
+
+        getAllCartItems()
         getAllWishlistedProducts()
         getProductsData()
     }, [])
@@ -131,6 +165,10 @@ const UserProductsPage = () => {
           setWishlistData(updatedWishlist)
         })
 
+        socket.on("cartUpdated", (updatedCart) => {
+          setCartItemData(updatedCart)
+        })
+
         return () => {
             socket.disconnect()
         }
@@ -174,7 +212,7 @@ const UserProductsPage = () => {
                 {
                     Array.isArray(filteredProductData) && filteredProductData.length > 0 ?
                     filteredProductData?.map((product, index) => (
-                        <UserProductCard isProductWishListed={isProductWishListed(product._id)} key={index} product={product}/>
+                        <UserProductCard isProductWishListed={isProductWishListed(product._id)} isProductAddedInCart={isProductAddedInCart(product._id)} key={index} product={product}/>
                     ))
                     : <div className='flex w-full h-[70vh] items-center justify-center '>
                         <p className='text-2xl font-semibold'>No Products found</p>

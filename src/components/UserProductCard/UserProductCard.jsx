@@ -3,24 +3,92 @@ import React, { useEffect, useState } from 'react'
 import { FaHeart, FaStar } from 'react-icons/fa6'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
+import axios from 'axios';
+import { Button, Modal } from 'antd'
 
-const UserProductCard = ({product}) => {
+const UserProductCard = ({product, isProductWishListed}) => {
 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false)
 
     const {pathname} = useLocation()
 
     const navigate = useNavigate()
 
-    const handleAddWishlist = (event) => {
+    const handleAddWishlist = async(event) => {
         event.preventDefault()
+        try{
+            const response = await axios.put(
+              `/user/addProductToWishlist/${product._id}`,
+              {},
+              {
+                withCredentials: true
+              }
+            )
+      
+            if(response.status === 200){
+            //   console.log("added")
+            }
+            
+          }
+          catch (error) {
+            if (error.response) {
+              if (error.response.status === 500) {
+                alert("An error occurred while Adding Product to wishlist");
+              } else {
+                alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+              }
+            } else if (error.request) {
+              alert("No response from server. Please try again.");
+            } else {
+              alert("An unexpected error occurred. Please try again.");
+            }
+          }
+
+    }
+
+    const openRemoveModal = (event) => {
+        event.preventDefault()
+        setIsRemoveModalOpen(true)
+    }
+
+    const handleRemoveWishlist = async(event) => {
+        event.preventDefault()
+        try{
+            const response = await axios.put(
+              `/user/removeProductFromWishlist/${product._id}`,
+              {},
+              {
+                withCredentials: true
+              }
+            )
+      
+            if(response.status === 200){
+              setIsRemoveModalOpen(false)
+            }
+            
+          }
+          catch (error) {
+            if (error.response) {
+              if (error.response.status === 500) {
+                alert(`An error occurred while Removing Product from wishlist: ${error.response.status} ${error.response.data.message}`);
+              } else {
+                alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+              }
+            } else if (error.request) {
+              alert("No response from server. Please try again.");
+            } else {
+              alert("An unexpected error occurred. Please try again.");
+            }
+          }
+
     }
 
     const formatRupees = (amount) => {
         return new Intl.NumberFormat('en-IN', {
             style: 'currency',
             currency: 'INR',
-            minimumFractionDigits: 0, // Adjust if you want decimals
+            minimumFractionDigits: 0, 
         }).format(amount);
     };
 
@@ -69,14 +137,20 @@ const UserProductCard = ({product}) => {
         <div>
             <div className='flex items-center justify-between'>
                 <h1 className='text-xl font-medium text-gray-800'>{product.productName}</h1>
-                <Tooltip title="Add to wishlist">
-                    <button onClick={(event) => handleAddWishlist(event)}>
-                        {
-                            
-                            <FaHeart className='text-gray-300 text-2xl transition hover:transform hover:scale-[120%]'/>
-                        }
-                    </button>
-                </Tooltip>
+                    {
+                        isProductWishListed ? 
+                        <Tooltip title="Remove from wishlist">
+                            <button onClick={(event) => openRemoveModal(event)}>
+                                <FaHeart className={`text-2xl transition hover:transform hover:scale-[120%] text-red-500`}/>
+                            </button>
+                        </Tooltip>
+                        :
+                        <Tooltip title="Add to wishlist">
+                            <button onClick={(event) => handleAddWishlist(event)}>
+                                <FaHeart className={`text-2xl transition hover:transform hover:scale-[120%] text-gray-300`}/>
+                            </button>
+                        </Tooltip>
+                    }
             </div>
         <p className='text-sm text-gray-500 font-light'>{product.productDescription}</p>
         </div>
@@ -97,6 +171,24 @@ const UserProductCard = ({product}) => {
             <button className='bg-blue-500 py-1 rounded-md text-white w-1/2 hover:bg-blue-400'>Add to cart</button>
         </div>
       </div>
+      <Modal 
+        title="Are you sure?" 
+        open={isRemoveModalOpen} 
+        onCancel={() => setIsRemoveModalOpen(false)}
+        footer={[]}
+        
+      >
+        <p>Remove {product.productName} from wishlist? </p>
+        <div className='flex justify-end gap-4 py-5'>
+            <Button htmlType="button" onClick={() => setIsRemoveModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button color="danger" variant="solid" onClick={(event) => handleRemoveWishlist(event)}>
+              Remove
+            </Button>
+
+        </div>
+      </Modal>
     </Link>
   )
 }

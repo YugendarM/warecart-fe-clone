@@ -48,7 +48,7 @@ const UserProductsPage = () => {
                 if (error.response.status === 500) {
                   alert("An error occurred while fetching Products data");
                 } else {
-                  alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                  alert(`An error occurreddddddd: ${error.response.status} ${error.response.data.message}`);
                 }
               } else if (error.request) {
                 alert("No response from server. Please try again.");
@@ -76,14 +76,14 @@ const UserProductsPage = () => {
         catch (error) {
           if (error.response) {
             if (error.response.status === 500) {
-              alert("An error occurred while fetching Wishlist data");
+              console.error("An error occurred while fetching Wishlist data");
             } else {
-              alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+              console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
             }
           } else if (error.request) {
-            alert("No response from server. Please try again.");
+            console.error("No response from server. Please try again.");
           } else {
-            alert("An unexpected error occurred. Please try again.");
+            console.error("An unexpected error occurred. Please try again.");
           }
         }
       }
@@ -104,14 +104,14 @@ const UserProductsPage = () => {
         catch (error) {
           if (error.response) {
             if (error.response.status === 500) {
-              alert("An error occurred while fetching Cart data");
+              console.error("An error occurred while fetching Cart data");
             } else {
-              alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+              console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
             }
           } else if (error.request) {
-            alert("No response from server. Please try again.");
+            console.error("No response from server. Please try again.");
           } else {
-            alert("An unexpected error occurred. Please try again.");
+            console.error("An unexpected error occurred. Please try again.");
           }
         }
       }
@@ -214,7 +214,7 @@ const UserProductsPage = () => {
                     filteredProductData?.map((product, index) => (
                         <UserProductCard isProductWishListed={isProductWishListed(product._id)} isProductAddedInCart={isProductAddedInCart(product._id)} key={index} product={product}/>
                     ))
-                    : <div className='flex w-full h-[70vh] items-center justify-center '>
+                    : <div className='flex w-[70vw] h-[60vh] items-center justify-center '>
                         <p className='text-2xl font-semibold'>No Products found</p>
                       </div>
                 }

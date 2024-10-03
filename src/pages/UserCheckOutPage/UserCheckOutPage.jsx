@@ -238,7 +238,7 @@ const UserCheckOutPage = () => {
                                     <h3 className='text-gray-400 font-semibold'>ORDER SUMMARY</h3>
                                     {isOrderSummaryContinue && <MdDone className='text-blue-500 text-xl' />}
                                 </div>
-                                <div className='py-5 flex flex-col gap-4'>
+                                <div className='py-5 flex flex-col gap-10'>
                                     {/* {productsData[0].productDetails.quantity} */}
                                     {orderDetails && orderDetails.orderItems && orderDetails.orderItems.length > 0 ? (
                                         orderDetails.orderItems.map((productData, index) => (

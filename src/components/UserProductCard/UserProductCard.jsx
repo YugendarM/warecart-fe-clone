@@ -49,7 +49,11 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
 
     const handleAddToCart = async(event) => {
       event.preventDefault()
-      try{
+      if(!isLoggedIn){
+        navigate("/login")
+      }
+      else{
+        try{
           const response = await axios.put(
             `/user/addProductToCart/${product._id}`,
             {},
@@ -76,6 +80,8 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
             alert("An unexpected error occurred. Please try again.");
           }
         }
+      }
+      
     }
 
     const openRemoveModal = (event) => {
@@ -189,7 +195,7 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
         <div className='flex items-center justify-between'>
             <h1 className='text-xl text-gray-900 font-semibold'>{formatRupees(product.price)}/-</h1>
             {
-                true &&
+                product && product.rating > 0 &&
                     <p className={`flex items-center gap-1 text-white px-2 rounded-sm ${product.rating >= 4 ? "bg-green-600" : product.rating === 3 ? "bg-yellow-300" : "bg-red-500" }`}>
                     {product.rating}
                     <FaStar className={`text-white text-sm`}/>

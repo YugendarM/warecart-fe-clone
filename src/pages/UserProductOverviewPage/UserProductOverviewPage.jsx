@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { getSocket, initiateSocketConnection } from '../../utilities/socketService';
 import axios from 'axios';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Tooltip } from 'antd';
 import { FaHeart, FaMinus, FaPlus, FaStar } from 'react-icons/fa6';
 import Cookies from 'js-cookie';
+import { Button, Modal } from 'antd'
+import { TiShoppingCart } from 'react-icons/ti';
 
 const UserProductOverviewPage = () => {
     const [productData, setProductData] = useState({});
@@ -13,6 +15,9 @@ const UserProductOverviewPage = () => {
     const [isMinusAbled, setIsMinusAbled] = useState(false);
     const [isPlusAbled, setIsPlusAbled] = useState(true);
     const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [wishlistData, setWishlistData] = useState([])
+    const [cartItemData, setCartItemData] = useState([])
+    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false)
 
     const { productId } = useParams();
     const navigate = useNavigate() 
@@ -47,6 +52,114 @@ const UserProductOverviewPage = () => {
                 }
             })
         }
+    }
+
+    const handleAddToCart = async() => {
+        if(!isLoggedIn){
+          navigate("/login")
+        }
+        else{
+          try{
+            const response = await axios.put(
+              `/user/addProductToCart/${productData._id}`,
+              {},
+              {
+                withCredentials: true
+              }
+            )
+      
+            if(response.status === 200){
+              // console.log("added")
+            }
+            
+          }
+          catch (error) {
+            if (error.response) {
+              if (error.response.status === 500) {
+                alert(`An error occurred while adding to cart: ${error.response.status} ${error.response.data.message}`);
+              } else {
+                alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+              }
+            } else if (error.request) {
+              alert("No response from server. Please try again.");
+            } else {
+              alert("An unexpected error occurred. Please try again.");
+            }
+          }
+        }
+    }
+
+    const handleAddWishlist = async() => {
+        try{
+            const response = await axios.put(
+              `/user/addProductToWishlist/${productData._id}`,
+              {},
+              {
+                withCredentials: true
+              }
+            )
+      
+            if(response.status === 200){
+            //   console.log("added")
+            }
+            
+          }
+          catch (error) {
+            if (error.response) {
+              if (error.response.status === 500) {
+                alert("An error occurred while Adding Product to wishlist");
+              } else {
+                alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+              }
+            } else if (error.request) {
+              alert("No response from server. Please try again.");
+            } else {
+              alert("An unexpected error occurred. Please try again.");
+            }
+          }
+    }
+
+    const handleRemoveWishlist = async() => {
+        try{
+            const response = await axios.put(
+              `/user/removeProductFromWishlist/${productData._id}`,
+              {},
+              {
+                withCredentials: true
+              }
+            )
+      
+            if(response.status === 200){
+              setIsRemoveModalOpen(false)
+            }
+            
+          }
+          catch (error) {
+            if (error.response) {
+              if (error.response.status === 500) {
+                alert(`An error occurred while Removing Product from wishlist: ${error.response.status} ${error.response.data.message}`);
+              } else {
+                alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+              }
+            } else if (error.request) {
+              alert("No response from server. Please try again.");
+            } else {
+              alert("An unexpected error occurred. Please try again.");
+            }
+          }
+    }
+
+    const openRemoveModal = (event) => {
+        event.preventDefault()
+        setIsRemoveModalOpen(true)
+    }
+
+    const isProductWishListed = (productId) => {
+        return wishlistData?.some((list) => list._id === productId) || false
+    }
+
+    const isProductAddedInCart = (productId) => {
+        return cartItemData?.some((item) => item._id === productId) || false
     }
 
     useEffect(() => {
@@ -105,6 +218,66 @@ const UserProductOverviewPage = () => {
                 }
             }
         };
+
+        const getAllWishlistedProducts = async() => {
+            try{
+              const response = await axios.get(
+                "/user/wishlist",
+                {
+                  withCredentials: true
+                }
+              )
+        
+              if(response.status === 200){
+                setWishlistData(response.data.data)
+              }
+              
+            }
+            catch (error) {
+              if (error.response) {
+                if (error.response.status === 500) {
+                  console.error("An error occurred while fetching Wishlist data");
+                } else {
+                  console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                }
+              } else if (error.request) {
+                console.error("No response from server. Please try again.");
+              } else {
+                console.error("An unexpected error occurred. Please try again.");
+              }
+            }
+        }
+    
+        const getAllCartItems = async() => {
+            try{
+              const response = await axios.get(
+                "/user/cartItems",
+                {
+                  withCredentials: true
+                }
+              )
+              if(response.status === 200){
+                setCartItemData(response.data.data)
+              }
+              
+            }
+            catch (error) {
+              if (error.response) {
+                if (error.response.status === 500) {
+                  console.error("An error occurred while fetching Cart data");
+                } else {
+                  console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                }
+              } else if (error.request) {
+                console.error("No response from server. Please try again.");
+              } else {
+                console.error("An unexpected error occurred. Please try again.");
+              }
+            }
+        }
+    
+        getAllCartItems()
+        getAllWishlistedProducts()
         
         getOffersData();
         getProductData();
@@ -134,6 +307,14 @@ const UserProductOverviewPage = () => {
             setOffersData((prevState) => prevState.filter((offer) => offer._id !== deletedPricingRule._id));
         });
 
+        socket.on("wishlistUpdated", (updatedWishlist) => {
+            setWishlistData(updatedWishlist)
+        })
+
+        socket.on("cartUpdated", (updatedCart) => {
+            setCartItemData(updatedCart)
+        })
+
         return () => {
             socket.disconnect();
         };
@@ -159,11 +340,17 @@ const UserProductOverviewPage = () => {
                 <div className='w-[35%] bg-gray-0 flex flex-col gap-2 '>
                     <div className='h-[450px]'>
                         <img
-                            // src='https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg'
+                            src='https://img.freepik.com/premium-vector/beautiful-flat-style-shopping-cart-icon-vector-illustration_1287274-64477.jpg?w=740'
                             className='w-full h-full object-cover'
                         />
                     </div>
-                    <button className='bg-blue-500 py-3 rounded-lg text-white text-xl w-full hover:bg-blue-400'>Add to cart</button>
+                    {
+                        isProductAddedInCart(productData._id) ? 
+                        <Link to={"/cart"} className='flex items-center justify-center gap-3 text-center bg-blue-500 py-3 rounded-lg text-white text-xl w-full hover:bg-blue-400'><TiShoppingCart className='text-white text-2xl'/>Go to cart</Link>
+                        :
+                        <button onClick={handleAddToCart} className='flex items-center justify-center gap-3 bg-blue-500 py-3 rounded-lg text-white text-xl w-full hover:bg-blue-400'><TiShoppingCart className='text-white text-2xl'/>Add to cart</button>
+
+                    }
                 </div>
                 <div className='px-10 w-[65%] flex flex-col gap-2'>
                     <div className='h-[450px] py-5 flex flex-col gap-5'>
@@ -172,7 +359,7 @@ const UserProductOverviewPage = () => {
                                 <h1 className='text-4xl text-gray-800'>{productData.productName}</h1>
                                 <h3 className='text-xl text-gray-500'>{productData.productDescription}</h3>
                             </div>
-                            {true &&
+                            {productData && productData.rating > 0 &&
                                 <p className={`flex items-center gap-1 text-white px-4 py-1 text-xl rounded-md ${productData.rating >= 4 ? "bg-green-600" : productData.rating === 3 ? "bg-yellow-300" : "bg-red-500"}`}>
                                     {productData.rating}
                                     <FaStar className={`text-white text-xl`} />
@@ -217,12 +404,35 @@ const UserProductOverviewPage = () => {
                         </div>
                     </div>
                     <div className='flex justify-end gap-10'>
-                        <button className='border-2 border-blue-400 text-blue-400 py-1 rounded-lg px-8 text-xl'>Add to Wishlist</button>
+                        {
+                            isProductWishListed(productData._id) ? 
+                            <button onClick={openRemoveModal} className='border-2 border-blue-400 text-blue-400 py-1 rounded-lg px-8 text-xl'>Remove from Wishlist</button>
+                            :
+                            <button onClick={handleAddWishlist} className='border-2 border-blue-400 text-blue-400 py-1 rounded-lg px-8 text-xl'>Add to Wishlist</button>
+                        }
                         <button onClick={handleBuyNow} className='bg-green-500 py-2 rounded-lg px-8 text-white text-xl hover:bg-green-400'>Buy now</button>
                     </div>
                 </div>
             </div>
             }
+            <Modal 
+                title="Are you sure?" 
+                open={isRemoveModalOpen} 
+                onCancel={() => setIsRemoveModalOpen(false)}
+                footer={[]}
+                
+            >
+                <p>Remove {productData.productName} from wishlist? </p>
+                <div className='flex justify-end gap-4 py-5'>
+                    <Button htmlType="button" onClick={() => setIsRemoveModalOpen(false)}>
+                    Cancel
+                    </Button>
+                    <Button color="danger" variant="solid" onClick={(event) => handleRemoveWishlist(event)}>
+                    Remove
+                    </Button>
+
+                </div>
+            </Modal>
             
         </React.Fragment>
     );

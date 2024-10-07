@@ -6,6 +6,9 @@ import AdminProductsPage from '../AdminProductsPage/AdminProductsPage'
 import AdminDashboardPage from '../AdminDashboardPage/AdminDashboardPage'
 import WarehousePage from '../../WarehousePage/WarehousePage'
 import ProductPage from '../../ProductPage/ProductPage'
+import AdminOrdersPage from '../AdminOrdersPage/AdminOrdersPage'
+import AdminPricingRulesPage from '../AdminPricingRulesPage/AdminPricingRulesPage'
+import AdminOrderOverviewPage from '../AdminOrderOverviewPage/AdminOrderOverviewPage'
 
 const AdminPageComponent = () => {
   return (
@@ -20,6 +23,9 @@ const AdminPageComponent = () => {
             <Route path='/warehouse/:warehouseId' element={<WarehousePage/>}/>
             <Route path='/products' element={<AdminProductsPage/>}/>
             <Route path='/product/:productId' element={<ProductPage/>}/>
+            <Route path='/orders' element={<AdminOrdersPage/>}/>
+            <Route path='/orders/:orderId' element={<AdminOrderOverviewPage/>}/>
+            <Route path='/pricing_rules' element={<AdminPricingRulesPage/>}/>
           </Routes>
         </div>
       </div>

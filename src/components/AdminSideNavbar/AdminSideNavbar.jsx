@@ -1,10 +1,11 @@
 import React from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { TbLayoutDashboard, TbLayoutDashboardFilled } from "react-icons/tb";
-import { BsPeople, BsPeopleFill } from "react-icons/bs";
+import { BsCartCheck, BsCartCheckFill, BsPeople, BsPeopleFill } from "react-icons/bs";
 import { FaCreditCard, FaHandshake, FaRegCreditCard, FaRegHandshake } from "react-icons/fa6";
 import { MdOutlineWarehouse, MdWarehouse } from 'react-icons/md';
 import { RiShoppingBag4Fill, RiShoppingBag4Line } from 'react-icons/ri';
+import { IoPricetags, IoPricetagsOutline } from 'react-icons/io5';
 
 
 const AdminSideNavbar = () => {
@@ -31,6 +32,18 @@ const AdminSideNavbar = () => {
             pathname.includes("product") ? <RiShoppingBag4Fill className='text-2xl'/> : < RiShoppingBag4Line className='text-2xl'/>
           }
             Products
+          </Link>
+
+          <Link to={"/admin/orders"} className={`text-white text-md flex items-center py-4 px-8  rounded-lg gap-5 ${pathname.includes("orders") ? "bg-primaryBlue" : "hover:bg-[#636363]"}`}>{
+            pathname.includes("orders") ? <BsCartCheckFill  className='text-2xl'/> : < BsCartCheck  className='text-2xl'/>
+          }
+            Orders
+          </Link>
+
+          <Link to={"/admin/pricing_rules"} className={`text-white text-md flex items-center py-4 px-8  rounded-lg gap-5 ${pathname.includes("pricing_rules") ? "bg-primaryBlue" : "hover:bg-[#636363]"}`}>{
+            pathname.includes("pricing_rules") ? <IoPricetags  className='text-2xl'/> : < IoPricetagsOutline  className='text-2xl'/>
+          }
+            Pricing Rules
           </Link>
 
         </nav>

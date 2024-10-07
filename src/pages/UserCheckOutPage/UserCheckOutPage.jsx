@@ -4,6 +4,8 @@ import { Button, Form, Input, InputNumber, Radio } from 'antd';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import OrderSummaryProductCardComponent from '../../components/OrderSummaryProductCardComponent/OrderSummaryProductCardComponent';
+import PaypalPayment from '../../components/PaypalPayment/PaypalPayment';
+import StripePayment from '../../components/StripePayment/StripePayment';
 
 const UserCheckOutPage = () => {
     const [form] = Form.useForm();
@@ -290,7 +292,7 @@ const UserCheckOutPage = () => {
                                                 <Radio.Group onChange={handleCardChange} value={selectedPayment.sub}>
                                                     <div className='flex flex-col gap-5'>
                                                         <Radio value="stripe">Stripe</Radio>
-                                                        <Radio value="razorpay">RazorPay</Radio>
+                                                        <Radio value="paypal">Paypal</Radio>
                                                     </div>
                                                 </Radio.Group>
                                             </div>
@@ -300,12 +302,20 @@ const UserCheckOutPage = () => {
                                 </div>
                             </Radio.Group>
                             <div className='flex justify-end'>
-                                <button 
-                                    onClick={handleOrderContinue} 
-                                    className={`rounded-sm px-6 py-2 transition ${!selectedPayment?.sub || !isOrderSummaryContinue ? " bg-gray-100 text-gray-300 cursor-not-allowed" : "bg-yellow-500 text-white hover:bg-yellow-300"}`}
-                                >
-                                        {selectedPayment && selectedPayment.sub === "cash" ? "Place Order" : "Continue for Payment"}
-                                </button>
+                                {
+                                    selectedPayment && selectedPayment.sub && selectedPayment.sub === "paypal" ?
+                                    <PaypalPayment cartAmount={orderDetails && orderDetails.priceDetails && orderDetails.priceDetails.totalPayable}/>
+                                    :
+                                    selectedPayment && selectedPayment.sub && selectedPayment.sub === "stripe" ?
+                                    <StripePayment userData={userData} cartAmount={orderDetails && orderDetails.priceDetails && orderDetails.priceDetails.totalPayable}/>
+                                    :
+                                    <button 
+                                        onClick={handleOrderContinue} 
+                                        className={`rounded-sm px-6 py-2 transition ${!selectedPayment?.sub || !isOrderSummaryContinue ? " bg-gray-100 text-gray-300 cursor-not-allowed" : "bg-yellow-500 text-white hover:bg-yellow-300"}`}
+                                    >
+                                            {selectedPayment && selectedPayment.sub === "cash" ? "Place Order" : "Continue for Payment"}
+                                    </button>
+                                }
                             </div>
                         </div>
                     </div>

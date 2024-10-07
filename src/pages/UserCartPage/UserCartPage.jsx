@@ -138,9 +138,12 @@ const UserCartPage = () => {
             )}
           </div>
         </div>
-        <div className="flex justify-end">
-          <button onClick={handleCheckout} className={`rounded-sm px-6 py-2 transition bg-yellow-500 text-white hover:bg-yellow-300`}>CHECKOUT</button>
-        </div>
+        {
+          orderDetails?.orderItems?.length > 0 &&
+          <div className="flex justify-end">
+            <button onClick={handleCheckout} className={`rounded-sm px-6 py-2 transition bg-yellow-500 text-white hover:bg-yellow-300`}>CHECKOUT</button>
+          </div>
+        }
       </div>
 
       <div className="shadow-custom-medium rounded-sm flex flex-col w-[30%] h-full min-h-60 sticky top-10">

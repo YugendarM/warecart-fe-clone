@@ -276,8 +276,10 @@ const UserProductOverviewPage = () => {
             }
         }
     
+       if(isLoggedIn){
         getAllCartItems()
         getAllWishlistedProducts()
+       }
         
         getOffersData();
         getProductData();
@@ -331,7 +333,7 @@ const UserProductOverviewPage = () => {
         if (quantity >= 30) {
             setIsPlusAbled(false);
         }
-    }, [quantity]);
+    }, [quantity]); 
 
     return (
         <React.Fragment>

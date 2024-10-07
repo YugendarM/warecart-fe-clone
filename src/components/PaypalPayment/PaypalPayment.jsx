@@ -1,10 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-function PaypalPayment({cartAmount}) {
+function PaypalPayment({cartAmount, orderDetails}) {
+
 
   const navigate = useNavigate()
+
+  const processOrder = async(transactionId) => {
+    const orderData = {
+      products: orderDetails.orderItems.map((item) => {
+        return {
+          product: item.productDetails._id,
+          quantity: item.quantity,
+          price: item.productDetails.price
+        }
+      }),
+        platformFee: orderDetails.priceDetails.platformFee,
+        totalAmount: orderDetails.priceDetails.totalPrice,
+        discountedAmount: orderDetails.priceDetails.totalDiscount,
+        payableAmount : orderDetails.priceDetails.totalPayable,
+        paymentInfo: {
+          paymentMethod: "paypal",
+          paymentStatus: "completed",
+          transactionId: transactionId
+        }
+    }
+
+    try {
+      const response = await axios.post(`/order/add`, 
+        orderData,
+        { withCredentials: true });
+
+      if (response.status === 201) {
+          alert("Order placed Successfully");
+      }
+    } catch (error) {
+        if (error.response) {
+            alert(`Error while placing the order: ${error.response.status} - ${error.response.data.message}`);
+        } else {
+            alert("An unexpected error occurred while placing the order. Please try again.");
+        }
+    }
+
+
+    // alert("Payment Sucess", "Redirecting to orders")
+    // navigate("/orders")
+
+}
 
   return (
       <PayPalButtons
@@ -16,7 +60,7 @@ function PaypalPayment({cartAmount}) {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              cart: cartAmount,
+              cart: orderDetails.priceDetails && orderDetails.priceDetails.totalPayable,
             }),
           })
             .then((response) => response.json())
@@ -54,16 +98,9 @@ function PaypalPayment({cartAmount}) {
             } 
             else {
               const transaction = orderData.purchase_units[0].payments.captures[0];
-              console.log(
-                "Capture result",
-                orderData,
-                JSON.stringify(orderData, null, 2)
-              );
-              console.log("transaction")
-              console.log(transaction)
               if(transaction.status === "COMPLETED"){
-                alert("Payment Sucess", "Redirecting to orders")
-                navigate("/orders")
+                processOrder(transaction.id)
+                
               }
             }
           } catch (error) {

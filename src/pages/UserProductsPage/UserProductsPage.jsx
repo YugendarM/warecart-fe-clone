@@ -3,6 +3,8 @@ import React, { useEffect, useState, useSyncExternalStore } from 'react'
 import { IoSearch } from 'react-icons/io5'
 import UserProductCard from '../../components/UserProductCard/UserProductCard'
 import { getSocket, initiateSocketConnection } from '../../utilities/socketService'
+import Cookies from 'js-cookie';
+import { useLocation } from 'react-router-dom'
 
 const UserProductsPage = () => {
 
@@ -12,6 +14,9 @@ const UserProductsPage = () => {
     const [filteredProductData, setFilteredProductData] = useState([])
     const [wishlistData, setWishlistData] = useState([])
     const [cartItemData, setCartItemData] = useState([])
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const {pathname} = useLocation()
 
     const handleClear = () => {
         setProductSearch("")
@@ -116,8 +121,10 @@ const UserProductsPage = () => {
         }
       }
 
-        getAllCartItems()
-        getAllWishlistedProducts()
+        if(isLoggedIn){
+          getAllCartItems()
+          getAllWishlistedProducts()
+        }
         getProductsData()
     }, [])
 
@@ -174,6 +181,15 @@ const UserProductsPage = () => {
         }
         
     }, [])
+
+    useEffect(() => {
+      const sessionToken = Cookies.get('SessionID');
+      if (sessionToken) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    }, [pathname]);  
 
   return (
     <div className='px-5 md:px:20 lg:px-56 py-10'>

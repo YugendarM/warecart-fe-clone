@@ -139,6 +139,47 @@ const UserCheckOutPage = () => {
         setSelectedPayment({ method: 'card', sub: value }); // Set Card selection
     };
 
+    const processOrder = async(paymentMethod) => {
+        const orderData = {
+          products: orderDetails.orderItems.map((item) => {
+            return {
+              product: item.productDetails._id,
+              quantity: item.quantity,
+              price: item.productDetails.price
+            }
+          }),
+            platformFee: orderDetails.priceDetails.platformFee,
+            totalAmount: orderDetails.priceDetails.totalPrice,
+            discountedAmount: orderDetails.priceDetails.totalDiscount,
+            payableAmount : orderDetails.priceDetails.totalPayable,
+            paymentInfo: {
+              paymentMethod: paymentMethod,
+              paymentStatus: "pending",
+            }
+        }
+    
+        try {
+          const response = await axios.post(`/order/add`, 
+            orderData,
+            { withCredentials: true });
+    
+          if (response.status === 201) {
+              alert("Order placed Successfully");
+              navigate("/orders")
+          }
+        } catch (error) {
+            if (error.response) {
+                alert(`Error while placing the order: ${error.response.status} - ${error.response.data.message}`);
+            } else {
+                alert("An unexpected error occurred while placing the order. Please try again.");
+            }
+        }
+    }
+
+    const proceedUPIPayment = async() => {
+        processOrder("gpay")
+    }
+
     useEffect(() => {
         if (location.state && location.state.products) {
             setProductsData(location.state.products);
@@ -219,7 +260,7 @@ const UserCheckOutPage = () => {
                             </div>
                         ) : (
                             <div>
-                                {userData && (
+                                {userData && userData.addressFirstLine && (
                                     <>
                                         <p className='capitalize'><span className='font-semibold'>{userData.firstName}</span>, {userData.addressFirstLine}, {userData.addressSecondLine}</p>
                                         <p>{userData.city}, {userData.state}</p>
@@ -235,25 +276,30 @@ const UserCheckOutPage = () => {
                     <div className='w-full flex gap-3'>
                         <p className='text-blue-500 bg-gray-200 p-1 text-xs font-semibold h-6 text-center align-middle w-6 rounded-sm'>2</p>
                         <div className='flex flex-col gap-4 w-full'>
-                            <div className='flex flex-col '>
                                 <div className='flex items-center gap-4'>
                                     <h3 className='text-gray-400 font-semibold'>ORDER SUMMARY</h3>
                                     {isOrderSummaryContinue && <MdDone className='text-blue-500 text-xl' />}
                                 </div>
-                                <div className='py-5 flex flex-col gap-10'>
-                                    {/* {productsData[0].productDetails.quantity} */}
-                                    {orderDetails && orderDetails.orderItems && orderDetails.orderItems.length > 0 ? (
-                                        orderDetails.orderItems.map((productData, index) => (
-                                            <OrderSummaryProductCardComponent onQuantityChange={handleQuantityChange} isOrderSummaryContinue={isOrderSummaryContinue} key={index} productData={productData}  />
-                                        ))
-                                    ) : (
-                                        <h1>No products available</h1> // Optional: a fallback when no products are present
-                                    )}
+                            {
+                                !isAddressFormOpen &&
+                                <div>
+                                    <div className='flex flex-col '>
+                                        <div className='py-5 flex flex-col gap-10'>
+                                            {/* {productsData[0].productDetails.quantity} */}
+                                            {orderDetails && orderDetails.orderItems && orderDetails.orderItems.length > 0 ? (
+                                                orderDetails.orderItems.map((productData, index) => (
+                                                    <OrderSummaryProductCardComponent onQuantityChange={handleQuantityChange} isOrderSummaryContinue={isOrderSummaryContinue} key={index} productData={productData}  />
+                                                ))
+                                            ) : (
+                                                <h1>No products available</h1> // Optional: a fallback when no products are present
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className='flex justify-end'>
+                                        <button onClick={handleOrderContinue} className={`rounded-sm px-6 py-2 transition ${isOrderSummaryContinue ? "bg-gray-100 text-gray-300 cursor-not-allowed" : "bg-yellow-500 text-white hover:bg-yellow-300"}`}>Continue</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className='flex justify-end'>
-                                <button onClick={handleOrderContinue} className={`rounded-sm px-6 py-2 transition ${isOrderSummaryContinue ? "bg-gray-100 text-gray-300 cursor-not-allowed" : "bg-yellow-500 text-white hover:bg-yellow-300"}`}>Continue</button>
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -266,57 +312,61 @@ const UserCheckOutPage = () => {
                                 <h3 className='text-gray-400 font-semibold'>PAYMENT METHOD</h3>
                                 {selectedPayment && selectedPayment.sub && <MdDone className='text-blue-500 text-xl' />}
                             </div>
-                            <Radio.Group onChange={handlePaymentMethodChange} value={selectedPayment?.method}>
+                            {
+                                isOrderSummaryContinue &&
                                 <div className='flex flex-col gap-5'>
-                                    <Radio className='inline-block border-b border-b-gray-300' value="upi">
-                                        UPI 
-                                        <p className='text-gray-400 pt-3'>Make hasslefree payments with your UPI</p>
-                                        {selectedPayment?.method === 'upi' && (
-                                            <div className='ml-20 '>
-                                                <p className='font-semibold text-md py-3'>Choose an option</p>
-                                                <Radio.Group onChange={handleUPIChange} value={selectedPayment.sub}>
-                                                    <div className='flex flex-col gap-5'>
-                                                        <Radio value="gpayyyyyyy">GPay</Radio>
-                                                        <Radio value="phonepay">Phone Pay</Radio>
+                                    <Radio.Group onChange={handlePaymentMethodChange} value={selectedPayment?.method}>
+                                        <div className='flex flex-col gap-5'>
+                                            <Radio className='inline-block border-b border-b-gray-300' value="upi">
+                                                UPI 
+                                                <p className='text-gray-400 pt-3'>Make hasslefree payments with your UPI</p>
+                                                {selectedPayment?.method === 'upi' && (
+                                                    <div className='ml-20 '>
+                                                        <p className='font-semibold text-md py-3'>Choose an option</p>
+                                                        <Radio.Group onChange={handleUPIChange} value={selectedPayment.sub}>
+                                                            <div className='flex flex-col gap-5'>
+                                                                <Radio value="gpayyyyyyy">GPay</Radio>
+                                                                <Radio value="phonepay">Phone Pay</Radio>
+                                                            </div>
+                                                        </Radio.Group>
                                                     </div>
-                                                </Radio.Group>
-                                            </div>
-                                        )}
-                                    </Radio>
-                                    <Radio className='inline-block  border-b border-b-gray-300' value="card">
-                                        Credit / Debit / ATM Card
-                                        <p className='text-gray-400 pt-3'>Make secure payments with our payment gateway providers</p>
-                                        {selectedPayment?.method === 'card' && (
-                                            <div className='ml-20'>
-                                                <p className='font-semibold text-md py-3'>Choose an option</p>
-                                                <Radio.Group onChange={handleCardChange} value={selectedPayment.sub}>
-                                                    <div className='flex flex-col gap-5'>
-                                                        <Radio value="stripe">Stripe</Radio>
-                                                        <Radio value="paypal">Paypal</Radio>
+                                                )}
+                                            </Radio>
+                                            <Radio className='inline-block  border-b border-b-gray-300' value="card">
+                                                Credit / Debit / ATM Card
+                                                <p className='text-gray-400 pt-3'>Make secure payments with our payment gateway providers</p>
+                                                {selectedPayment?.method === 'card' && (
+                                                    <div className='ml-20'>
+                                                        <p className='font-semibold text-md py-3'>Choose an option</p>
+                                                        <Radio.Group onChange={handleCardChange} value={selectedPayment.sub}>
+                                                            <div className='flex flex-col gap-5'>
+                                                                <Radio value="stripe">Stripe</Radio>
+                                                                <Radio value="paypal">Paypal</Radio>
+                                                            </div>
+                                                        </Radio.Group>
                                                     </div>
-                                                </Radio.Group>
-                                            </div>
-                                        )}
-                                    </Radio>
-                                    <Radio className='inline-block  border-b border-b-gray-300 pb-5' value="cash">Cash On Delivery</Radio>
+                                                )}
+                                            </Radio>
+                                            <Radio className='inline-block  border-b border-b-gray-300 pb-5' value="cash">Cash On Delivery</Radio>
+                                        </div>
+                                    </Radio.Group>
+                                    <div className='flex justify-end'>
+                                        {
+                                            selectedPayment && selectedPayment.sub && selectedPayment.sub === "paypal" ?
+                                            <PaypalPayment cartAmount={orderDetails && orderDetails.priceDetails && orderDetails.priceDetails.totalPayable} orderDetails={orderDetails}/>
+                                            :
+                                            selectedPayment && selectedPayment.sub && selectedPayment.sub === "stripe" ?
+                                            <StripePayment userData={userData} cartAmount={orderDetails && orderDetails.priceDetails && orderDetails.priceDetails.totalPayable}/>
+                                            :
+                                            selectedPayment && selectedPayment.sub && selectedPayment.sub === "cash" ?
+                                            <button onClick={() => processOrder("cod")} className={`rounded-sm px-6 py-2 transition ${!selectedPayment?.sub || !isOrderSummaryContinue ? " bg-gray-100 text-gray-300 cursor-not-allowed" : "bg-yellow-500 text-white hover:bg-yellow-300"}`} >Place Order</button>
+                                            :
+
+                                            <button onClick={proceedUPIPayment} className={`rounded-sm px-6 py-2 transition ${!selectedPayment?.sub || !isOrderSummaryContinue ? " bg-gray-100 text-gray-300 cursor-not-allowed" : "bg-yellow-500 text-white hover:bg-yellow-300"}`}>Proceed Payment</button>
+                                        }
+                                    </div>
                                 </div>
-                            </Radio.Group>
-                            <div className='flex justify-end'>
-                                {
-                                    selectedPayment && selectedPayment.sub && selectedPayment.sub === "paypal" ?
-                                    <PaypalPayment cartAmount={orderDetails && orderDetails.priceDetails && orderDetails.priceDetails.totalPayable}/>
-                                    :
-                                    selectedPayment && selectedPayment.sub && selectedPayment.sub === "stripe" ?
-                                    <StripePayment userData={userData} cartAmount={orderDetails && orderDetails.priceDetails && orderDetails.priceDetails.totalPayable}/>
-                                    :
-                                    <button 
-                                        onClick={handleOrderContinue} 
-                                        className={`rounded-sm px-6 py-2 transition ${!selectedPayment?.sub || !isOrderSummaryContinue ? " bg-gray-100 text-gray-300 cursor-not-allowed" : "bg-yellow-500 text-white hover:bg-yellow-300"}`}
-                                    >
-                                            {selectedPayment && selectedPayment.sub === "cash" ? "Place Order" : "Continue for Payment"}
-                                    </button>
-                                }
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>

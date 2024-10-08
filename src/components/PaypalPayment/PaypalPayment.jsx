@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from "react" 
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js" 
+import { useNavigate } from "react-router-dom" 
+import axios from "axios" 
 
 function PaypalPayment({cartAmount, orderDetails}) {
 
@@ -31,22 +31,37 @@ function PaypalPayment({cartAmount, orderDetails}) {
     try {
       const response = await axios.post(`/order/add`, 
         orderData,
-        { withCredentials: true });
+        { withCredentials: true }) 
 
-      if (response.status === 201) {
-          alert("Order placed Successfully");
-      }
+        if (response.status === 201) {
+          try {
+            // Using Promise.all to handle requests in parallel
+            await Promise.all(orderDetails.orderItems.map(item =>
+              axios.post(
+                '/userActivity/track',
+                {
+                  action: 'purchase',
+                  productId: item.productDetails._id, // Track each product
+                  additionalInfo: { quantity: item.quantity },
+                },
+                {
+                  withCredentials: true,
+                }
+              )
+            )) 
+            alert('Order placed Successfully') 
+          } catch (error) {
+            console.error('Error tracking user activity:', error) 
+            alert('Order placed, but tracking failed.') 
+          }
+        }
     } catch (error) {
         if (error.response) {
-            alert(`Error while placing the order: ${error.response.status} - ${error.response.data.message}`);
+            alert(`Error while placing the order: ${error.response.status} - ${error.response.data.message}`) 
         } else {
-            alert("An unexpected error occurred while placing the order. Please try again.");
+            alert("An unexpected error occurred while placing the order. Please try again.") 
         }
     }
-
-
-    // alert("Payment Sucess", "Redirecting to orders")
-    // navigate("/orders")
 
 }
 
@@ -66,13 +81,13 @@ function PaypalPayment({cartAmount, orderDetails}) {
             .then((response) => response.json())
             .then((data) => {
               if (data && data.id) {
-                return data.id;
+                return data.id 
               }
-              throw new Error("Failed to create order");
+              throw new Error("Failed to create order") 
             })
             .catch((error) => {
-              console.error("Error creating order:", error);
-            });
+              console.error("Error creating order:", error) 
+            }) 
         }}
         onApprove={async (data, actions) => {
           try {
@@ -84,32 +99,32 @@ function PaypalPayment({cartAmount, orderDetails}) {
                   "Content-Type": "application/json",
                 },
               }
-            );
+            ) 
         
-            const orderData = await response.json();
+            const orderData = await response.json() 
         
-            const errorDetail = orderData?.details?.[0];
+            const errorDetail = orderData?.details?.[0] 
         
             if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
-              return actions.restart();
+              return actions.restart() 
             } 
             else if (errorDetail) {
-              throw new Error(`${errorDetail.description} (${orderData.debug_id})`);
+              throw new Error(`${errorDetail.description} (${orderData.debug_id})`) 
             } 
             else {
-              const transaction = orderData.purchase_units[0].payments.captures[0];
+              const transaction = orderData.purchase_units[0].payments.captures[0] 
               if(transaction.status === "COMPLETED"){
                 processOrder(transaction.id)
                 
               }
             }
           } catch (error) {
-            console.error(error);
+            console.error(error) 
           }
         }}
         
       />
-  );
+  ) 
 }
 
-export default PaypalPayment;
+export default PaypalPayment 

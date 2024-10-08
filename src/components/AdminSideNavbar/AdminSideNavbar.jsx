@@ -13,7 +13,7 @@ const AdminSideNavbar = () => {
   const {pathname} = useLocation()
 
   return (
-    <div className='w-[350px] md:flex justify-center h-[88vh]'>
+    <div className='w-[350px] md:flex justify-center min-h-[90vh]'>
       <div className='w-[80%] rounded-md h-full bg-gradient-to-b from-[#414141] to-[#191919]'>
         <nav className='px-5 flex flex-col gap-4 py-10'>
           <Link to={"/admin/dashboard"} className={`text-white text-md flex items-center py-4 px-8 rounded-lg gap-5 transition ${pathname === "/admin/dashboard" ? "bg-primaryBlue" : "hover:bg-[#636363]"}`}>{

@@ -126,7 +126,7 @@ const UserProductsPage = () => {
           getAllWishlistedProducts()
         }
         getProductsData()
-    }, [])
+    }, [isLoggedIn])
 
     useEffect(() => {
         const searchQuery = productSearch.trim().toLowerCase();

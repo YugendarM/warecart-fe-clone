@@ -1,7 +1,7 @@
 import { Tooltip } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { FaHeart, FaStar } from 'react-icons/fa6'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, redirect, useLocation, useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { Button, Modal } from 'antd'
@@ -16,7 +16,8 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
     const navigate = useNavigate()
 
     const handleAddWishlist = async(event) => {
-        event.preventDefault()
+      event.preventDefault()
+        if(isLoggedIn){
         try{
             const response = await axios.put(
               `/user/addProductToWishlist/${product._id}`,
@@ -27,7 +28,16 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
             )
       
             if(response.status === 200){
-            //   console.log("added")
+              await axios.post(
+                '/userActivity/track', 
+                {
+                  action: 'wishlist',
+                  productId: product._id,
+                },
+                {
+                  withCredentials: true
+                }
+              );
             }
             
           }
@@ -44,13 +54,26 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
               alert("An unexpected error occurred. Please try again.");
             }
           }
+        }
+
+        else{
+          navigate("/login", {
+            state: {
+              redirect: "/products"
+            }
+          })
+        }
 
     }
 
     const handleAddToCart = async(event) => {
       event.preventDefault()
       if(!isLoggedIn){
-        navigate("/login")
+        navigate("/login", {
+          state: {
+            redirect: "/products"
+          }
+        })
       }
       else{
         try{
@@ -63,7 +86,17 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
           )
     
           if(response.status === 200){
-            // console.log("added")
+            await axios.post(
+              '/userActivity/track', 
+              {
+                action: 'add_to_cart',
+                productId: product._id,
+                additionalInfo: { quantity: 1 }
+              },
+              {
+                withCredentials: true
+              }
+            );
           }
           
         }
@@ -102,6 +135,16 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
       
             if(response.status === 200){
               setIsRemoveModalOpen(false)
+              await axios.post(
+                '/userActivity/track', 
+                {
+                  action: 'remove_from_wishlist',
+                  productId : product._id
+                },
+                {
+                  withCredentials: true
+                }
+              )
             }
             
           }

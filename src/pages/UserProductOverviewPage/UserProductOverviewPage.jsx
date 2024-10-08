@@ -69,7 +69,17 @@ const UserProductOverviewPage = () => {
             )
       
             if(response.status === 200){
-              // console.log("added")
+              await axios.post(
+                '/userActivity/track', 
+                {
+                  action: 'add_to_cart',
+                  productId,
+                  additionalInfo: { quantity: 1 }
+                },
+                {
+                  withCredentials: true
+                }
+              );
             }
             
           }
@@ -100,7 +110,16 @@ const UserProductOverviewPage = () => {
             )
       
             if(response.status === 200){
-            //   console.log("added")
+              await axios.post(
+                '/userActivity/track', 
+                {
+                  action: 'wishlist',
+                  productId,
+                },
+                {
+                  withCredentials: true
+                }
+              );
             }
             
           }
@@ -334,6 +353,31 @@ const UserProductOverviewPage = () => {
             setIsPlusAbled(false);
         }
     }, [quantity]); 
+
+    useEffect(() => {
+      const trackPageView = async () => {
+        try {
+          console.log("tracking");
+          await axios.post(
+            '/userActivity/track', 
+            {
+              action: 'page_view',
+              productId,
+              additionalInfo: { referrer: document.referrer }
+            },
+            {
+              withCredentials: true
+            }
+          );
+          console.log("Tracking successful");
+        } catch (error) {
+          console.error("Error tracking page view:", error.message);
+        }
+      };
+    
+      trackPageView();
+    }, [productData]);
+    
 
     return (
         <React.Fragment>

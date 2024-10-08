@@ -41,7 +41,16 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
           )
     
           if(response.status === 200){
-            // console.log("removed")
+            await axios.post(
+                '/userActivity/track', 
+                {
+                    action: 'remove_from_cart',
+                    productId : productData._id
+                },
+                {
+                    withCredentials: true
+                }
+            )
           }
           
         }

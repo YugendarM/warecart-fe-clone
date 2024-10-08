@@ -40,12 +40,15 @@ const LoginPage = () => {
 
             if(response.status === 200){
                 alert("User logged In")
-                if(location.state){
+                if(location.state && location.state.products){
                   navigate("/checkout", {
                     state: {
                       products: location.state.products
                     }
                   })
+                }
+                else if(location.state && location.state.redirect){
+                  navigate(`${location.state.redirect}`)
                 }
                 else{
                   navigate("/")

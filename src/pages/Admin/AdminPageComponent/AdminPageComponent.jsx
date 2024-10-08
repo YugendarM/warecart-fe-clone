@@ -12,7 +12,7 @@ import AdminOrderOverviewPage from '../AdminOrderOverviewPage/AdminOrderOverview
 
 const AdminPageComponent = () => {
   return (
-    <div className='flex'>
+    <div className='flex overflow-hidden'>
       <AdminSideNavbar/>
       <div className='w-full md:w-3/4 flex'>
         <div className='w-full md:mt-10 '>

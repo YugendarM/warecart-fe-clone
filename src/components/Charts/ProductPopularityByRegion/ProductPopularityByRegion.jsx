@@ -48,9 +48,7 @@ const ProductPopularityByRegion = () => {
           options={{
             responsive: true,
             plugins: {
-              legend: {
-                position: 'top',
-              },
+              
               
             },
           }}

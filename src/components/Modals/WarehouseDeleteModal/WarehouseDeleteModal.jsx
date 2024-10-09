@@ -2,6 +2,7 @@ import { Button, Modal } from 'antd'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const WarehouseDeleteModal = ({warehouse, isDeleteModalOpen, handleDeleteCancel}) => {
 
@@ -18,7 +19,7 @@ const WarehouseDeleteModal = ({warehouse, isDeleteModalOpen, handleDeleteCancel}
           )
     
           if(response.status === 200){
-            alert("Warehouse deleted successfully")
+            toast.success("Warehouse deleted successfully")
             handleDeleteCancel()
             navigate("/admin/warehouse")
           }
@@ -27,16 +28,16 @@ const WarehouseDeleteModal = ({warehouse, isDeleteModalOpen, handleDeleteCancel}
         catch (error) {
           if (error.response) {
             if (error.response.status === 404) {
-              alert("Warehouse does not exists");
+              toast.error("Warehouse does not exists");
             } else if (error.response.status === 500) {
-              alert("An error occurred while deleting the warehouse");
+              toast.error("An error occurred while deleting the warehouse");
             } else {
-              alert(`An error occurred: ${error.response.status}`);
+              toast.error(`An error occurred: ${error.response.status}`);
             }
           } else if (error.request) {
-            alert("No response from server. Please try again.");
+            toast.error("No response from server. Please try again.");
           } else {
-            alert("An unexpected error occurred. Please try again.");
+            toast.error("An unexpected error occurred. Please try again.");
           }
         }
       }

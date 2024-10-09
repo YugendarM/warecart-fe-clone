@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js" 
 import { useNavigate } from "react-router-dom" 
 import axios from "axios" 
+import { toast } from "react-toastify"
 
 function PaypalPayment({cartAmount, orderDetails}) {
 
@@ -49,17 +50,17 @@ function PaypalPayment({cartAmount, orderDetails}) {
                 }
               )
             )) 
-            alert('Order placed Successfully') 
+            toast.success('Order placed Successfully') 
           } catch (error) {
             console.error('Error tracking user activity:', error) 
-            alert('Order placed, but tracking failed.') 
+            toast.warn('Order placed, but tracking failed.') 
           }
         }
     } catch (error) {
         if (error.response) {
-            alert(`Error while placing the order: ${error.response.status} - ${error.response.data.message}`) 
+          toast.error(`Error while placing the order: ${error.response.status} - ${error.response.data.message}`) 
         } else {
-            alert("An unexpected error occurred while placing the order. Please try again.") 
+          toast.error("An unexpected error occurred while placing the order. Please try again.") 
         }
     }
 

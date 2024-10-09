@@ -13,6 +13,7 @@ import MonthwishPurchasedBarChart from '../../../components/Charts/MonthwishPurc
 import MonthwisePurchaseLineChart from '../../../components/Charts/MonthwisePurchaseLineChart/MonthwisePurchaseLineChart' 
 import TopPerformingProductsBarChart from '../../../components/Charts/TopPerformingProductsBarChart/TopPerformingProductsBarChart' 
 import ProductPopularityByRegion from '../../../components/Charts/ProductPopularityByRegion/ProductPopularityByRegion' 
+import { toast } from 'react-toastify'
 
 const AdminDashboardPage = () => {
 
@@ -43,14 +44,14 @@ const AdminDashboardPage = () => {
     catch (error) {
       if (error.response) {
         if (error.response.status === 500) {
-          alert("An error occurred while fetching average product views") 
+          toast.error("An error occurred while fetching average product views") 
         } else {
-          alert(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
+          toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
         }
       } else if (error.request) {
-        alert("No response from server. Please try again.") 
+        toast.error("No response from server. Please try again.") 
       } else {
-        alert("An unexpected error occurred. Please try again.") 
+        toast.error("An unexpected error occurred. Please try again.") 
       }
     }
   }
@@ -71,14 +72,14 @@ const AdminDashboardPage = () => {
     catch (error) {
       if (error.response) {
         if (error.response.status === 500) {
-          alert("An error occurred while fetching best selling product") 
+          toast.error("An error occurred while fetching best selling product") 
         } else {
-          alert(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
+          toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
         }
       } else if (error.request) {
-        alert("No response from server. Please try again.") 
+        toast.error("No response from server. Please try again.") 
       } else {
-        alert("An unexpected error occurred. Please try again.") 
+        toast.error("An unexpected error occurred. Please try again.") 
       }
     }
   }
@@ -99,14 +100,14 @@ const AdminDashboardPage = () => {
     catch (error) {
       if (error.response) {
         if (error.response.status === 500) {
-          alert("An error occurred while fetching most liked product") 
+          toast.error("An error occurred while fetching most liked product") 
         } else {
-          alert(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
+          toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
         }
       } else if (error.request) {
-        alert("No response from server. Please try again.") 
+        toast.error("No response from server. Please try again.") 
       } else {
-        alert("An unexpected error occurred. Please try again.") 
+        toast.error("An unexpected error occurred. Please try again.") 
       }
     }
   }
@@ -127,14 +128,14 @@ const AdminDashboardPage = () => {
     catch (error) {
       if (error.response) {
         if (error.response.status === 500) {
-          alert("An error occurred while fetching product and user count") 
+          toast.error("An error occurred while fetching product and user count") 
         } else {
-          alert(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
+          toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
         }
       } else if (error.request) {
-        alert("No response from server. Please try again.") 
+        toast.error("No response from server. Please try again.") 
       } else {
-        alert("An unexpected error occurred. Please try again.") 
+        toast.error("An unexpected error occurred. Please try again.") 
       }
     }
   }

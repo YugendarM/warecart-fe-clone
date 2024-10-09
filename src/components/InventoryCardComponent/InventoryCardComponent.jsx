@@ -6,6 +6,7 @@ import { MdDeleteOutline, MdOutlineShoppingBag } from 'react-icons/md'
 import { Link, useAsyncError } from 'react-router-dom'
 import { Breadcrumb, Button, Dropdown, Form, Input, InputNumber, Menu, Modal, Space, Tooltip } from 'antd';
 import axios from 'axios'
+import { toast, ToastContainer } from 'react-toastify'
 
 const InventoryCardComponent = ({inventory, index}) => {
     
@@ -44,7 +45,7 @@ const InventoryCardComponent = ({inventory, index}) => {
         )
 
         if(response.status === 200){
-          alert("Inventory updated successfully")
+          toast.success("Inventory updated successfully")
           setEditIsModalOpen(false)
         }
         
@@ -52,16 +53,16 @@ const InventoryCardComponent = ({inventory, index}) => {
       catch (error) {
         if (error.response) {
           if (error.response.status === 404) {
-            alert("Inventory does not exists");
+            toast.error("Inventory does not exists");
           } else if (error.response.status === 500) {
-            alert("An error occurred while adding the Inventory");
+            toast.error("An error occurred while adding the Inventory");
           } else {
-            alert(`An error occurred: ${error.response.status}`);
+            toast.error(`An error occurred: ${error.response.status}`);
           }
         } else if (error.request) {
-          alert("No response from server. Please try again.");
+          toast.error("No response from server. Please try again.");
         } else {
-          alert("An unexpected error occurred. Please try again.");
+          toast.error("An unexpected error occurred. Please try again.");
         }
       }
     }
@@ -86,7 +87,7 @@ const InventoryCardComponent = ({inventory, index}) => {
         )
 
         if(response.status === 200){
-          alert("Inventory deleted successfully")
+          toast.success("Inventory deleted successfully")
           setIsDeleteModalOpen(false)
         }
         
@@ -94,16 +95,16 @@ const InventoryCardComponent = ({inventory, index}) => {
       catch (error) {
         if (error.response) {
           if (error.response.status === 404) {
-            alert("Inventory does not exists");
+            toast.error("Inventory does not exists");
           } else if (error.response.status === 500) {
-            alert("An error occurred while deleting the inventory");
+            toast.error("An error occurred while deleting the inventory");
           } else {
-            alert(`An error occurred: ${error.response.status}`);
+            toast.error(`An error occurred: ${error.response.status}`);
           }
         } else if (error.request) {
-          alert("No response from server. Please try again.");
+          toast.error("No response from server. Please try again.");
         } else {
-          alert("An unexpected error occurred. Please try again.");
+          toast.error("An unexpected error occurred. Please try again.");
         }
       }
     }

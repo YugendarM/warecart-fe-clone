@@ -8,6 +8,7 @@ import WarehouseCardComponent from '../../../components/WarehouseCardComponent/W
 import axios from 'axios';
 import {io} from "socket.io-client"
 import { getSocket, initiateSocketConnection } from '../../../utilities/socketService';
+import { toast } from 'react-toastify';
 
 const AdminWarehousePage = () => {
 
@@ -50,7 +51,7 @@ const AdminWarehousePage = () => {
       )
 
       if(response.status === 201){
-        alert("Warehouse added successfully")
+        toast.success("Warehouse added successfully")
         setIsModalOpen(false)
       }
       
@@ -58,16 +59,16 @@ const AdminWarehousePage = () => {
     catch (error) {
       if (error.response) {
         if (error.response.status === 409) {
-          alert("Warehouse already exists");
+          toast.error("Warehouse already exists");
         } else if (error.response.status === 500) {
-          alert("An error occurred while adding the warehouse");
+          toast.error("An error occurred while adding the warehouse");
         } else {
-          alert(`An error occurred: ${error.response.status}`);
+          toast.error(`An error occurred: ${error.response.status}`);
         }
       } else if (error.request) {
-        alert("No response from server. Please try again.");
+        toast.error("No response from server. Please try again.");
       } else {
-        alert("An unexpected error occurred. Please try again.");
+        toast.error("An unexpected error occurred. Please try again.");
       }
     }
   };

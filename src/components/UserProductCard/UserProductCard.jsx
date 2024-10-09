@@ -5,6 +5,7 @@ import { Link, redirect, useLocation, useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { Button, Modal } from 'antd'
+import { toast } from 'react-toastify';
 
 const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) => {
 
@@ -28,6 +29,7 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
             )
       
             if(response.status === 200){
+              toast.success("Product added to wishlist")
               await axios.post(
                 '/userActivity/track', 
                 {
@@ -44,14 +46,14 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
           catch (error) {
             if (error.response) {
               if (error.response.status === 500) {
-                alert("An error occurred while Adding Product to wishlist");
+                toast.error("An error occurred while Adding Product to wishlist");
               } else {
-                alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
               }
             } else if (error.request) {
-              alert("No response from server. Please try again.");
+              toast.error("No response from server. Please try again.");
             } else {
-              alert("An unexpected error occurred. Please try again.");
+              toast.error("An unexpected error occurred. Please try again.");
             }
           }
         }
@@ -86,6 +88,7 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
           )
     
           if(response.status === 200){
+            toast.success("Product added to cart")
             await axios.post(
               '/userActivity/track', 
               {
@@ -103,14 +106,14 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
         catch (error) {
           if (error.response) {
             if (error.response.status === 500) {
-              alert(`An error occurred while adding to cart: ${error.response.status} ${error.response.data.message}`);
+              toast.error(`An error occurred while adding to cart: ${error.response.status} ${error.response.data.message}`);
             } else {
-              alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+              toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
             }
           } else if (error.request) {
-            alert("No response from server. Please try again.");
+            toast.error("No response from server. Please try again.");
           } else {
-            alert("An unexpected error occurred. Please try again.");
+            toast.error("An unexpected error occurred. Please try again.");
           }
         }
       }
@@ -135,6 +138,7 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
       
             if(response.status === 200){
               setIsRemoveModalOpen(false)
+              toast.success("Product removed from cart")
               await axios.post(
                 '/userActivity/track', 
                 {
@@ -151,14 +155,14 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
           catch (error) {
             if (error.response) {
               if (error.response.status === 500) {
-                alert(`An error occurred while Removing Product from wishlist: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred while Removing Product from wishlist: ${error.response.status} ${error.response.data.message}`);
               } else {
-                alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
               }
             } else if (error.request) {
-              alert("No response from server. Please try again.");
+              toast.error("No response from server. Please try again.");
             } else {
-              alert("An unexpected error occurred. Please try again.");
+              toast.error("An unexpected error occurred. Please try again.");
             }
           }
 

@@ -3,6 +3,7 @@ import { Breadcrumb, Button, DatePicker, Dropdown, Form, Input, InputNumber, Men
 import { useForm } from 'antd/es/form/Form' 
 import axios from 'axios' 
 import moment from 'moment' 
+import { toast } from 'react-toastify'
 
 const PricingRuleAddModal = ({isAddModalOpen, handleAddCancel}) => {
 
@@ -36,7 +37,7 @@ const PricingRuleAddModal = ({isAddModalOpen, handleAddCancel}) => {
           )
     
           if(response.status === 201){
-            alert("Pricing Rule added successfully")
+            toast.success("Pricing Rule added successfully")
             setIsModalOpen(false)
             handleAddCancel()
           }
@@ -45,16 +46,16 @@ const PricingRuleAddModal = ({isAddModalOpen, handleAddCancel}) => {
         catch (error) {
           if (error.response) {
             if (error.response.status === 404) {
-              alert("Pricing rule does not exists") 
+              toast.error("Pricing rule does not exists") 
             } else if (error.response.status === 500) {
-              alert("An error occurred while adding the pricing rule") 
+              toast.error("An error occurred while adding the pricing rule") 
             } else {
-              alert(`An error occurred: ${error.response.status}`) 
+              toast.error(`An error occurred: ${error.response.status}`) 
             }
           } else if (error.request) {
-            alert("No response from server. Please try again.") 
+            toast.error("No response from server. Please try again.") 
           } else {
-            alert("An unexpected error occurred. Please try again.") 
+            toast.error("An unexpected error occurred. Please try again.") 
           }
         }
       }

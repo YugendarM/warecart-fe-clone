@@ -15,7 +15,7 @@ const StripePayment = ({userData, cartAmount}) => {
                 window.location.href = response.data.url
             }
             else{
-                alert("Url not found")
+                toast.error("Url not found")
             }
         }
         catch(error){

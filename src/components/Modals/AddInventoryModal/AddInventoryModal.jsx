@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Breadcrumb, Button, Dropdown, Form, Input, InputNumber, Menu, Modal, Select, Space, Tooltip } from 'antd';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const AddInventoryModal = ({warehouse, isAddModalOpen, handleAddCancel, spaceAvailable}) => {
 
@@ -31,7 +32,7 @@ const AddInventoryModal = ({warehouse, isAddModalOpen, handleAddCancel, spaceAva
       )
 
       if(response.status === 201){
-        alert("Inventory added successfully")
+        toast.success("Inventory added successfully")
         form.resetFields()
         handleAddCancel()
       }
@@ -40,14 +41,14 @@ const AddInventoryModal = ({warehouse, isAddModalOpen, handleAddCancel, spaceAva
     catch (error) {
       if (error.response) {
         if (error.response.status === 500) {
-          alert("An error occurred while adding the Inventory");
+          toast.error("An error occurred while adding the Inventory");
         } else {
-          alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+          toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
         }
       } else if (error.request) {
-        alert("No response from server. Please try again.");
+        toast.error("No response from server. Please try again.");
       } else {
-        alert("An unexpected error occurred. Please try again.");
+        toast.error("An unexpected error occurred. Please try again.");
       }
     }
   }

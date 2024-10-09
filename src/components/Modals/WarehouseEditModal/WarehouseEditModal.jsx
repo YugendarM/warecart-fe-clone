@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Breadcrumb, Button, Dropdown, Form, Input, Menu, Modal, Space, Tooltip } from 'antd';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const WarehouseEditModal = ({warehouse, isModalOpen, handleCancel}) => {
 
@@ -40,7 +41,7 @@ const WarehouseEditModal = ({warehouse, isModalOpen, handleCancel}) => {
       )
 
       if(response.status === 200){
-        alert("Warehouse updated successfully")
+        toast.success("Warehouse updated successfully")
         handleCancel()
       }
       
@@ -48,16 +49,16 @@ const WarehouseEditModal = ({warehouse, isModalOpen, handleCancel}) => {
     catch (error) {
       if (error.response) {
         if (error.response.status === 404) {
-          alert("Warehouse does not exists");
+          toast.error("Warehouse does not exists");
         } else if (error.response.status === 500) {
-          alert("An error occurred while editing the warehouse");
+          toast.error("An error occurred while editing the warehouse");
         } else {
-          alert(`An error occurred: ${error.response.status}`);
+          toast.error(`An error occurred: ${error.response.status}`);
         }
       } else if (error.request) {
-        alert("No response from server. Please try again.");
+        toast.error("No response from server. Please try again.");
       } else {
-        alert("An unexpected error occurred. Please try again.");
+        toast.error("An unexpected error occurred. Please try again.");
       }
     }
   }

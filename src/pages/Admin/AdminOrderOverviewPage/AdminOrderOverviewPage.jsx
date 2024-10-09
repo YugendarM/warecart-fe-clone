@@ -7,6 +7,7 @@ import { TbLayoutDashboardFilled } from 'react-icons/tb'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { getSocket, initiateSocketConnection } from '../../../utilities/socketService'
 import AdminOrderSummaryProductCard from '../../../components/AdminOrderSummaryProductCard/AdminOrderSummaryProductCard'
+import { toast } from 'react-toastify'
 // import ProductEditModal from '../../components/Modals/ProductEditModal/ProductEditModal'
 // import ProductDeleteModal from '../../components/Modals/ProductDeleteModal/ProductDeleteModal'
 // import ProductPageWarehouseCard from '../../../components/ProductPageWarehouseCard/ProductPageWarehouseCard'
@@ -53,16 +54,16 @@ const AdminOrderOverviewPage = () => {
             catch (error) {
                 if (error.response) {
                   if (error.response.status === 404) {
-                    alert("Order Not Found");
+                    toast.error("Order Not Found");
                   } else if (error.response.status === 500) {
-                    alert("An error occurred while fetching the order");
+                    toast.error("An error occurred while fetching the order");
                   } else {
-                    alert(`An error occurred: ${error.response.status}`);
+                    toast.error(`An error occurred: ${error.response.status}`);
                   }
                 } else if (error.request) {
-                  alert("No response from server. Please try again.");
+                    toast.error("No response from server. Please try again.");
                 } else {
-                  alert("An unexpected error occurred. Please try again.");
+                    toast.error("An unexpected error occurred. Please try again.");
                 }
               }
         }

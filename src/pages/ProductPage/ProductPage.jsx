@@ -9,6 +9,7 @@ import ProductPageWarehouseCard from '../../components/ProductPageWarehouseCard/
 import ProductEditModal from '../../components/Modals/ProductEditModal/ProductEditModal'
 import ProductDeleteModal from '../../components/Modals/ProductDeleteModal/ProductDeleteModal'
 import { getSocket, initiateSocketConnection } from '../../utilities/socketService'
+import { toast } from 'react-toastify'
 
 const ProductPage = () => {
     
@@ -57,16 +58,16 @@ const ProductPage = () => {
             catch (error) {
                 if (error.response) {
                   if (error.response.status === 404) {
-                    alert("Product Not Found");
+                    toast.error("Product Not Found");
                   } else if (error.response.status === 500) {
-                    alert("An error occurred while fetching the product");
+                    toast.error("An error occurred while fetching the product");
                   } else {
-                    alert(`An error occurred: ${error.response.status}`);
+                    toast.error(`An error occurred: ${error.response.status}`);
                   }
                 } else if (error.request) {
-                  alert("No response from server. Please try again.");
+                    toast.error("No response from server. Please try again.");
                 } else {
-                  alert("An unexpected error occurred. Please try again.");
+                    toast.error("An unexpected error occurred. Please try again.");
                 }
               }
         }

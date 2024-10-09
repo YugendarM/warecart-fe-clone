@@ -5,6 +5,7 @@ import UserProductCard from '../../components/UserProductCard/UserProductCard'
 import { getSocket, initiateSocketConnection } from '../../utilities/socketService'
 import Cookies from 'js-cookie';
 import { useLocation } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const UserProductsPage = () => {
 
@@ -51,14 +52,14 @@ const UserProductsPage = () => {
             catch (error) {
               if (error.response) {
                 if (error.response.status === 500) {
-                  alert("An error occurred while fetching Products data");
+                  toast.error("An error occurred while fetching Products data");
                 } else {
-                  alert(`An error occurreddddddd: ${error.response.status} ${error.response.data.message}`);
+                  toast.error(`An error occurreddddddd: ${error.response.status} ${error.response.data.message}`);
                 }
               } else if (error.request) {
-                alert("No response from server. Please try again.");
+                toast.error("No response from server. Please try again.");
               } else {
-                alert("An unexpected error occurred. Please try again.");
+                toast.error("An unexpected error occurred. Please try again.");
               }
             }
             

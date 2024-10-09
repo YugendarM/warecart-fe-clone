@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, DatePicker, Form, Input, InputNumber, Modal, Radio, Select } from 'antd' 
 import axios from 'axios' 
 import moment from 'moment' 
+import { toast } from 'react-toastify'
 
 
 const PricingRuleEditModal = ({rule, isEditModalOpen, handleEditCancel}) => {
@@ -48,7 +49,7 @@ const PricingRuleEditModal = ({rule, isEditModalOpen, handleEditCancel}) => {
           )
     
           if(response.status === 200){
-            alert("Pricing Rule updated successfully")
+            toast.success("Pricing Rule updated successfully")
             setIsModalOpen(false)
             handleEditCancel()
           }
@@ -57,16 +58,16 @@ const PricingRuleEditModal = ({rule, isEditModalOpen, handleEditCancel}) => {
         catch (error) {
           if (error.response) {
             if (error.response.status === 404) {
-              alert("Product does not exists") 
+              toast.error("Product does not exists") 
             } else if (error.response.status === 500) {
-              alert("An error occurred while updating the pricing rule") 
+              toast.error("An error occurred while updating the pricing rule") 
             } else {
-              alert(`An error occurred: ${error.response.status}`) 
+              toast.error(`An error occurred: ${error.response.status}`) 
             }
           } else if (error.request) {
-            alert("No response from server. Please try again.") 
+            toast.error("No response from server. Please try again.") 
           } else {
-            alert("An unexpected error occurred. Please try again.") 
+            toast.error("An unexpected error occurred. Please try again.") 
           }
         }
       }

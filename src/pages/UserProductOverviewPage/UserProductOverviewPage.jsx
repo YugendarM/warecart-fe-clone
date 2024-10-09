@@ -7,6 +7,7 @@ import { FaHeart, FaMinus, FaPlus, FaStar } from 'react-icons/fa6';
 import Cookies from 'js-cookie';
 import { Button, Modal } from 'antd'
 import { TiShoppingCart } from 'react-icons/ti';
+import { toast } from 'react-toastify';
 
 const UserProductOverviewPage = () => {
     const [productData, setProductData] = useState({});
@@ -69,6 +70,7 @@ const UserProductOverviewPage = () => {
             )
       
             if(response.status === 200){
+              toast.success("Product added to cart")
               await axios.post(
                 '/userActivity/track', 
                 {
@@ -86,14 +88,14 @@ const UserProductOverviewPage = () => {
           catch (error) {
             if (error.response) {
               if (error.response.status === 500) {
-                alert(`An error occurred while adding to cart: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred while adding to cart: ${error.response.status} ${error.response.data.message}`);
               } else {
-                alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
               }
             } else if (error.request) {
-              alert("No response from server. Please try again.");
+              toast.error("No response from server. Please try again.");
             } else {
-              alert("An unexpected error occurred. Please try again.");
+              toast.error("An unexpected error occurred. Please try again.");
             }
           }
         }
@@ -110,6 +112,7 @@ const UserProductOverviewPage = () => {
             )
       
             if(response.status === 200){
+              toast.success("Product added to wishlist")
               await axios.post(
                 '/userActivity/track', 
                 {
@@ -126,14 +129,14 @@ const UserProductOverviewPage = () => {
           catch (error) {
             if (error.response) {
               if (error.response.status === 500) {
-                alert("An error occurred while Adding Product to wishlist");
+                toast.error("An error occurred while Adding Product to wishlist");
               } else {
-                alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
               }
             } else if (error.request) {
-              alert("No response from server. Please try again.");
+              toast.error("No response from server. Please try again.");
             } else {
-              alert("An unexpected error occurred. Please try again.");
+              toast.error("An unexpected error occurred. Please try again.");
             }
           }
     }
@@ -150,20 +153,21 @@ const UserProductOverviewPage = () => {
       
             if(response.status === 200){
               setIsRemoveModalOpen(false)
+              toast.success("Product removed from wishlist")
             }
             
           }
           catch (error) {
             if (error.response) {
               if (error.response.status === 500) {
-                alert(`An error occurred while Removing Product from wishlist: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred while Removing Product from wishlist: ${error.response.status} ${error.response.data.message}`);
               } else {
-                alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
               }
             } else if (error.request) {
-              alert("No response from server. Please try again.");
+              toast.error("No response from server. Please try again.");
             } else {
-              alert("An unexpected error occurred. Please try again.");
+              toast.error("An unexpected error occurred. Please try again.");
             }
           }
     }
@@ -201,16 +205,16 @@ const UserProductOverviewPage = () => {
             } catch (error) {
                 if (error.response) {
                     if (error.response.status === 409) {
-                        alert("Warehouse already exists");
+                      toast.error("Warehouse already exists");
                     } else if (error.response.status === 500) {
-                        alert("An error occurred while adding the warehouse");
+                      toast.error("An error occurred while adding the warehouse");
                     } else {
-                        alert(`An error occurred: ${error.response.status}`);
+                      toast.error(`An error occurred: ${error.response.status}`);
                     }
                 } else if (error.request) {
-                    alert("No response from server. Please try again.");
+                  toast.error("No response from server. Please try again.");
                 } else {
-                    alert("An unexpected error occurred. Please try again.");
+                  toast.error("An unexpected error occurred. Please try again.");
                 }
             }
         };
@@ -223,17 +227,17 @@ const UserProductOverviewPage = () => {
                 }
             } catch (error) {
                 if (error.response) {
-                    if (error.response.status === 409) {
-                        alert("Warehouse already exists");
+                    if (error.response.status === 404) {
+                      toast.error("No offers found");
                     } else if (error.response.status === 500) {
-                        alert("An error occurred while adding the warehouse");
+                      toast.error("An error occurred while adding the warehouse");
                     } else {
-                        alert(`An error occurred: ${error.response.status}`);
+                      toast.error(`An error occurred: ${error.response.status}`);
                     }
                 } else if (error.request) {
-                    alert("No response from server. Please try again.");
+                  toast.error("No response from server. Please try again.");
                 } else {
-                    alert("An unexpected error occurred. Please try again.");
+                  toast.error("An unexpected error occurred. Please try again.");
                 }
             }
         };

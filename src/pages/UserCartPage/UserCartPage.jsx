@@ -3,6 +3,7 @@ import OrderSummaryProductCardComponent from '../../components/OrderSummaryProdu
 import axios from 'axios'
 import { getSocket, initiateSocketConnection } from '../../utilities/socketService'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const UserCartPage = () => {
   const [orderDetails, setOrderDetails] = useState({}) 
@@ -54,7 +55,7 @@ const UserCartPage = () => {
           }))
         ) 
       } else {
-        alert("No cart items found.") 
+        toast.error("No cart items found.") 
       }
     } catch (error) {
       handleError(error, "cart details") 
@@ -64,11 +65,11 @@ const UserCartPage = () => {
   const handleError = (error, context) => {
     if (error.response) {
       const message = error.response.data.message || "Something went wrong" 
-      alert(`Error fetching ${context}: ${error.response.status} ${message}`) 
+      toast.error(`Error fetching ${context}: ${error.response.status} ${message}`) 
     } else if (error.request) {
-      alert(`No response from server for ${context}. Please try again.`) 
+      toast.error(`No response from server for ${context}. Please try again.`) 
     } else {
-      alert(`Unexpected error in fetching ${context}.`) 
+      toast.error(`Unexpected error in fetching ${context}.`) 
     }
   } 
 

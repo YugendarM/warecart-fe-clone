@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Form, Input } from 'antd';
 import axios from 'axios';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const SignupPage = () => {
 
@@ -27,7 +28,7 @@ const SignupPage = () => {
             )
 
             if(response.status === 201){
-                alert("User Signed Up")
+                toast.success("User Signed Up")
                 if(location.state){
                   navigate("/checkout", {
                     state: {
@@ -43,14 +44,14 @@ const SignupPage = () => {
         catch (error) {
             if (error.response) {
               if (error.response.status === 500) {
-                alert(`${error.response.data.message}`);
+                toast.error(`${error.response.data.message}`);
               } else {
-                alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
               }
             } else if (error.request) {
-              alert("No response from server. Please try again.");
+              toast.error("No response from server. Please try again.");
             } else {
-              alert("An unexpected error occurred. Please try again.");
+              toast.error("An unexpected error occurred. Please try again.");
             }
           }
     }

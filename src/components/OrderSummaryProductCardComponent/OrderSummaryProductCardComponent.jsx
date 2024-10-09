@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useMemo, useState } from 'react'
 import { FaCircleInfo, FaMinus, FaPlus, FaStar } from 'react-icons/fa6'
 import { useLocation } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, onQuantityChange}) => {
 
@@ -41,6 +42,7 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
           )
     
           if(response.status === 200){
+            toast.success("Product removed from cart")
             await axios.post(
                 '/userActivity/track', 
                 {
@@ -57,14 +59,14 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
         catch (error) {
           if (error.response) {
             if (error.response.status === 500) {
-              alert(`An error occurred while Removing Product from cart: ${error.response.status} ${error.response.data.message}`);
+              toast.error(`An error occurred while Removing Product from cart: ${error.response.status} ${error.response.data.message}`);
             } else {
-              alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
             }
           } else if (error.request) {
-            alert("No response from server. Please try again.");
+            toast.error("No response from server. Please try again.");
           } else {
-            alert("An unexpected error occurred. Please try again.");
+            toast.error("An unexpected error occurred. Please try again.");
           }
         }
     }

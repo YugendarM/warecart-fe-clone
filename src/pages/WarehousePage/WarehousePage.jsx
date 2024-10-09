@@ -10,6 +10,7 @@ import WarehouseDeleteModal from '../../components/Modals/WarehouseDeleteModal/W
 import { TbLayoutDashboardFilled } from 'react-icons/tb'
 import AddInventoryModal from '../../components/Modals/AddInventoryModal/AddInventoryModal'
 import { getSocket, initiateSocketConnection } from '../../utilities/socketService'
+import { toast } from 'react-toastify'
 
 const WarehousePage = () => {
 
@@ -67,16 +68,16 @@ const WarehousePage = () => {
             catch (error) {
                 if (error.response) {
                   if (error.response.status === 404) {
-                    alert("Warehouse Not Found");
+                    toast.error("Warehouse Not Found");
                   } else if (error.response.status === 500) {
-                    alert("An error occurred while fetching the warehouse");
+                    toast.error("An error occurred while fetching the warehouse");
                   } else {
-                    alert(`An error occurred: ${error.response.status}`);
+                    toast.error(`An error occurred: ${error.response.status}`);
                   }
                 } else if (error.request) {
-                  alert("No response from server. Please try again.");
+                  toast.error("No response from server. Please try again.");
                 } else {
-                  alert("An unexpected error occurred. Please try again.");
+                  toast.error("An unexpected error occurred. Please try again.");
                 }
               }
         }

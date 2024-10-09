@@ -7,6 +7,7 @@ import OrderSummaryProductCardComponent from '../../components/OrderSummaryProdu
 import PaypalPayment from '../../components/PaypalPayment/PaypalPayment' 
 import StripePayment from '../../components/StripePayment/StripePayment' 
 import UPIPaymentModal from '../../components/Modals/UPIPaymentModal/UPIPaymentModal' 
+import { toast } from 'react-toastify'
 
 const UserCheckOutPage = () => {
     const [form] = Form.useForm() 
@@ -55,16 +56,16 @@ const UserCheckOutPage = () => {
         } catch (error) {
             if (error.response) {
                 if (error.response.status === 500) {
-                    alert(`An error occurred while fetching price details ${error.response.status}, ${error.response.data.message}`) 
+                    toast.error(`An error occurred while fetching price details ${error.response.status}, ${error.response.data.message}`) 
                 } else if (error.response.status === 400) {
-                    alert(`No orders in item : ${error.response.status}, ${error.response.data.message}`) 
+                    toast.error(`No orders in item : ${error.response.status}, ${error.response.data.message}`) 
                 } else {
-                    alert(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
+                    toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
                 }
             } else if (error.request) {
-                alert("No response from server. Please try again.") 
+                toast.error("No response from server. Please try again.") 
             } else {
-                alert("An unexpected error occurred in fetching price details. Please try again.") 
+                toast.error("An unexpected error occurred in fetching price details. Please try again.") 
             }
         }
     } 
@@ -85,9 +86,9 @@ const UserCheckOutPage = () => {
             }
         } catch (error) {
             if (error.response) {
-                alert(`Error: ${error.response.status} - ${error.response.data.message}`) 
+                toast.error(`Error: ${error.response.status} - ${error.response.data.message}`) 
             } else {
-                alert("An unexpected error occurred in fetching user details. Please try again.") 
+                toast.error("An unexpected error occurred in fetching user details. Please try again.") 
             }
         }
     } 
@@ -104,14 +105,14 @@ const UserCheckOutPage = () => {
             }, { withCredentials: true }) 
 
             if (response.status === 200) {
-                alert("User updated successfully") 
+                toast.success("User updated successfully") 
                 getUserDetails() 
             }
         } catch (error) {
             if (error.response) {
-                alert(`Error: ${error.response.status} - ${error.response.data.message}`) 
+                toast.error(`Error: ${error.response.status} - ${error.response.data.message}`) 
             } else {
-                alert("An unexpected error occurred. Please try again.") 
+                toast.error("An unexpected error occurred. Please try again.") 
             }
         }
     } 
@@ -177,14 +178,14 @@ const UserCheckOutPage = () => {
                         }
                     )
                 )) 
-                alert("Order placed Successfully") 
+                toast.success("Order placed Successfully") 
                 navigate("/orders") 
             }
         } catch (error) {
             if (error.response) {
-                alert(`Error while placing the order: ${error.response.status} - ${error.response.data.message}`) 
+                toast.error(`Error while placing the order: ${error.response.status} - ${error.response.data.message}`) 
             } else {
-                alert("An unexpected error occurred while placing the order. Please try again.") 
+                toast.error("An unexpected error occurred while placing the order. Please try again.") 
             }
         }
     } 
@@ -237,18 +238,18 @@ const UserCheckOutPage = () => {
                             }
                         )
                     )) 
-                    alert('Order placed Successfully') 
+                    toast.success('Order placed Successfully') 
                     navigate("/orders") 
                 } catch (error) {
                     console.error('Error tracking user activity:', error) 
-                    alert('Order placed, but tracking failed.') 
+                    toast.warn('Order placed, but tracking failed.') 
                 }
             }
         } catch (error) {
             if (error.response) {
-                alert(`Error while placing the order: ${error.response.status} - ${error.response.data.message}`) 
+                toast.error(`Error while placing the order: ${error.response.status} - ${error.response.data.message}`) 
             } else {
-                alert("An unexpected error occurred while placing the order. Please try again.") 
+                toast.error("An unexpected error occurred while placing the order. Please try again.") 
             }
         }
     } 

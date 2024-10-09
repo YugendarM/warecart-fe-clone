@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Modal } from 'antd'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const ProductDeleteModal = ({isDeleteModalOpen, handleDeleteCancel, product}) => {
 
@@ -19,7 +20,7 @@ const ProductDeleteModal = ({isDeleteModalOpen, handleDeleteCancel, product}) =>
             )
       
             if(response.status === 200){
-              alert("Product deleted successfully")
+              toast.success("Product deleted successfully")
               setIsModalOpen(false)
               navigate("/admin/products")
             }
@@ -28,16 +29,16 @@ const ProductDeleteModal = ({isDeleteModalOpen, handleDeleteCancel, product}) =>
           catch (error) {
             if (error.response) {
               if (error.response.status === 404) {
-                alert("Product does not exists");
+                toast.error("Product does not exists");
               } else if (error.response.status === 500) {
-                alert("An error occurred while deleting the product");
+                toast.error("An error occurred while deleting the product");
               } else {
-                alert(`An error occurred: ${error.response.status}`);
+                toast.error(`An error occurred: ${error.response.status}`);
               }
             } else if (error.request) {
-              alert("No response from server. Please try again.");
+              toast.error("No response from server. Please try again.");
             } else {
-              alert("ccc An unexpected error occurred. Please try again.");
+              toast.error("ccc An unexpected error occurred. Please try again.");
             }
           }
     }

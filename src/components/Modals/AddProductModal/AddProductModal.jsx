@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Breadcrumb, Button, Dropdown, Form, Input, InputNumber, Menu, Modal, Select, Space } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
 
@@ -43,7 +44,7 @@ const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
           )
     
           if(response.status === 201){
-            alert("Product added successfully")
+            toast.success("Product added successfully")
             setIsModalOpen(false)
           }
           
@@ -51,16 +52,16 @@ const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
         catch (error) {
           if (error.response) {
             if (error.response.status === 409) {
-              alert("Product already exists");
+              toast.error("Product already exists");
             } else if (error.response.status === 500) {
-              alert("An error occurred while adding the product");
+              toast.error("An error occurred while adding the product");
             } else {
-              alert(`An error occurred: ${error.response.status}`);
+              toast.error(`An error occurred: ${error.response.status}`);
             }
           } else if (error.request) {
-            alert("No response from server. Please try again.");
+            toast.error("No response from server. Please try again.");
           } else {
-            alert("An unexpected error occurred. Please try again.");
+            toast.error("An unexpected error occurred. Please try again.");
           }
         }
       };

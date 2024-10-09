@@ -4,6 +4,8 @@ import RouterComponent from './components/RouterComponent/RouterComponent'
 import NavbarComponent from './components/NavbarComponent/NavbarComponent'
 import axios from 'axios';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
 
@@ -20,6 +22,7 @@ const App = () => {
         <NavbarComponent/>
         <RouterComponent/>
       </BrowserRouter>
+      <ToastContainer/>
     </PayPalScriptProvider>
     
   )

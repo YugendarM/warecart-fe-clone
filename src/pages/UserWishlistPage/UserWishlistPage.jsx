@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import UserProductCard from '../../components/UserProductCard/UserProductCard'
 import { getSocket, initiateSocketConnection } from '../../utilities/socketService'
+import { toast } from 'react-toastify'
 
 const UserWishlistPage = () => {
 
@@ -33,14 +34,14 @@ const UserWishlistPage = () => {
       catch (error) {
         if (error.response) {
           if (error.response.status === 500) {
-            alert("An error occurred while fetching Wishlist data");
+            toast.error("An error occurred while fetching Wishlist data");
           } else {
-            alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+            toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
           }
         } else if (error.request) {
-          alert("No response from server. Please try again.");
+          toast.error("No response from server. Please try again.");
         } else {
-          alert("An unexpected error occurred. Please try again.");
+          toast.error("An unexpected error occurred. Please try again.");
         }
       }
     }
@@ -62,14 +63,14 @@ const UserWishlistPage = () => {
       catch (error) {
         if (error.response) {
           if (error.response.status === 500) {
-            alert("An error occurred while fetching User data");
+            toast.error("An error occurred while fetching User data");
           } else {
-            alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+            toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
           }
         } else if (error.request) {
-          alert("No response from server. Please try again.");
+          toast.error("No response from server. Please try again.");
         } else {
-          alert("An unexpected error occurred. Please try again.");
+          toast.error("An unexpected error occurred. Please try again.");
         }
       }
       

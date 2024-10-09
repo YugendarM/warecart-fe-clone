@@ -1,96 +1,96 @@
-import React, { useEffect, useState } from 'react';
-import { MdDone } from 'react-icons/md';
-import { Button, Form, Input, InputNumber, Radio } from 'antd';
-import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
-import OrderSummaryProductCardComponent from '../../components/OrderSummaryProductCardComponent/OrderSummaryProductCardComponent';
-import PaypalPayment from '../../components/PaypalPayment/PaypalPayment';
-import StripePayment from '../../components/StripePayment/StripePayment';
+import React, { useEffect, useState } from 'react' 
+import { MdDone } from 'react-icons/md' 
+import { Button, Form, Input, InputNumber, Radio } from 'antd' 
+import axios from 'axios' 
+import { useLocation, useNavigate, useParams } from 'react-router-dom' 
+import OrderSummaryProductCardComponent from '../../components/OrderSummaryProductCardComponent/OrderSummaryProductCardComponent' 
+import PaypalPayment from '../../components/PaypalPayment/PaypalPayment' 
+import StripePayment from '../../components/StripePayment/StripePayment' 
+import UPIPaymentModal from '../../components/Modals/UPIPaymentModal/UPIPaymentModal' 
 
 const UserCheckOutPage = () => {
-    const [form] = Form.useForm();
-    const [isAddressFormOpen, setIsAddressFormOpen] = useState(false);
-    const [addressData, setAddressData] = useState(null);
-    const [userData, setUserData] = useState({});
-    const [isOrderSummaryContinue, setIsOrderSummaryContinue] = useState(false);
-    const [productsData, setProductsData] = useState([]);
-    const [selectedPayment, setSelectedPayment] = useState(null);
-    const [orderDetails, setOrderDetails] = useState({})
+    const [form] = Form.useForm() 
+    const [isAddressFormOpen, setIsAddressFormOpen] = useState(false) 
+    const [addressData, setAddressData] = useState(null) 
+    const [userData, setUserData] = useState({}) 
+    const [isOrderSummaryContinue, setIsOrderSummaryContinue] = useState(false) 
+    const [productsData, setProductsData] = useState([]) 
+    const [selectedPayment, setSelectedPayment] = useState(null) 
+    const [orderDetails, setOrderDetails] = useState({}) 
+    const [isUPIpaymentModalOpen, setUPIPaymentModalOpen] = useState(false) 
 
-    const location = useLocation();
-    const navigate = useNavigate();
+    const location = useLocation() 
+    const navigate = useNavigate() 
 
     const handleQuantityChange = (productId, newQuantity) => {
         setProductsData((prevProducts) =>
-          prevProducts.map((product) =>
-            product.productDetails._id === productId ? { ...product, quantity: newQuantity } : product
-          )
-        );
-      };
+            prevProducts.map((product) =>
+                product.productDetails._id === productId ? { ...product, quantity: newQuantity } : product
+            )
+        ) 
+    } 
 
     const formatRupees = (amount) => {
         return new Intl.NumberFormat('en-IN', {
             style: 'currency',
             currency: 'INR',
-            minimumFractionDigits: 0, // Adjust if you want decimals
-        }).format(amount);
-    };
+            minimumFractionDigits: 0,
+        }).format(amount) 
+    } 
 
-    const getPriceDetails = async() => {
-        const orderItems = productsData
-        try{
+    const getPriceDetails = async () => {
+        const orderItems = productsData 
+        try {
             const response = await axios.post(
-              `/order/priceDetails`,
-                {orderItems : productsData} ,
-              {
-                withCredentials: true
-              }
-            )
-      
-            if(response.status === 200){
-              setOrderDetails(response.data)
+                `/order/priceDetails`,
+                { orderItems: productsData },
+                {
+                    withCredentials: true,
+                }
+            ) 
+
+            if (response.status === 200) {
+                setOrderDetails(response.data) 
             }
-            
-          }
-          catch (error) {
+        } catch (error) {
             if (error.response) {
-              if (error.response.status === 500) {
-                alert(`An error occurred while fetching price details ${error.response.status}, ${error.response.data.message}`);
-              } else if (error.response.status === 400) {
-                alert(`No orders in item : ${error.response.status}, ${error.response.data.message}`);
-              }  else {
-                alert(`An error occurred: ${error.response.status} ${error.response.data.message}`);
-              }
+                if (error.response.status === 500) {
+                    alert(`An error occurred while fetching price details ${error.response.status}, ${error.response.data.message}`) 
+                } else if (error.response.status === 400) {
+                    alert(`No orders in item : ${error.response.status}, ${error.response.data.message}`) 
+                } else {
+                    alert(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
+                }
             } else if (error.request) {
-              alert("No response from server. Please try again.");
+                alert("No response from server. Please try again.") 
             } else {
-              alert("An unexpected error occurred in fetching price details. Please try again.");
+                alert("An unexpected error occurred in fetching price details. Please try again.") 
             }
-          }
-    }
+        }
+    } 
 
     const getUserDetails = async () => {
         try {
-            const response = await axios.get("/user/getUserDetails", { withCredentials: true });
+            const response = await axios.get("/user/getUserDetails", { withCredentials: true }) 
             if (response.status === 200) {
-                setUserData(response.data);
+                setUserData(response.data) 
                 setAddressData({
                     addressFirstLine: response.data.addressFirstLine,
                     addressSecondLine: response.data.addressSecondLine,
                     city: response.data.city,
                     state: response.data.state,
                     pincode: response.data.pincode,
-                    phoneNo: response.data.phoneNo
-                });
+                    phoneNo: response.data.phoneNo,
+                }) 
             }
         } catch (error) {
             if (error.response) {
-                alert(`Error: ${error.response.status} - ${error.response.data.message}`);
+                alert(`Error: ${error.response.status} - ${error.response.data.message}`) 
             } else {
-                alert("An unexpected error occurred in fetching user details. Please try again.");
+                alert("An unexpected error occurred in fetching user details. Please try again.") 
             }
         }
-    };
+    } 
 
     const handleAddressOk = async (values) => {
         try {
@@ -100,108 +100,212 @@ const UserCheckOutPage = () => {
                 city: values.city,
                 state: values.state,
                 pincode: values.pincode,
-                phoneNo: values.phoneNo
-            }, { withCredentials: true });
+                phoneNo: values.phoneNo,
+            }, { withCredentials: true }) 
 
             if (response.status === 200) {
-                alert("User updated successfully");
-                getUserDetails();
+                alert("User updated successfully") 
+                getUserDetails() 
             }
         } catch (error) {
             if (error.response) {
-                alert(`Error: ${error.response.status} - ${error.response.data.message}`);
+                alert(`Error: ${error.response.status} - ${error.response.data.message}`) 
             } else {
-                alert("An unexpected error occurred. Please try again.");
+                alert("An unexpected error occurred. Please try again.") 
             }
         }
-    };
+    } 
 
     const handleOrderContinue = () => {
-        setIsOrderSummaryContinue(true);
-    };
+        setIsOrderSummaryContinue(true) 
+    } 
 
     const handlePaymentMethodChange = (e) => {
-        const value = e.target.value;
+        const value = e.target.value 
         if (value === 'cash') {
-            setSelectedPayment({ method: value, sub: "cash" }); // Cash on Delivery
+            setSelectedPayment({ method: value, sub: "cash" })  // Cash on Delivery
         } else {
-            setSelectedPayment({ method: value, sub: null }); // Reset sub-options for other methods
+            setSelectedPayment({ method: value, sub: null })  // Reset sub-options for other methods
         }
-    };
+    } 
 
     const handleUPIChange = (e) => {
-        const value = e.target.value;
-        setSelectedPayment({ method: 'upi', sub: value }); // Set UPI selection
-    };
+        const value = e.target.value 
+        setSelectedPayment({ method: 'upi', sub: value })  // Set UPI selection
+    } 
 
     const handleCardChange = (e) => {
-        const value = e.target.value;
-        setSelectedPayment({ method: 'card', sub: value }); // Set Card selection
-    };
+        const value = e.target.value 
+        setSelectedPayment({ method: 'card', sub: value })  // Set Card selection
+    } 
 
-    const processOrder = async(paymentMethod) => {
+    const processOrder = async (paymentMethod) => {
         const orderData = {
-          products: orderDetails.orderItems.map((item) => {
-            return {
-              product: item.productDetails._id,
-              quantity: item.quantity,
-              price: item.productDetails.price
-            }
-          }),
+            products: orderDetails.orderItems.map((item) => {
+                return {
+                    product: item.productDetails._id,
+                    quantity: item.quantity,
+                    price: item.productDetails.price,
+                } 
+            }),
             platformFee: orderDetails.priceDetails.platformFee,
             totalAmount: orderDetails.priceDetails.totalPrice,
             discountedAmount: orderDetails.priceDetails.totalDiscount,
-            payableAmount : orderDetails.priceDetails.totalPayable,
+            payableAmount: orderDetails.priceDetails.totalPayable,
             paymentInfo: {
-              paymentMethod: paymentMethod,
-              paymentStatus: "pending",
-            }
-        }
-    
+                paymentMethod: paymentMethod,
+                paymentStatus: paymentMethod === "cash" ? "pending" : "completed",
+            },
+        } 
+
         try {
-          const response = await axios.post(`/order/add`, 
-            orderData,
-            { withCredentials: true });
-    
-          if (response.status === 201) {
-              alert("Order placed Successfully");
-              navigate("/orders")
-          }
+            const response = await axios.post(`/order/add`,
+                orderData,
+                { withCredentials: true }) 
+
+            if (response.status === 201) {
+                await Promise.all(orderDetails.orderItems.map(item =>
+                    axios.post(
+                        '/userActivity/track',
+                        {
+                            action: 'purchase',
+                            productId: item.productDetails._id,
+                            additionalInfo: { quantity: item.quantity, paymentMethod: paymentMethod },
+                        },
+                        {
+                            withCredentials: true,
+                        }
+                    )
+                )) 
+                alert("Order placed Successfully") 
+                navigate("/orders") 
+            }
         } catch (error) {
             if (error.response) {
-                alert(`Error while placing the order: ${error.response.status} - ${error.response.data.message}`);
+                alert(`Error while placing the order: ${error.response.status} - ${error.response.data.message}`) 
             } else {
-                alert("An unexpected error occurred while placing the order. Please try again.");
+                alert("An unexpected error occurred while placing the order. Please try again.") 
             }
         }
-    }
+    } 
 
-    const proceedUPIPayment = async() => {
-        processOrder("gpay")
-    }
+    const proceedUPIPayment = async () => {
+        setUPIPaymentModalOpen(true) 
+    } 
+
+    const handleUPIPaymentModalClose = () => {
+        setUPIPaymentModalOpen(false) 
+    } 
+
+    const processStripePayment = async (transactionId) => {
+        const orderData = {
+            products: orderDetails.orderItems.map((item) => {
+                return {
+                    product: item.productDetails._id,
+                    quantity: item.quantity,
+                    price: item.productDetails.price,
+                } 
+            }),
+            platformFee: orderDetails.priceDetails.platformFee,
+            totalAmount: orderDetails.priceDetails.totalPrice,
+            discountedAmount: orderDetails.priceDetails.totalDiscount,
+            payableAmount: orderDetails.priceDetails.totalPayable,
+            paymentInfo: {
+                paymentMethod: "stripe",
+                paymentStatus: "completed",
+                transactionId: transactionId,
+            },
+        } 
+
+        try {
+            const response = await axios.post(`/order/add`,
+                orderData,
+                { withCredentials: true }) 
+
+            if (response.status === 201) {
+                try {
+                    await Promise.all(orderDetails?.orderItems?.map(item =>
+                        axios.post(
+                            '/userActivity/track',
+                            {
+                                action: 'purchase',
+                                productId: item.productDetails._id,
+                                additionalInfo: { quantity: item.quantity, paymentMethod: "stripe" },
+                            },
+                            {
+                                withCredentials: true,
+                            }
+                        )
+                    )) 
+                    alert('Order placed Successfully') 
+                    navigate("/orders") 
+                } catch (error) {
+                    console.error('Error tracking user activity:', error) 
+                    alert('Order placed, but tracking failed.') 
+                }
+            }
+        } catch (error) {
+            if (error.response) {
+                alert(`Error while placing the order: ${error.response.status} - ${error.response.data.message}`) 
+            } else {
+                alert("An unexpected error occurred while placing the order. Please try again.") 
+            }
+        }
+    } 
 
     useEffect(() => {
-        if (location.state && location.state.products) {
-            setProductsData(location.state.products);
-        } else {
-            navigate("/");
+        if (selectedPayment && selectedPayment.sub && selectedPayment.sub === "stripe") {
+            sessionStorage.setItem("checkoutState", JSON.stringify(location.state.products)) 
         }
-        getUserDetails();
-    }, [location.state, navigate]);
+    }, [selectedPayment, selectedPayment?.sub]) 
+
+    const getStoredProducts = () => {
+        const storedState = sessionStorage.getItem("checkoutState") 
+        try {
+            return storedState ? JSON.parse(storedState) : null 
+        } catch (error) {
+            console.error("Error parsing storedState:", error) 
+            return null 
+        }
+    } 
+
+    useEffect(() => {
+        const storedProducts = getStoredProducts() 
+        const products = location.state?.products || storedProducts 
+
+        if (products) {
+            setProductsData(products) 
+        } else {
+            navigate("/") 
+        }
+
+        getUserDetails() 
+    }, [location.state, navigate]) 
 
     useEffect(() => {
         if (userData.addressFirstLine) {
-            setIsAddressFormOpen(false);
+            setIsAddressFormOpen(false) 
         } else {
-            setIsAddressFormOpen(true);
+            setIsAddressFormOpen(true) 
         }
-    }, [userData]);
+    }, [userData]) 
 
     useEffect(() => {
-        if(productsData.length > 0){
-            getPriceDetails()
+        if (productsData.length > 0) {
+            getPriceDetails() 
         }
-    }, [productsData])
+    }, [productsData]) 
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search) 
+        const paymentStatus = params.get('paymentStatus') 
+        const transactionId = params.get('transactionId')
+
+        if(paymentStatus && paymentStatus === "success" && productsData.length > 0){
+            processStripePayment(paymentStatus, transactionId)
+        }
+    }, [productsData, orderDetails])
+
 
     return (
         <div className='px-56 flex gap-5 py-10'>
@@ -325,8 +429,8 @@ const UserCheckOutPage = () => {
                                                         <p className='font-semibold text-md py-3'>Choose an option</p>
                                                         <Radio.Group onChange={handleUPIChange} value={selectedPayment.sub}>
                                                             <div className='flex flex-col gap-5'>
-                                                                <Radio value="gpayyyyyyy">GPay</Radio>
-                                                                <Radio value="phonepay">Phone Pay</Radio>
+                                                                <Radio value="gpay">GPay</Radio>
+                                                                <Radio value="phonepe">Phone Pe</Radio>
                                                             </div>
                                                         </Radio.Group>
                                                     </div>
@@ -407,10 +511,12 @@ const UserCheckOutPage = () => {
                     </div>
                 }
             </div>
-        </div>
-    );
-};
 
-export default UserCheckOutPage;
+            <UPIPaymentModal orderDetails={orderDetails} isUPIpaymentModalOpen={isUPIpaymentModalOpen} paymentMethod={selectedPayment && selectedPayment.sub && selectedPayment.sub} handleModalClose={handleUPIPaymentModalClose}/>
+        </div>
+    ) 
+} 
+
+export default UserCheckOutPage 
 
 

@@ -42,7 +42,7 @@ function PaypalPayment({cartAmount, orderDetails}) {
                 {
                   action: 'purchase',
                   productId: item.productDetails._id, // Track each product
-                  additionalInfo: { quantity: item.quantity },
+                  additionalInfo: { quantity: item.quantity, paymentMethod: paymentMethod },
                 },
                 {
                   withCredentials: true,

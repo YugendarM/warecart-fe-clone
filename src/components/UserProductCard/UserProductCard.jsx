@@ -138,7 +138,7 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
       
             if(response.status === 200){
               setIsRemoveModalOpen(false)
-              toast.success("Product removed from cart")
+              toast.success("Product removed from wishlist")
               await axios.post(
                 '/userActivity/track', 
                 {

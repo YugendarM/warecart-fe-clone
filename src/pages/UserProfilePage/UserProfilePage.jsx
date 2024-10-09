@@ -192,12 +192,11 @@ const UserProfilePage = () => {
         <div className='flex flex-col gap-6'>
           <div className='grid grid-cols-2 gap-12'>
             <Link to={"/cart"} className='border-2 border-gray-300 py-2 px-4 rounded-sm text-blue-500 text-base flex items-center gap-4 w-full hover:border-gray-500 transition hover:bg-blue-50'><FaCartShopping  className='text-blue-500 text-2xl' />My Cart</Link>
-            <Link to={"/orders"} className='border-2 border-gray-300 py-2 px-4 rounded-sm text-blue-500 text-base flex items-center gap-4 w-full hover:border-gray-500 transition hover:bg-blue-50'><FaBoxOpen  className='text-blue-500 text-2xl' />My Orders</Link>
-
+            {/* <Link to={"/orders"} className='border-2 border-gray-300 py-2 px-4 rounded-sm text-blue-500 text-base flex items-center gap-4 w-full hover:border-gray-500 transition hover:bg-blue-50'><FaBoxOpen  className='text-blue-500 text-2xl' />My Orders</Link> */}
+            <Link to={"/wishlist"} className='border-2 border-gray-300 py-2 px-4 rounded-sm text-blue-500 text-base flex items-center gap-4 w-full hover:border-gray-500 transition hover:bg-blue-50'><FaHeart  className='text-blue-500 text-2xl' />My Wishlist</Link>
           </div>
 
           <div className='grid grid-cols-2 gap-12'>
-            <Link to={"/wishlist"} className='border-2 border-gray-300 py-2 px-4 rounded-sm text-blue-500 text-base flex items-center gap-4 w-full hover:border-gray-500 transition hover:bg-blue-50'><FaHeart  className='text-blue-500 text-2xl' />My Wishlist</Link>
           </div>
         </div>
 

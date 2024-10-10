@@ -15,7 +15,7 @@ const App = () => {
       intent: "capture",
   };
 
-  axios.defaults.baseURL = "http://localhost:3500/api/v1"
+  axios.defaults.baseURL = "https://ware-cart-be.vercel.app/api/v1"
   return (
     <PayPalScriptProvider options={initialOptions}>
       <BrowserRouter>

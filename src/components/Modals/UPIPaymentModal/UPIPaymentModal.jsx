@@ -54,7 +54,7 @@ const UPIPaymentModal = ({isUPIpaymentModalOpen, handleModalClose, paymentMethod
             toast.success("Order placed succesfully")
             handleModalClose()
             setIsModalOpen(false)
-            navigate("/orders")
+            navigate("/")
           }
         } catch (error) {
             if (error.response) {

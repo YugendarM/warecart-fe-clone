@@ -159,6 +159,7 @@ const AdminOrderOverviewPage = () => {
                         <h1 className='w-[18%] py-3 px-4 text-sm font-semibold'>Price</h1>
                         <h1 className='w-[18%] py-3 px-4 text-sm font-semibold'>Quantity</h1>
                         <h1 className='w-[18%] py-3 px-4 text-sm font-semibold'>Total Price</h1>
+                        <h1 className='w-[16%] py-3 px-4 text-sm font-semibold'></h1>
                     </div>
                     <div className='overflow-y-scroll no-scrollbar'>
                         {

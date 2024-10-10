@@ -179,7 +179,7 @@ const UserCheckOutPage = () => {
                     )
                 )) 
                 toast.success("Order placed Successfully") 
-                navigate("/orders") 
+                navigate("/") 
             }
         } catch (error) {
             if (error.response) {
@@ -239,7 +239,7 @@ const UserCheckOutPage = () => {
                         )
                     )) 
                     toast.success('Order placed Successfully') 
-                    navigate("/orders") 
+                    navigate("/") 
                 } catch (error) {
                     console.error('Error tracking user activity:', error) 
                     toast.warn('Order placed, but tracking failed.') 

@@ -99,7 +99,7 @@ const ProductPage = () => {
                     title: <Link to={"/admin/dashboard"}><TbLayoutDashboardFilled className='text-xl'/></Link>,
                     },
                     {
-                    title: <Link to={"/admin/product"}>Products</Link>,
+                    title: <Link to={"/admin/products"}>Products</Link>,
                     },
                     {
                     title: <p className='capitalize'>{productData && productData.productData && productData.productData.productName}</p>,

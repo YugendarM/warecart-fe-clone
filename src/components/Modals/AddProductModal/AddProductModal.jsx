@@ -46,6 +46,7 @@ const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
           if(response.status === 201){
             toast.success("Product added successfully")
             setIsModalOpen(false)
+            handleAddCancel()
           }
           
         }

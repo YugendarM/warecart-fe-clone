@@ -213,8 +213,8 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
     <Link to={`/products/${product._id}`} className='shadow-custom-medium hover:shadow-custom-heavy transition rounded-md'>
       <div className='h-56'>
         <img 
-            src='https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg'
-            className='w-full h-full rounded-t-md object-contain'
+            src={product?.imageUrls?.length>0 ? product?.imageUrls[0] : `https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg`}
+            className='w-full h-full rounded-t-md object-cover'
         />
       </div>
       <div className='px-5 py-3 flex flex-col gap-4'>

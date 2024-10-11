@@ -42,7 +42,7 @@ const UserProductsPage = () => {
                   withCredentials: true
                 }
               )
-        
+              console.log(response)
               if(response.status === 200){
                 setProductsData(response.data.data)
                 setFilteredProductData(response.data.data)
@@ -138,7 +138,7 @@ const UserProductsPage = () => {
           else{
             setIsSortOrFilterApplied(false)
           }
-        const filteredData = Array.isArray(productsData) && productsData.length > 0 &&
+        const filteredData = Array.isArray(productsData) && productsData?.length > 0 &&
         productsData.filter((product) =>
           product.productName.toLowerCase().includes(searchQuery) ||
           product.productDescription.toLowerCase().includes(searchQuery) 

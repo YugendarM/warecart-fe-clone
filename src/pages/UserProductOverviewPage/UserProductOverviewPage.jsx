@@ -202,6 +202,7 @@ const UserProductOverviewPage = () => {
                 if (response.status === 200) {
                     setProductData(response.data.data);
                 }
+                console.log(response)
             } catch (error) {
                 if (error.response) {
                     if (error.response.status === 409) {
@@ -390,7 +391,7 @@ const UserProductOverviewPage = () => {
                 <div className='w-[35%] bg-gray-0 flex flex-col gap-2 '>
                     <div className='h-[450px]'>
                         <img
-                            src='https://img.freepik.com/premium-vector/beautiful-flat-style-shopping-cart-icon-vector-illustration_1287274-64477.jpg?w=740'
+                            src={productData?.imageUrls?.length>0 ? productData?.imageUrls[0] : `https://img.freepik.com/premium-vector/beautiful-flat-style-shopping-cart-icon-vector-illustration_1287274-64477.jpg?w=740`}
                             className='w-full h-full object-cover'
                         />
                     </div>

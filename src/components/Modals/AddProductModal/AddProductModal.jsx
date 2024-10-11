@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Button, Dropdown, Form, Input, InputNumber, Menu, Modal, Select, Space } from 'antd';
+import { Breadcrumb, Button, Dropdown, Form, Input, InputNumber, Menu, Modal, Select, Space, Upload } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
 
 const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(isAddModalOpen)
+
+    const [fileList, setFileList] = useState([]);
 
     const [form] = useForm()
     const { Option } = Select;
@@ -14,6 +17,19 @@ const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
     const handleOk = () => {
         setIsModalOpen(false);
       };
+
+      const normFile = (e) => {
+        if (Array.isArray(e)) {
+          return e;
+        }
+        return e && e.fileList;
+      };
+
+      const beforeUpload = (file) => {
+        setFileList((prevList) => [...prevList, file]);
+        return false; // Prevent automatic upload
+      };
+
 
       const handleCancel = () => {
         setIsModalOpen(false);
@@ -28,19 +44,30 @@ const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
       }
 
       const handleSubmit = async(values) => {
-        const productInputData = {
-          productName: values.productName,
-          productType: values.productType,
-          productDescription : values.productDescription,
-          price: values.price
-        }
+
+        const formData = new FormData()
+        formData.append('productName', values.productName)
+        formData.append('productType', values.productType)
+        formData.append('productDescription', values.productDescription)
+        formData.append('price', values.price)
+        fileList.forEach((file, index) => {
+          console.log(`File ${index}:`, file); // Debugging file structure
+          // console.log(`File ${index} originFileObj:`, file.originFileObj);
+          formData.append('images', file);
+        });
+
+        console.log(formData)
         try{
           const response = await axios.post(
             "product/add",
-            productInputData,
+            formData,
             {
-              withCredentials: true
-            }
+              withCredentials: true,
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            },
+            
           )
     
           if(response.status === 201){
@@ -154,6 +181,23 @@ const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
                     min={0} 
                     style={{ width: '100%' }} 
                     />
+          </Form.Item>
+
+          <Form.Item
+            name="images"
+            label="Images"
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+          >
+            <Upload name="logo"
+          listType="picture"
+          beforeUpload={beforeUpload}
+          fileList={fileList}
+          onRemove={(file) => {
+            setFileList((prevList) => prevList.filter((item) => item.uid !== file.uid));
+          }}>
+              <Button icon={<UploadOutlined />}>Click to upload</Button>
+            </Upload>
           </Form.Item>
 
           <Form.Item

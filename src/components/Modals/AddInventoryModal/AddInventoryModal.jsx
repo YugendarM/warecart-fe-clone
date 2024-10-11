@@ -111,7 +111,7 @@ const AddInventoryModal = ({warehouse, isAddModalOpen, handleAddCancel, spaceAva
                     {
                         productList.length > 0 && 
                         productList.map((product, index) => (
-                            <Option  value={product._id}><div className='text-sm font-semibold flex  items-center w-full' key={index}><p className='w-1/2'>{product.productName} </p><span className='text-xs text-gray-500 w-1/2'>Category:  <span className='capitalize text-gray-800 text-sm'>{product.productType}</span></span></div></Option>
+                            <Option  value={product._id}><div className='text-sm font-semibold flex gap-2 items-center w-full text-ellipsis overflow-hidden' key={index}><p className='w-1/2 text-ellipsis overflow-hidden'>{product.productName} </p><span className='text-xs text-gray-500 w-1/2'>Category:  <span className='capitalize text-gray-800 text-sm'>{product.productType}</span></span></div></Option>
                         ))
                     }
                 </Select>

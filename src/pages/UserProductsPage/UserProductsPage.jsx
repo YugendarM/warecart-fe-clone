@@ -3,7 +3,7 @@ import React, { useEffect, useState, useSyncExternalStore } from 'react'
 import { IoSearch } from 'react-icons/io5'
 import UserProductCard from '../../components/UserProductCard/UserProductCard'
 import { getSocket, initiateSocketConnection } from '../../utilities/socketService'
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie' 
 import { useLocation } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
@@ -15,7 +15,7 @@ const UserProductsPage = () => {
     const [filteredProductData, setFilteredProductData] = useState([])
     const [wishlistData, setWishlistData] = useState([])
     const [cartItemData, setCartItemData] = useState([])
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false) 
 
     const {pathname} = useLocation()
 
@@ -42,7 +42,6 @@ const UserProductsPage = () => {
                   withCredentials: true
                 }
               )
-              console.log(response)
               if(response.status === 200){
                 setProductsData(response.data.data)
                 setFilteredProductData(response.data.data)
@@ -52,14 +51,14 @@ const UserProductsPage = () => {
             catch (error) {
               if (error.response) {
                 if (error.response.status === 500) {
-                  toast.error("An error occurred while fetching Products data");
+                  toast.error("An error occurred while fetching Products data") 
                 } else {
-                  toast.error(`An error occurreddddddd: ${error.response.status} ${error.response.data.message}`);
+                  toast.error(`An error occurreddddddd: ${error.response.status} ${error.response.data.message}`) 
                 }
               } else if (error.request) {
-                toast.error("No response from server. Please try again.");
+                toast.error("No response from server. Please try again.") 
               } else {
-                toast.error("An unexpected error occurred. Please try again.");
+                toast.error("An unexpected error occurred. Please try again.") 
               }
             }
             
@@ -82,14 +81,14 @@ const UserProductsPage = () => {
         catch (error) {
           if (error.response) {
             if (error.response.status === 500) {
-              console.error("An error occurred while fetching Wishlist data");
+              console.error("An error occurred while fetching Wishlist data") 
             } else {
-              console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+              console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
             }
           } else if (error.request) {
-            console.error("No response from server. Please try again.");
+            console.error("No response from server. Please try again.") 
           } else {
-            console.error("An unexpected error occurred. Please try again.");
+            console.error("An unexpected error occurred. Please try again.") 
           }
         }
       }
@@ -110,14 +109,14 @@ const UserProductsPage = () => {
         catch (error) {
           if (error.response) {
             if (error.response.status === 500) {
-              console.error("An error occurred while fetching Cart data");
+              console.error("An error occurred while fetching Cart data") 
             } else {
-              console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+              console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
             }
           } else if (error.request) {
-            console.error("No response from server. Please try again.");
+            console.error("No response from server. Please try again.") 
           } else {
-            console.error("An unexpected error occurred. Please try again.");
+            console.error("An unexpected error occurred. Please try again.") 
           }
         }
       }
@@ -130,7 +129,7 @@ const UserProductsPage = () => {
     }, [isLoggedIn])
 
     useEffect(() => {
-        const searchQuery = productSearch.trim().toLowerCase();
+        const searchQuery = productSearch.trim().toLowerCase() 
 
         if(productSearch.length !== 0){
             setIsSortOrFilterApplied(true)
@@ -143,8 +142,8 @@ const UserProductsPage = () => {
           product.productName.toLowerCase().includes(searchQuery) ||
           product.productDescription.toLowerCase().includes(searchQuery) 
     
-        );
-        setFilteredProductData(filteredData);
+        ) 
+        setFilteredProductData(filteredData) 
     }, [productSearch, productsData])
 
     
@@ -161,9 +160,9 @@ const UserProductsPage = () => {
             setProductsData((prevState) => {
                 return prevState.map(product => 
                     product.id === updatedProduct.id ? updatedProduct : product
-                );
-            });
-        });
+                ) 
+            }) 
+        }) 
 
         socket.on("productDeleted", (deletedProduct) => {
             setProductsData((prevState) => prevState.filter((product) => product._id !== deletedProduct._id))
@@ -184,13 +183,13 @@ const UserProductsPage = () => {
     }, [])
 
     useEffect(() => {
-      const sessionToken = Cookies.get('SessionID');
+      const sessionToken = Cookies.get('SessionID') 
       if (sessionToken) {
-        setIsLoggedIn(true);
+        setIsLoggedIn(true) 
       } else {
-        setIsLoggedIn(false);
+        setIsLoggedIn(false) 
       }
-    }, [pathname]);  
+    }, [pathname])   
 
   return (
     <div className='px-5 md:px:20 lg:px-56 py-10'>

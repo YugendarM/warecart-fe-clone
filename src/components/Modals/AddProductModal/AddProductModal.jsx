@@ -1,43 +1,43 @@
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Button, Dropdown, Form, Input, InputNumber, Menu, Modal, Select, Space, Upload } from 'antd';
-import { useForm } from 'antd/es/form/Form';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
+import { Breadcrumb, Button, Dropdown, Form, Input, InputNumber, Menu, Modal, Select, Space, Upload } from 'antd' 
+import { useForm } from 'antd/es/form/Form' 
+import axios from 'axios' 
+import { toast } from 'react-toastify' 
+import { InboxOutlined, UploadOutlined } from '@ant-design/icons' 
 
 const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
 
     const [isModalOpen, setIsModalOpen] = useState(isAddModalOpen)
 
-    const [fileList, setFileList] = useState([]);
+    const [fileList, setFileList] = useState([]) 
 
     const [form] = useForm()
-    const { Option } = Select;
+    const { Option } = Select 
 
     const handleOk = () => {
-        setIsModalOpen(false);
-      };
+        setIsModalOpen(false) 
+      } 
 
       const normFile = (e) => {
         if (Array.isArray(e)) {
-          return e;
+          return e 
         }
-        return e && e.fileList;
-      };
+        return e && e.fileList 
+      } 
 
       const beforeUpload = (file) => {
-        setFileList((prevList) => [...prevList, file]);
-        return false; // Prevent automatic upload
-      };
+        setFileList((prevList) => [...prevList, file]) 
+        return false  
+      } 
 
 
       const handleCancel = () => {
-        setIsModalOpen(false);
-      };
+        setIsModalOpen(false) 
+      } 
 
       const handleFormChange = (changedValues, allValues) => {
-        setWarehouseInputData(allValues);
-      };
+        setWarehouseInputData(allValues) 
+      } 
     
       const handleFormClear = () => {
         form.resetFields()
@@ -51,12 +51,9 @@ const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
         formData.append('productDescription', values.productDescription)
         formData.append('price', values.price)
         fileList.forEach((file, index) => {
-          console.log(`File ${index}:`, file); // Debugging file structure
-          // console.log(`File ${index} originFileObj:`, file.originFileObj);
-          formData.append('images', file);
-        });
+          formData.append('images', file) 
+        }) 
 
-        console.log(formData)
         try{
           const response = await axios.post(
             "product/add",
@@ -80,19 +77,19 @@ const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
         catch (error) {
           if (error.response) {
             if (error.response.status === 409) {
-              toast.error("Product already exists");
+              toast.error("Product already exists") 
             } else if (error.response.status === 500) {
-              toast.error("An error occurred while adding the product");
+              toast.error("An error occurred while adding the product") 
             } else {
-              toast.error(`An error occurred: ${error.response.status}`);
+              toast.error(`An error occurred: ${error.response.status}`) 
             }
           } else if (error.request) {
-            toast.error("No response from server. Please try again.");
+            toast.error("No response from server. Please try again.") 
           } else {
-            toast.error("An unexpected error occurred. Please try again.");
+            toast.error("An unexpected error occurred. Please try again.") 
           }
         }
-      };
+      } 
 
       useEffect(() => {
         if(isAddModalOpen){
@@ -194,7 +191,7 @@ const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
           beforeUpload={beforeUpload}
           fileList={fileList}
           onRemove={(file) => {
-            setFileList((prevList) => prevList.filter((item) => item.uid !== file.uid));
+            setFileList((prevList) => prevList.filter((item) => item.uid !== file.uid)) 
           }}>
               <Button icon={<UploadOutlined />}>Click to upload</Button>
             </Upload>

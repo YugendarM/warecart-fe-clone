@@ -1,4 +1,4 @@
-import { Breadcrumb, Button } from 'antd'
+import { Breadcrumb, Button, Image } from 'antd'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { FaEdit } from 'react-icons/fa'
@@ -10,6 +10,8 @@ import ProductEditModal from '../../components/Modals/ProductEditModal/ProductEd
 import ProductDeleteModal from '../../components/Modals/ProductDeleteModal/ProductDeleteModal'
 import { getSocket, initiateSocketConnection } from '../../utilities/socketService'
 import { toast } from 'react-toastify'
+import "react-responsive-carousel/lib/styles/carousel.min.css" 
+import { Carousel } from 'react-responsive-carousel' 
 
 const ProductPage = () => {
     
@@ -27,6 +29,14 @@ const ProductPage = () => {
     const handleDeleteCancel = () => {
         setIsDeleteModalOpen(false)
     }
+
+    const formatRupees = (amount) => {
+        return new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            minimumFractionDigits: 0,  
+        }).format(amount) 
+    } 
 
     useEffect(() => {
 
@@ -58,16 +68,16 @@ const ProductPage = () => {
             catch (error) {
                 if (error.response) {
                   if (error.response.status === 404) {
-                    toast.error("Product Not Found");
+                    toast.error("Product Not Found") 
                   } else if (error.response.status === 500) {
-                    toast.error("An error occurred while fetching the product");
+                    toast.error("An error occurred while fetching the product") 
                   } else {
-                    toast.error(`An error occurred: ${error.response.status}`);
+                    toast.error(`An error occurred: ${error.response.status}`) 
                   }
                 } else if (error.request) {
-                    toast.error("No response from server. Please try again.");
+                    toast.error("No response from server. Please try again.") 
                 } else {
-                    toast.error("An unexpected error occurred. Please try again.");
+                    toast.error("An unexpected error occurred. Please try again.") 
                 }
               }
         }
@@ -110,27 +120,60 @@ const ProductPage = () => {
             productData !== null ? 
             <div className='shadow-custom-medium rounded-md w-full flex flex-col min-h-[78vh] px-5 py-5'>
                 
-                <div className='flex items-center justify-between '>
-                    <div className='flex flex-col gap-2'>
-                        <h1 className='text-3xl font-bold text-gray-800'>{productData.productData.productName}</h1>
-                        <h3 className='text-gray-600'>{productData.productData.productDescription}</h3>
+                <div className='flex items-start gap-10'>
+                    <div className='w-[40%]'>
+                        <div className='h-[400px] '>
+                        {
+                        productData?.productData?.imageUrls?.length > 0 ? 
+                        <Carousel className=''>
+                            {
+                            productData?.productData?.imageUrls?.length > 0 ? 
+                            productData?.productData?.imageUrls?.map((image) => (
+                                <Image
+                                height={400}
+                                width={"100%"}
+                                className='object-cover h-96'
+                                src={image}
+                                />
+                            ))
+                            : 
+                            null
+                            }
+                        </Carousel>
+
+                        :
+                        <img
+                            src={`https://img.freepik.com/premium-vector/beautiful-flat-style-shopping-cart-icon-vector-illustration_1287274-64477.jpg?w=740`}
+                            className='w-full h-full object-cover'
+                        /> 
+                        }
+                        </div>
                     </div>
-                    <div className='flex items-center gap-3'>
-                    <Button type='primary' onClick={() => setIsEditModalOpen(true)}><FaEdit className='text-base' />Edit</Button>
-                    <Button onClick={() => setIsDeleteModalOpen(true)} color='danger' variant='solid'><MdDelete className='text-base' />Delete</Button>
+                    <div className='flex flex-col items-start gap-10 w-[60%] py-10'>
+                        <div className='flex justify-end items-center gap-5 w-full'>
+                            <Button type='primary' onClick={() => setIsEditModalOpen(true)}><FaEdit className='text-base' />Edit</Button>
+                            <Button onClick={() => setIsDeleteModalOpen(true)} color='danger' variant='solid'><MdDelete className='text-base' />Delete</Button>
+                        </div>
+                        <div className='flex flex-col gap-2'>
+                            <h1 className='text-3xl font-bold text-gray-800'>{productData.productData.productName}</h1>
+                            <h3 className='text-gray-600'>{productData.productData.productDescription}</h3>
+                        </div>
+                        <div className='flex gap-20'>
+                            <div className='flex items-end gap-2'>
+                                <h4 className='text-base text-gray-700 font-medium'>Price: </h4>
+                                <span className='text-3xl font-semibold'>{formatRupees(productData.productData.price)}<span className='text-base text-gray-600 font-medium'></span></span>
+                            </div>
+                            <div className='flex items-end gap-2'>
+                                <h4 className='text-base text-gray-700 font-medium'>Category: </h4>
+                                <span className='text-3xl font-semibold capitalize'>{productData.productData.productType}<span className='text-base text-gray-600 font-medium'></span></span>
+                            </div>
+                        </div>
                     </div>
                     
                 </div>
 
                 <div className='flex gap-20 py-5'>
-                    <div className='flex items-end gap-2'>
-                        <h4 className='text-base text-gray-700 font-medium'>Price: </h4>
-                        <span className='text-3xl font-semibold'>₹ {productData.productData.price}<span className='text-base text-gray-600 font-medium'></span></span>
-                    </div>
-                    <div className='flex items-end gap-2'>
-                        <h4 className='text-base text-gray-700 font-medium'>Category: </h4>
-                        <span className='text-3xl font-semibold capitalize'>{productData.productData.productType}<span className='text-base text-gray-600 font-medium'></span></span>
-                    </div>
+                    
                 </div>
 
                 <div className='pt-5'>

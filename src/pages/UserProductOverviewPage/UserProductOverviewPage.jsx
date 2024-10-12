@@ -1,26 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { getSocket, initiateSocketConnection } from '../../utilities/socketService';
-import axios from 'axios';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Tooltip } from 'antd';
-import { FaHeart, FaMinus, FaPlus, FaStar } from 'react-icons/fa6';
-import Cookies from 'js-cookie';
+import React, { useEffect, useState } from 'react' 
+import { getSocket, initiateSocketConnection } from '../../utilities/socketService' 
+import axios from 'axios' 
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom' 
+import { Tooltip, Image } from 'antd' 
+import { FaHeart, FaMinus, FaPlus, FaStar } from 'react-icons/fa6' 
+import Cookies from 'js-cookie' 
 import { Button, Modal } from 'antd'
-import { TiShoppingCart } from 'react-icons/ti';
-import { toast } from 'react-toastify';
+import { TiShoppingCart } from 'react-icons/ti' 
+import { toast } from 'react-toastify' 
+import "react-responsive-carousel/lib/styles/carousel.min.css"   
+import { Carousel } from 'react-responsive-carousel' 
 
 const UserProductOverviewPage = () => {
-    const [productData, setProductData] = useState({});
-    const [offersData, setOffersData] = useState([]);
-    const [quantity, setQuantity] = useState(1);
-    const [isMinusAbled, setIsMinusAbled] = useState(false);
-    const [isPlusAbled, setIsPlusAbled] = useState(true);
+    const [productData, setProductData] = useState({}) 
+    const [offersData, setOffersData] = useState([]) 
+    const [quantity, setQuantity] = useState(1) 
+    const [isMinusAbled, setIsMinusAbled] = useState(false) 
+    const [isPlusAbled, setIsPlusAbled] = useState(true) 
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [wishlistData, setWishlistData] = useState([])
     const [cartItemData, setCartItemData] = useState([])
     const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false)
 
-    const { productId } = useParams();
+    const { productId } = useParams() 
     const navigate = useNavigate() 
     const {pathname} = useLocation()
 
@@ -28,9 +30,9 @@ const UserProductOverviewPage = () => {
         return new Intl.NumberFormat('en-IN', {
             style: 'currency',
             currency: 'INR',
-            minimumFractionDigits: 0, // Adjust if you want decimals
-        }).format(amount);
-    };
+            minimumFractionDigits: 0,
+        }).format(amount) 
+    } 
 
     const handleBuyNow = () => {
         if(isLoggedIn){
@@ -81,21 +83,21 @@ const UserProductOverviewPage = () => {
                 {
                   withCredentials: true
                 }
-              );
+              ) 
             }
             
           }
           catch (error) {
             if (error.response) {
               if (error.response.status === 500) {
-                toast.error(`An error occurred while adding to cart: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred while adding to cart: ${error.response.status} ${error.response.data.message}`) 
               } else {
-                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
               }
             } else if (error.request) {
-              toast.error("No response from server. Please try again.");
+              toast.error("No response from server. Please try again.") 
             } else {
-              toast.error("An unexpected error occurred. Please try again.");
+              toast.error("An unexpected error occurred. Please try again.") 
             }
           }
         }
@@ -122,21 +124,21 @@ const UserProductOverviewPage = () => {
                 {
                   withCredentials: true
                 }
-              );
+              ) 
             }
             
           }
           catch (error) {
             if (error.response) {
               if (error.response.status === 500) {
-                toast.error("An error occurred while Adding Product to wishlist");
+                toast.error("An error occurred while Adding Product to wishlist") 
               } else {
-                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
               }
             } else if (error.request) {
-              toast.error("No response from server. Please try again.");
+              toast.error("No response from server. Please try again.") 
             } else {
-              toast.error("An unexpected error occurred. Please try again.");
+              toast.error("An unexpected error occurred. Please try again.") 
             }
           }
     }
@@ -160,14 +162,14 @@ const UserProductOverviewPage = () => {
           catch (error) {
             if (error.response) {
               if (error.response.status === 500) {
-                toast.error(`An error occurred while Removing Product from wishlist: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred while Removing Product from wishlist: ${error.response.status} ${error.response.data.message}`) 
               } else {
-                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
               }
             } else if (error.request) {
-              toast.error("No response from server. Please try again.");
+              toast.error("No response from server. Please try again.") 
             } else {
-              toast.error("An unexpected error occurred. Please try again.");
+              toast.error("An unexpected error occurred. Please try again.") 
             }
           }
     }
@@ -186,62 +188,61 @@ const UserProductOverviewPage = () => {
     }
 
     useEffect(() => {
-        const sessionToken = Cookies.get('SessionID');
+        const sessionToken = Cookies.get('SessionID') 
         if (sessionToken) {
-          setIsLoggedIn(true);
+          setIsLoggedIn(true) 
         } else {
-          setIsLoggedIn(false);
+          setIsLoggedIn(false) 
         }
-      }, [pathname]);
+      }, [pathname]) 
     
 
     useEffect(() => {
         const getProductData = async () => {
             try {
-                const response = await axios.get(`/product/users/${productId}`);
+                const response = await axios.get(`/product/users/${productId}`) 
                 if (response.status === 200) {
-                    setProductData(response.data.data);
+                    setProductData(response.data.data) 
                 }
-                console.log(response)
             } catch (error) {
                 if (error.response) {
                     if (error.response.status === 409) {
-                      toast.error("Warehouse already exists");
+                      toast.error("Warehouse already exists") 
                     } else if (error.response.status === 500) {
-                      toast.error("An error occurred while adding the warehouse");
+                      toast.error("An error occurred while adding the warehouse") 
                     } else {
-                      toast.error(`An error occurred: ${error.response.status}`);
+                      toast.error(`An error occurred: ${error.response.status}`) 
                     }
                 } else if (error.request) {
-                  toast.error("No response from server. Please try again.");
+                  toast.error("No response from server. Please try again.") 
                 } else {
-                  toast.error("An unexpected error occurred. Please try again.");
+                  toast.error("An unexpected error occurred. Please try again.") 
                 }
             }
-        };
+        } 
         
         const getOffersData = async () => {
             try {
-                const response = await axios.get("/pricingRule");
+                const response = await axios.get("/pricingRule") 
                 if (response.status === 200) {
-                    setOffersData(response.data.data);
+                    setOffersData(response.data.data) 
                 }
             } catch (error) {
                 if (error.response) {
                     if (error.response.status === 404) {
-                      toast.error("No offers found");
+                      toast.error("No offers found") 
                     } else if (error.response.status === 500) {
-                      toast.error("An error occurred while adding the warehouse");
+                      toast.error("An error occurred while adding the warehouse") 
                     } else {
-                      toast.error(`An error occurred: ${error.response.status}`);
+                      toast.error(`An error occurred: ${error.response.status}`) 
                     }
                 } else if (error.request) {
-                  toast.error("No response from server. Please try again.");
+                  toast.error("No response from server. Please try again.") 
                 } else {
-                  toast.error("An unexpected error occurred. Please try again.");
+                  toast.error("An unexpected error occurred. Please try again.") 
                 }
             }
-        };
+        } 
 
         const getAllWishlistedProducts = async() => {
             try{
@@ -260,14 +261,14 @@ const UserProductOverviewPage = () => {
             catch (error) {
               if (error.response) {
                 if (error.response.status === 500) {
-                  console.error("An error occurred while fetching Wishlist data");
+                  console.error("An error occurred while fetching Wishlist data") 
                 } else {
-                  console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                  console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
                 }
               } else if (error.request) {
-                console.error("No response from server. Please try again.");
+                console.error("No response from server. Please try again.") 
               } else {
-                console.error("An unexpected error occurred. Please try again.");
+                console.error("An unexpected error occurred. Please try again.") 
               }
             }
         }
@@ -288,14 +289,14 @@ const UserProductOverviewPage = () => {
             catch (error) {
               if (error.response) {
                 if (error.response.status === 500) {
-                  console.error("An error occurred while fetching Cart data");
+                  console.error("An error occurred while fetching Cart data") 
                 } else {
-                  console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                  console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
                 }
               } else if (error.request) {
-                console.error("No response from server. Please try again.");
+                console.error("No response from server. Please try again.") 
               } else {
-                console.error("An unexpected error occurred. Please try again.");
+                console.error("An unexpected error occurred. Please try again.") 
               }
             }
         }
@@ -305,33 +306,33 @@ const UserProductOverviewPage = () => {
         getAllWishlistedProducts()
        }
         
-        getOffersData();
-        getProductData();
-    }, []);
+        getOffersData() 
+        getProductData() 
+    }, []) 
 
     useEffect(() => {
-        initiateSocketConnection();
-        const socket = getSocket();
+        initiateSocketConnection() 
+        const socket = getSocket() 
 
         socket.on("productUpdated", (updatedProduct) => {
-            setProductData(updatedProduct);
-        });
+            setProductData(updatedProduct) 
+        }) 
 
         socket.on("pricingRuleAdded", (addedPricingRule) => {
-            setOffersData((prevState) => [...prevState, addedPricingRule]);
-        });
+            setOffersData((prevState) => [...prevState, addedPricingRule]) 
+        }) 
 
         socket.on("pricingRuleUpdated", (updatedPricingRule) => {
             setOffersData((prevState) => {
                 return prevState.map(offer => 
                     offer.id === updatedPricingRule.id ? updatedPricingRule : offer
-                );
-            });
-        });
+                ) 
+            }) 
+        }) 
 
         socket.on("pricingRuleDeleted", (deletedPricingRule) => {
-            setOffersData((prevState) => prevState.filter((offer) => offer._id !== deletedPricingRule._id));
-        });
+            setOffersData((prevState) => prevState.filter((offer) => offer._id !== deletedPricingRule._id)) 
+        }) 
 
         socket.on("wishlistUpdated", (updatedWishlist) => {
             setWishlistData(updatedWishlist)
@@ -342,27 +343,26 @@ const UserProductOverviewPage = () => {
         })
 
         return () => {
-            socket.disconnect();
-        };
-    }, []);
+            socket.disconnect() 
+        } 
+    }, []) 
 
     useEffect(() => {
         if (quantity > 1) {
-            setIsMinusAbled(true);
-            setIsPlusAbled(true);
+            setIsMinusAbled(true) 
+            setIsPlusAbled(true) 
         }
         if (quantity <= 1) {
-            setIsMinusAbled(false);
+            setIsMinusAbled(false) 
         }
         if (quantity >= 30) {
-            setIsPlusAbled(false);
+            setIsPlusAbled(false) 
         }
-    }, [quantity]); 
+    }, [quantity])  
 
     useEffect(() => {
       const trackPageView = async () => {
         try {
-          console.log("tracking");
           await axios.post(
             '/userActivity/track', 
             {
@@ -373,15 +373,14 @@ const UserProductOverviewPage = () => {
             {
               withCredentials: true
             }
-          );
-          console.log("Tracking successful");
+          ) 
         } catch (error) {
-          console.error("Error tracking page view:", error.message);
+          console.error("Error tracking page view:", error.message) 
         }
-      };
+      } 
     
-      trackPageView();
-    }, [productData]);
+      trackPageView() 
+    }, [productData]) 
     
 
     return (
@@ -390,10 +389,31 @@ const UserProductOverviewPage = () => {
             <div className='px-5 md:px-20 lg:px-56 py-20 flex'>
                 <div className='w-[35%] bg-gray-0 flex flex-col gap-2 '>
                     <div className='h-[450px]'>
-                        <img
-                            src={productData?.imageUrls?.length>0 ? productData?.imageUrls[0] : `https://img.freepik.com/premium-vector/beautiful-flat-style-shopping-cart-icon-vector-illustration_1287274-64477.jpg?w=740`}
-                            className='w-full h-full object-cover'
-                        />
+                    {
+                      productData?.imageUrls?.length > 0 ? 
+                      <Carousel className='h-[4px]'>
+                        {
+                          productData?.imageUrls?.length > 0 ? 
+                          productData?.imageUrls?.map((image) => (
+                            <Image
+                              height={450}
+                              width={"100%"}
+                              className='object-cover h-96'
+                              src={image}
+                            />
+                          ))
+
+                          : 
+                          null
+                        }
+                      </Carousel>
+
+                      :
+                      <img
+                        src={`https://img.freepik.com/premium-vector/beautiful-flat-style-shopping-cart-icon-vector-illustration_1287274-64477.jpg?w=740`}
+                        className='w-full h-full object-cover'
+                      /> 
+                    }
                     </div>
                     {
                         isProductAddedInCart(productData._id) ? 
@@ -486,7 +506,7 @@ const UserProductOverviewPage = () => {
             </Modal>
             
         </React.Fragment>
-    );
-};
+    ) 
+} 
 
-export default UserProductOverviewPage;
+export default UserProductOverviewPage 

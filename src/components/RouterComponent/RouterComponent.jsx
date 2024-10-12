@@ -11,6 +11,9 @@ import UserWishlistPage from '../../pages/UserWishlistPage/UserWishlistPage'
 import UserProfilePage from '../../pages/UserProfilePage/UserProfilePage'
 import UserOrdersPage from '../../pages/UserOrdersPage/UserOrdersPage'
 import UserCartPage from '../../pages/UserCartPage/UserCartPage'
+import LoginProtectedRoutes from '../ProtectedRoutes/LoginProtectedRoutes'
+import LogoutProtectedRoutes from '../ProtectedRoutes/LogoutProtectedRoutes'
+import AdminProtectedRoutes from '../ProtectedRoutes/AdminProtectedRoutes'
 
 const RouterComponent = () => {
   return (
@@ -18,14 +21,20 @@ const RouterComponent = () => {
         <Route exact path='/' element={<HomePage/>}/>
         <Route exact path='/products' element={<UserProductsPage/>}/>
         <Route exact path='/products/:productId' element={<UserProductOverviewPage/>}/>
-        <Route path='/login' element={<LoginPage/>}/>
-        <Route path='/signup' element={<SignupPage/>}/>
-        <Route path='/wishlist' element={<UserWishlistPage/>}/> 
-        <Route path='/profile' element={<UserProfilePage/>}/> 
-        <Route path='/orders' element={<UserOrdersPage/>}/> 
-        <Route path='/cart' element={<UserCartPage/>}/> 
-        <Route path='/checkout' element={<UserCheckOutPage/>}/>
-        <Route path='/admin/*' element={<AdminPageComponent/>}/>
+        <Route element={<LogoutProtectedRoutes/>}>
+          <Route path='/login' element={<LoginPage/>}/>
+          <Route path='/signup' element={<SignupPage/>}/>
+        </Route>
+        <Route element={<LoginProtectedRoutes/>}>
+          <Route path='/wishlist' element={<UserWishlistPage/>}/> 
+          <Route path='/profile' element={<UserProfilePage/>}/> 
+          <Route path='/orders' element={<UserOrdersPage/>}/> 
+          <Route path='/cart' element={<UserCartPage/>}/> 
+          <Route path='/checkout' element={<UserCheckOutPage/>}/>
+        </Route>
+        <Route element={<AdminProtectedRoutes/>}>
+          <Route path='/admin/*' element={<AdminPageComponent/>}/>  
+        </Route>
       </Routes>
   )
 }

@@ -168,8 +168,8 @@ const AdminDashboardPage = () => {
   }, [pathname])   
 
   return (
-    <div className='flex flex-col gap-10 w-full h-[95vh] py-5 md:py-5 overflow-y-scroll no-scrollbar px-5'>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 ga w-full gap-6'>
+    <div className='flex flex-col gap-10 w-full h-[95vh]  md:py-5 overflow-y-scroll no-scrollbar px-5'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 ga w-full gap-6 py-5'>
         <div className='rounded-lg hover:transform hover:-translate-y-2 transition shadow-custom-medium hover:shadow-custom-heavy p-5 w-full flex flex-col gap-3'>
             <IoEye className='text-primaryBlue text-3xl'/>
             <h1 className='text-lg font-bold'>Average Product Views</h1>
@@ -192,10 +192,10 @@ const AdminDashboardPage = () => {
               option && option === "Today" ? 
               ( bestSellingProduct?.bestSellingToday?.productDetails?
                 <div className='flex flex-col'>
-                  <p className='font-semibold text-gray-800 text-2xl'>{bestSellingProduct?.bestSellingToday?.productDetails?.productName}</p>
+                  <p className='font-semibold text-gray-800 text-2xl text-ellipsis whitespace-nowrap overflow-hidden'>{bestSellingProduct?.bestSellingToday?.productDetails?.productName}</p>
                   <div className='flex items-center justify-between'>
-                    <p className='font-normal text-gray-500 text-sm'>{bestSellingProduct?.bestSellingToday?.productDetails?.productDescription}</p>
-                    <p className='font-normal text-gray-500 text-sm'><span className='text-lg font-medium text-gray-800'>{bestSellingProduct?.bestSellingToday?.totalSales}</span> Purchases</p>
+                    <p className='font-normal text-gray-500 text-sm text-ellipsis whitespace-nowrap overflow-hidden w-[60%]'>{bestSellingProduct?.bestSellingToday?.productDetails?.productDescription}</p>
+                    <p className='font-normal text-gray-500 text-xs'><span className='text-sm font-medium text-gray-800 w-[40%]'>{bestSellingProduct?.bestSellingToday?.totalSales}</span> Purchases</p>
                   </div>
                 </div>
                 :
@@ -205,10 +205,10 @@ const AdminDashboardPage = () => {
               option && option === "This Month" ?
               ( bestSellingProduct?.bestSellingMonth?.productDetails?
                 <div className='flex flex-col'>
-                  <p className='font-semibold text-gray-800 text-2xl'>{bestSellingProduct?.bestSellingMonth?.productDetails?.productName}</p>
+                  <p className='font-semibold text-gray-800 text-2xl text-ellipsis whitespace-nowrap overflow-hidden'>{bestSellingProduct?.bestSellingMonth?.productDetails?.productName}</p>
                   <div className='flex items-center justify-between'>
-                    <p className='font-normal text-gray-500 text-sm'>{bestSellingProduct?.bestSellingMonth?.productDetails?.productDescription}</p>
-                    <p className='font-normal text-gray-500 text-sm'><span className='text-lg font-medium text-gray-800'>{bestSellingProduct?.bestSellingMonth?.totalSales}</span> Purchases</p>
+                    <p className='font-normal text-gray-500 text-sm text-ellipsis whitespace-nowrap overflow-hidden w-[60%]'>{bestSellingProduct?.bestSellingMonth?.productDetails?.productDescription}</p>
+                    <p className='font-normal text-gray-500 text-xs w-[40%]'><span className='text-sm font-medium text-gray-800'>{bestSellingProduct?.bestSellingMonth?.totalSales}</span> Purchases</p>
                   </div>
                 </div>
                 :
@@ -218,10 +218,10 @@ const AdminDashboardPage = () => {
               option && option === "This Year" ? 
               ( bestSellingProduct?.bestSellingYear?.productDetails?
                 <div className='flex flex-col'>
-                  <p className='font-semibold text-gray-800 text-2xl'>{bestSellingProduct?.bestSellingYear?.productDetails?.productName}</p>
+                  <p className='font-semibold text-gray-800 text-2xl text-ellipsis whitespace-nowrap overflow-hidden'>{bestSellingProduct?.bestSellingYear?.productDetails?.productName}</p>
                   <div className='flex items-center justify-between'>
-                    <p className='font-normal text-gray-500 text-sm'>{bestSellingProduct?.bestSellingYear?.productDetails?.productDescription}</p>
-                    <p className='font-normal text-gray-500 text-sm'><span className='text-lg font-medium text-gray-800'>{bestSellingProduct?.bestSellingYear?.totalSales}</span> Purchases</p>
+                    <p className='font-normal text-gray-500 text-sm text-ellipsis whitespace-nowrap overflow-hidden w-[60%]'>{bestSellingProduct?.bestSellingYear?.productDetails?.productDescription}</p>
+                    <p className='font-normal text-gray-500 text-xs w-[40%]'><span className='text-sm font-medium text-gray-800'>{bestSellingProduct?.bestSellingYear?.totalSales}</span> Purchases</p>
                   </div>
                 </div>
                 :
@@ -262,8 +262,8 @@ const AdminDashboardPage = () => {
             <div className='flex flex-col'>
               <p className='font-semibold text-gray-800 text-2xl'>{mostLikedProduct?.productDetails?.productName}</p>
               <div className='flex items-center justify-between'>
-                <p className='font-normal text-gray-500 text-sm'>{mostLikedProduct?.productDetails?.productDescription}</p>
-                <p className='font-normal text-gray-500 text-sm'><span className='text-lg font-medium text-gray-800'>{mostLikedProduct?.wishlistCount}</span> Counts</p>
+                <p className='font-normal text-gray-500 text-sm text-ellipsis whitespace-nowrap overflow-hidden'>{mostLikedProduct?.productDetails?.productDescription}</p>
+                <p className='font-normal text-gray-500 text-sm text-ellipsis whitespace-nowrap overflow-hidden'><span className='text-lg font-medium text-gray-800'>{mostLikedProduct?.wishlistCount}</span> Counts</p>
               </div>
             </div>
         </Link>

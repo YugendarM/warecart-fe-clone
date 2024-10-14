@@ -12,24 +12,24 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
     const {pathname} = useLocation()
 
     const handleIncrease = () => {
-        const newQuantity = Math.min(quantity + 1, 30); // Max limit
-        setQuantity(newQuantity);
-        onQuantityChange(productData.productDetails._id, newQuantity); // Call the parent handler
-      };
+        const newQuantity = Math.min(quantity + 1, 30)  
+        setQuantity(newQuantity) 
+        onQuantityChange(productData.productDetails._id, newQuantity) 
+      } 
     
       const handleDecrease = () => {
-        const newQuantity = Math.max(quantity - 1, 1); // Min limit
-        setQuantity(newQuantity);
-        onQuantityChange(productData.productDetails._id, newQuantity); // Call the parent handler
-      };
+        const newQuantity = Math.max(quantity - 1, 1)  
+        setQuantity(newQuantity) 
+        onQuantityChange(productData.productDetails._id, newQuantity) 
+      } 
 
     const formatRupees = (amount) => {
     return new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR',
-        minimumFractionDigits: 0, // Adjust if you want decimals
-    }).format(amount);
-    };
+        minimumFractionDigits: 0, 
+    }).format(amount) 
+    } 
 
     const handleCartItemRemove = async() => {
       try{
@@ -59,29 +59,31 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
         catch (error) {
           if (error.response) {
             if (error.response.status === 500) {
-              toast.error(`An error occurred while Removing Product from cart: ${error.response.status} ${error.response.data.message}`);
+              toast.error(`An error occurred while Removing Product from cart: ${error.response.status} ${error.response.data.message}`) 
             } else {
-                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+                toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`) 
             }
           } else if (error.request) {
-            toast.error("No response from server. Please try again.");
+            toast.error("No response from server. Please try again.") 
           } else {
-            toast.error("An unexpected error occurred. Please try again.");
+            toast.error("An unexpected error occurred. Please try again.") 
           }
         }
     }
 
     const totalDiscountedPrice = useMemo(() => {
         if (productData && productData.productDetails && quantity) {
-            return ((productData.productDetails.price * quantity) - productData.discountPrice) || 0;
+            return ((productData.productDetails.price * quantity) - productData.discountPrice) || 0 
         }
-        return 0; // Default or fallback value
-    }, [productData, quantity]);
+        return 0  
+    }, [productData, quantity]) 
 
   return (
     <div className='flex w-full' >
         <div className="flex flex-col gap-3 w-[20%]" >
-            <img className="h-28 w-full object-contain border " src="https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg"/>
+            <div className='h-28 w-36'>
+                <img className="h-full w-full object-cover border " src={productData?.productDetails?.imageUrls?.length>0 ? productData?.productDetails?.imageUrls?.[0] :"https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg"}/>
+            </div>
             <div>
                 <div className='flex items-center justify-between '>
                     <button 

@@ -24,7 +24,6 @@ const HomePage = () => {
           withCredentials: true
         }
       )
-      console.log(response)
       if(response.status === 200){
         setTopProducts(response.data)
       }
@@ -64,14 +63,14 @@ const HomePage = () => {
         {
           topProducts?.length > 0 &&
           topProducts?.map((product, index) => (
-            <Link key={index} to={`/products/${product?._id?._id}`} className='shadow-custom-medium rounded-sm'>
-              <div>
-                <img src='https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg' className='w- object-fill'/>
+            <Link key={index} to={`/products/${product?._id}`} className='shadow-custom-medium rounded-sm'>
+              <div className='h-40 w-full'>
+                <img className="h-full w-full object-cover border " src={product?.imageUrls?.length>0 ? product?.imageUrls?.[0] :"https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg"}/>
               </div>
               <div className='px-4 py-4'>
-                <p className='text-xl font-medium'>{product?._id?.productName}</p>
-                <p className='text-sm text-gray-400 font-normal'>{product?._id?.productDescription}</p>
-                <p className='text-base text-gray-800 font-medium text-end pt-3'>{formatRupees(product?._id?.price)}</p>
+                <p className='text-lg font-medium whitespace-nowrap text-ellipsis overflow-hidden'>{product?.productName}</p>
+                <p className='text-sm text-gray-400 font-normal whitespace-nowrap text-ellipsis overflow-hidden'>{product?.productDescription}</p>
+                <p className='text-base text-gray-800 font-medium text-end pt-3'>{formatRupees(product?.price)}</p>
               </div>
             </Link>
           ))

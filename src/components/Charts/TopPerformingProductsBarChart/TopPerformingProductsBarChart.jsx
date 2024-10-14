@@ -43,7 +43,7 @@ const TopPerformingProductsBarChart = () => {
                 ) 
                 const products = response.data 
 
-                const labels = products.map(product => product._id.productName)  
+                const labels = products.map(product => product.productName)  
                 const data = products.map(product => product.interactions) 
 
                 setChartData({

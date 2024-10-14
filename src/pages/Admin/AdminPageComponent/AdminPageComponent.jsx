@@ -15,7 +15,7 @@ const AdminPageComponent = () => {
     <div className='flex overflow-hidden'>
       <AdminSideNavbar/>
       <div className='w-full md:w-3/4 flex'>
-        <div className='w-full md:mt-10 '>
+        <div className='w-full md:mt-5 '>
           <Routes>
             <Route path="/" element={<Navigate to="dashboard" replace />} />
             <Route path='/dashboard' element={<AdminDashboardPage/>}/>

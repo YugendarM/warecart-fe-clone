@@ -212,10 +212,10 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
 
   return (
     <Link to={`/products/${product._id}`} className=' hover:shadow-custom-medium transition rounded-sm bg-white'>
-      <div className='h-56 w-full'>
+      <div className='h-56 w-full '>
         <img 
             src={product?.imageUrls?.length>0 ? product?.imageUrls[0] : `https://www.lg.com/lg5-common/images/common/product-default-list-350.jpg`}
-            className='w-full h-full rounded-t-sm object-cover'
+            className='w-full h-full rounded-t-sm object-cover '
         />
       </div>
       <div className='px-5 py-3 flex flex-col'>
@@ -244,10 +244,14 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
             <h1 className='text-base text-gray-900 font-medium'>{formatRupees(product.price)}/-</h1>
             {
                 product && product.rating > 0 &&
-                    <p className={`flex items-center gap-1 text-white px-2 rounded-sm ${product.rating >= 4 ? "bg-green-600" : product.rating === 3 ? "bg-yellow-300" : "bg-red-500" }`}>
-                    {product.rating}
-                    <FaStar className={`text-white text-sm`}/>
-                </p>
+                <p className={`text-sm flex items-center gap-1 text-white px-1 rounded-sm ${
+                  product.rating >= 3.6 ? "bg-green-600" : 
+                  product.rating >= 2.5 && product.rating < 3.6 ? "bg-yellow-400" : 
+                  "bg-red-500"
+              }`}>
+                  {product.rating}
+                  <FaStar className={`text-white text-xs`} />
+              </p>
             }
         </div>
 

@@ -10,6 +10,7 @@ import { TiShoppingCart } from 'react-icons/ti'
 import { toast } from 'react-toastify' 
 import "react-responsive-carousel/lib/styles/carousel.min.css"   
 import { Carousel } from 'react-responsive-carousel' 
+import { IoIosPricetags } from 'react-icons/io'
 
 const UserProductOverviewPage = () => {
     const [productData, setProductData] = useState({}) 
@@ -21,6 +22,7 @@ const UserProductOverviewPage = () => {
     const [wishlistData, setWishlistData] = useState([])
     const [cartItemData, setCartItemData] = useState([])
     const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false)
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     const { productId } = useParams() 
     const navigate = useNavigate() 
@@ -187,6 +189,10 @@ const UserProductOverviewPage = () => {
         return cartItemData?.some((item) => item._id === productId) || false
     }
 
+    const handleThumbnailClick = (index) => {
+      setCurrentIndex(index); // Update the current index when a thumbnail is clicked
+    };
+
     useEffect(() => {
         const sessionToken = Cookies.get('SessionID') 
         if (sessionToken) {
@@ -256,7 +262,6 @@ const UserProductOverviewPage = () => {
               if(response.status === 200){
                 setWishlistData(response.data.data)
               }
-              
             }
             catch (error) {
               if (error.response) {
@@ -386,106 +391,183 @@ const UserProductOverviewPage = () => {
     return (
         <React.Fragment>
             {productData && 
-            <div className='px-5 md:px-20 lg:px-56 py-20 flex'>
-                <div className='w-[35%] bg-gray-0 flex flex-col gap-2 '>
-                    <div className='h-[450px]'>
+            <div className='px-5 md:px-20 lg:px-56 py-8 flex min-h-screen'>
+                <div className='w-[35%] flex flex-col gap-3 sticky top-16 h-screen overflow-y-auto '>
+                  <div className='h-[430px]'>
                     {
-                      productData?.imageUrls?.length > 0 ? 
-                      <Carousel className='h-[4px]'>
-                        {
-                          productData?.imageUrls?.length > 0 ? 
-                          productData?.imageUrls?.map((image) => (
-                            <Image
-                              height={450}
-                              width={"100%"}
-                              className='object-cover h-96'
-                              src={image}
-                            />
-                          ))
-
-                          : 
-                          null
-                        }
-                      </Carousel>
-
-                      :
-                      <img
-                        src={`https://img.freepik.com/premium-vector/beautiful-flat-style-shopping-cart-icon-vector-illustration_1287274-64477.jpg?w=740`}
-                        className='w-full h-full object-cover'
-                      /> 
-                    }
-                    </div>
-                    {
-                        isProductAddedInCart(productData._id) ? 
-                        <Link to={"/cart"} className='flex items-center justify-center gap-3 text-center bg-blue-500 py-3 rounded-lg text-white text-xl w-full hover:bg-blue-400'><TiShoppingCart className='text-white text-2xl'/>Go to cart</Link>
+                      productData?.imageUrls?.length > 0 ?
+                        <Carousel selectedItem={currentIndex} onChange={setCurrentIndex} className='h-[4px]'>
+                          {
+                            productData?.imageUrls?.map((image, index) => (
+                              <Image
+                                key={index} 
+                                height={430}
+                                width={"100%"}
+                                className='object-cover h-96'
+                                src={image}
+                              />
+                            ))
+                          }
+                        </Carousel>
                         :
-                        <button onClick={handleAddToCart} className='flex items-center justify-center gap-3 bg-blue-500 py-3 rounded-lg text-white text-xl w-full hover:bg-blue-400'><TiShoppingCart className='text-white text-2xl'/>Add to cart</button>
-
+                        <img
+                          src={`https://img.freepik.com/premium-vector/beautiful-flat-style-shopping-cart-icon-vector-illustration_1287274-64477.jpg?w=740`}
+                          className='w-full h-full object-cover'
+                        />
                     }
+                  </div>
+                  <div className='grid grid-cols-4 gap-2'>
+                    {
+                      productData?.imageUrls?.length > 0 &&
+                      productData?.imageUrls?.map((image, index) => (
+                        <button key={index} onClick={() => handleThumbnailClick(index)} className={`h-20 object-cover ${currentIndex === index ? 'border-2 border-blue-500' : ''}`}>
+                          <img className='h-full w-full object-cover' src={image} alt={`Thumbnail ${index + 1}`} />
+                        </button>
+                      ))
+                    }
+                    {
+                      productData?.imageUrls?.length > 4 && (
+                        <div className='flex items-center justify-center h-20 w-20 bg-gray-400 bg-opacity-40'>
+                          <span className='text-xs text-center text-gray-600'>+{productData.imageUrls.length - 4} more</span>
+                        </div>
+                      )
+                    }
+                  </div>
+                  {
+                    isProductAddedInCart(productData._id) ?
+                      <Link to={"/cart"} className='flex items-center justify-center gap-3 text-center bg-blue-500 py-3 rounded-lg text-white text-xl w-full hover:bg-blue-400'>
+                        <TiShoppingCart className='text-white text-2xl' />Go to cart
+                      </Link>
+                      :
+                      <button onClick={handleAddToCart} className='flex items-center justify-center gap-3 bg-blue-500 py-3 rounded-md text-white text-xl w-full hover:bg-blue-400'>
+                        <TiShoppingCart className='text-white text-2xl' />Add to cart
+                      </button>
+                  }
                 </div>
                 <div className='px-10 w-[65%] flex flex-col gap-2'>
-                    <div className='h-[450px] py-5 flex flex-col gap-5'>
+                    <div className='h-[450px] py-5 flex flex-col gap-1'>
                         <div className='flex items-center justify-between w-full'>
                             <div>
-                                <h1 className='text-4xl text-gray-800'>{productData.productName}</h1>
-                                <h3 className='text-xl text-gray-500'>{productData.productDescription}</h3>
+                                <h1 className='text-2xl font-medium text-gray-800'>{productData.productName}</h1>
+                                <h3 className='text-lg text-gray-500'>{productData.productDescription}</h3>
                             </div>
-                            {productData && productData.rating > 0 &&
-                                <p className={`flex items-center gap-1 text-white px-4 py-1 text-xl rounded-md ${productData.rating >= 4 ? "bg-green-600" : productData.rating === 3 ? "bg-yellow-300" : "bg-red-500"}`}>
-                                    {productData.rating}
-                                    <FaStar className={`text-white text-xl`} />
-                                </p>
+                            {productData && productData.rating > 0 && productData.numberOfReviews > 0 &&
+                                <div className='flex items-center gap-2'>
+                                  <p className={`flex items-center gap-1 text-white px-3 py-1 text-base rounded-sm ${
+                                  productData.rating >= 3.6 ? "bg-green-600" : 
+                                  productData.rating >= 2.5 && productData.rating < 3.6 ? "bg-yellow-400" : 
+                                  "bg-red-500"
+                                  }`}>
+                                      {productData.rating}
+                                      <FaStar className={`text-white text-base`} />
+                                  </p>
+                                  <p className='text-sm text-gray-400'>({productData.numberOfReviews} reviews)</p>
+                                </div>
                             }
                         </div>
                         <div>
-                            <p className='text-gray-600'>Category: <span className='capitalize text-gray-800 text-2xl font-medium'>{productData.productType}</span></p>
+                            <p className='text-sm text-gray-600'>Category: <span className='capitalize text-gray-800 text-lg font-medium'>{productData.productType}</span></p>
                         </div>
                         <div>
-                            <h3 className='text-2xl font-semibold text-gray-800'>{formatRupees(productData.price)}/-</h3>
+                            <h3 className='text-2xl py-2 font-semibold text-gray-800'>{formatRupees(productData.price)}/-</h3>
                         </div>
 
                         {offersData.length > 0 &&
-                            <div className='flex flex-col gap-3'>
-                                <h1 className='text-xl font-medium text-gray-800'>Available Offers</h1>
-                                <div className='flex flex-wrap gap-5'>
+                            <div className='flex flex-col gap-3 py-5'>
+                                <h1 className='text-xl font-medium text-gray-800 leading-3'>Available Offers</h1>
+                                <div className='flex flex-col'>
                                     {offersData.map((offer) => (
-                                        <div key={offer._id} className='border border-blue-500 rounded-xl px-4 py-2'>
-                                            <p className='text-blue-500 h-1/2'>{offer.name}</p>
-                                            <p className='text-blue-500 font-semibold text-base'>{offer.discountPercentage}% Off</p>
+                                        <div key={offer._id} className='flex items-center gap-2 rounded-xl  py-2'>
+                                            <IoIosPricetags className='text-green-400 text' />
+                                            <p className='text-gray-700'>{offer.name}</p>
+                                            <p className='text-green-600 font-semibold text-base'>{offer.discountPercentage}% Off</p>
                                         </div>
                                     ))}
                                 </div>
                             </div>
                         }
                         <div className='flex gap-4 items-end'>
-                            <p className='text-gray-700 text-base font-medium'>Quantity:</p>
-                            <div className='flex items-center gap-5 '>
+                            <p className='text-gray-700 text-sm font-medium'>Quantity:</p>
+                            <div className='flex items-center gap-3 '>
                                 <button 
                                     onClick={() => setQuantity((prev) => prev - 1)}
-                                    className={`border rounded-md p-3 ${isMinusAbled ? "border-blue-500 text-blue-500 hover:bg-blue-100" : "border-gray-500 text-gray-400 cursor-not-allowed"}`}
+                                    className={`border rounded-full p-2 ${isMinusAbled ? "border-blue-500 text-blue-500 hover:bg-blue-50" : "border-gray-500 text-gray-400 cursor-not-allowed"}`}
                                     disabled={!isMinusAbled}
                                 ><FaMinus /></button>
                                 <p className='text-lg font-medium'>{quantity}</p>
                                 <button 
                                     onClick={() => setQuantity((prev) => prev + 1)}
-                                    className={`border rounded-md p-3 ${isPlusAbled ? "border-blue-500 text-blue-500 hover:bg-blue-100" : "border-gray-500 text-gray-400 cursor-not-allowed"}`}
+                                    className={`border rounded-full p-2 ${isPlusAbled ? "border-blue-500 text-blue-500 hover:bg-blue-50" : "border-gray-500 text-gray-400 cursor-not-allowed"}`}
                                     disabled={!isPlusAbled}
                                 ><FaPlus /></button>
                             </div>
                         </div>
                     </div>
-                    <div className='flex justify-end gap-10'>
+                    <div className='flex justify-end gap-3'>
+                        <button onClick={handleBuyNow} className='bg-green-500 py-2 rounded-lg w-60 text-white text-xl hover:bg-green-400'>Buy now</button>
+
                         {
                             isProductWishListed(productData._id) ? 
-                            <button onClick={openRemoveModal} className='border-2 border-blue-400 text-blue-400 py-1 rounded-lg px-8 text-xl'>Remove from Wishlist</button>
+                            <Tooltip title="Remove from wishlist">
+                              <button onClick={openRemoveModal} className=' border-2 border-gray-300 py-2 rounded-lg px-3 text-xl'><FaHeart className={`text-2xl transition hover:transform hover:scale-[120%] text-red-500`}/></button>
+                            </Tooltip>
                             :
-                            <button onClick={handleAddWishlist} className='border-2 border-blue-400 text-blue-400 py-1 rounded-lg px-8 text-xl'>Add to Wishlist</button>
+                            <Tooltip title="Add to wishlist">
+                              <button onClick={handleAddWishlist} className=' border-2 border-gray-300  py-2 px-3 rounded-lg text-xl'><FaHeart className={`text-2xl transition hover:transform hover:scale-[120%] text-gray-300`}/></button>
+                            </Tooltip>
                         }
-                        <button onClick={handleBuyNow} className='bg-green-500 py-2 rounded-lg px-8 text-white text-xl hover:bg-green-400'>Buy now</button>
                     </div>
+
+
+                    <div className=' flex flex-col py-5'>
+                      <div className='flex gap-2 items-center'>
+                      <h1 className='text-xl font-medium text-gray-800 leading-3'>Ratings & Reviews</h1>
+                        {productData?.rating > 0 &&
+                          <div className='flex items-center gap-2'>
+                            <p className={`flex items-center gap-1 text-white px-3 py-1 text-base rounded-sm ${
+                            productData.rating >= 3.6 ? "bg-green-600" : 
+                            productData.rating >= 2.5 && productData.rating < 3.6 ? "bg-yellow-400" : 
+                            "bg-red-500"
+                            }`}>
+                                {productData.rating}
+                                <FaStar className={`text-white text-base`} />
+                            </p>
+                            <p className='text-sm text-gray-400'>({productData.numberOfReviews} reviews)</p>
+                          </div>
+                        }
+                      </div>
+                      <div className='py-3'>
+                        {
+                          productData?.reviews?.length > 0 ?
+                          productData?.reviews?.map((review) => (
+                            <div className='flex border-b border-b-gray-300 py-2 px-3 gap-5'>
+                              <p className={`flex items-center gap-1 text-white px-3 py-1 text-xs rounded-full ${
+                                review.rating >= 3.6 ? "bg-green-600" : 
+                                review.rating >= 2.5 && review.rating < 3.6 ? "bg-yellow-400" : 
+                                "bg-red-500"
+                                }`}>
+                                    {productData.rating}
+                                    <FaStar className={`text-white text-xs`} />
+                                </p>
+                              <p>{review?.comment}</p>
+                            </div>
+                          ))
+                          :
+                          <div>No reviews yet</div>
+                        }
+                      </div>
+
+                      
+                      
+                    </div>
+
+
+
                 </div>
             </div>
             }
+
+            
             <Modal 
                 title="Are you sure?" 
                 open={isRemoveModalOpen} 

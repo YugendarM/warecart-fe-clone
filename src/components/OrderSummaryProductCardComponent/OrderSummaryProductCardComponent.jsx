@@ -108,9 +108,17 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
                 </div>
                 {
                     productData && productData.productDetails && productData.productDetails.rating>0 &&
-                    <p className={`flex items-center gap-1 text-white px-2 rounded-sm ${productData && productData.productDetails && productData.productDetails.rating &&  productData.productDetails.rating >= 4 ? "bg-green-600" : productData && productData.productDetails && productData.productDetails.rating && productData.productDetails.rating === 3 ? "bg-yellow-300" : "bg-red-500" }`}>
-                        {productData && productData.productDetails &&  productData && productData.productDetails.rating && productData.productDetails.rating}
-                        <FaStar className={`text-white text-sm`}/>
+                    // <p className={`flex items-center gap-1 text-white px-2 rounded-sm ${productData.productDetails.rating &&  productData.productDetails.rating >= 4 ? "bg-green-600" : productData?.productDetails?.rating === 3 || productData?.productDetails?.rating === 3.5 ? "bg-yellow-400" : "bg-red-500" }`}>
+                    //     {productData && productData.productDetails &&  productData && productData.productDetails.rating && productData.productDetails.rating}
+                    //     <FaStar className={`text-white text-sm`}/>
+                    // </p>
+                    <p className={`flex items-center gap-1 text-white px-2 rounded-sm ${
+                        productData.productDetails.rating >= 3.6 ? "bg-green-600" : 
+                        productData.productDetails.rating >= 2.5 && productData.productDetails.rating < 3.6 ? "bg-yellow-400" : 
+                        "bg-red-500"
+                    }`}>
+                        {productData.productDetails.rating}
+                        <FaStar className={`text-white text-xs`} />
                     </p>
                 }
             </div>

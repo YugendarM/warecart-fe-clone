@@ -57,21 +57,31 @@ const UserCartPage = () => {
       } else {
         toast.error("No cart items found.") 
       }
-    } catch (error) {
-      handleError(error, "cart details") 
+    }  catch (error) {
+      if (error.response) {
+        if (error.response.status === 500) {
+          console.error("An error occurred while fetching cart data");
+        } else {
+          console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+        }
+      } else if (error.request) {
+        console.error("No response from server. Please try again.");
+      } else {
+        console.error("An unexpected error occurred. Please try again.");
+      }
     }
   } 
 
-  const handleError = (error, context) => {
-    if (error.response) {
-      const message = error.response.data.message || "Something went wrong" 
-      toast.error(`Error fetching ${context}: ${error.response.status} ${message}`) 
-    } else if (error.request) {
-      toast.error(`No response from server for ${context}. Please try again.`) 
-    } else {
-      toast.error(`Unexpected error in fetching ${context}.`) 
-    }
-  } 
+  // const handleError = (error, context) => {
+  //   if (error.response) {
+  //     const message = error.response.data.message || "Something went wrong" 
+  //     toast.error(`Error fetching ${context}: ${error.response.status} ${message}`) 
+  //   } else if (error.request) {
+  //     toast.error(`No response from server for ${context}. Please try again.`) 
+  //   } else {
+  //     toast.error(`Unexpected error in fetching ${context}.`) 
+  //   }
+  // } 
 
   const handleCheckout = () => {
     navigate("/checkout", {

@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { Button, Modal } from 'antd'
 import { toast } from 'react-toastify';
+import { MdAddShoppingCart } from 'react-icons/md';
 
 const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) => {
 
@@ -210,37 +211,37 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
       }, [pathname]);
 
   return (
-    <Link to={`/products/${product._id}`} className='shadow-custom-medium hover:shadow-custom-heavy transition rounded-md'>
-      <div className='h-56'>
+    <Link to={`/products/${product._id}`} className=' hover:shadow-custom-medium transition rounded-sm bg-white'>
+      <div className='h-56 w-full'>
         <img 
-            src={product?.imageUrls?.length>0 ? product?.imageUrls[0] : `https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg`}
-            className='w-full h-full rounded-t-md object-cover'
+            src={product?.imageUrls?.length>0 ? product?.imageUrls[0] : `https://www.lg.com/lg5-common/images/common/product-default-list-350.jpg`}
+            className='w-full h-full rounded-t-sm object-cover'
         />
       </div>
-      <div className='px-5 py-3 flex flex-col gap-4'>
+      <div className='px-5 py-3 flex flex-col'>
         <div>
-            <div className='flex items-center justify-between'>
-                <h1 className='text-xl font-medium text-gray-800'>{product.productName}</h1>
+            <div className='flex items-start justify-between'>
+                <h1 className='text-base font-medium text-gray-800'>{product.productName}</h1>
                     {
                         isProductWishListed ? 
                         <Tooltip title="Remove from wishlist">
                             <button onClick={(event) => openRemoveModal(event)}>
-                                <FaHeart className={`text-2xl transition hover:transform hover:scale-[120%] text-red-500`}/>
+                                <FaHeart className={`text-xl transition hover:transform hover:scale-[120%] text-red-500`}/>
                             </button>
                         </Tooltip>
                         :
                         <Tooltip title="Add to wishlist">
                             <button onClick={(event) => handleAddWishlist(event)}>
-                                <FaHeart className={`text-2xl transition hover:transform hover:scale-[120%] text-gray-300`}/>
+                                <FaHeart className={`text-xl transition hover:transform hover:scale-[120%] text-gray-300`}/>
                             </button>
                         </Tooltip>
                     }
             </div>
-        <p className='text-sm text-gray-500 font-light'>{product.productDescription}</p>
+            <p className='text-xs text-gray-500 font-normal text-ellipsis whitespace-nowrap overflow-hidden'>{product.productDescription}</p>
         </div>
-        <h1 className='text-xs text-gray-500'>Category:<span className='text-gray-700 capitalize text-base'> {product.productType}</span></h1>
+        <h1 className='text-xs text-gray-500'>Category:<span className='text-gray-700 capitalize text-sm'> {product.productType}</span></h1>
         <div className='flex items-center justify-between'>
-            <h1 className='text-xl text-gray-900 font-semibold'>{formatRupees(product.price)}/-</h1>
+            <h1 className='text-base text-gray-900 font-medium'>{formatRupees(product.price)}/-</h1>
             {
                 product && product.rating > 0 &&
                     <p className={`flex items-center gap-1 text-white px-2 rounded-sm ${product.rating >= 4 ? "bg-green-600" : product.rating === 3 ? "bg-yellow-300" : "bg-red-500" }`}>
@@ -250,13 +251,13 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
             }
         </div>
 
-        <div className='flex justify-between items-center w/full gap-3'>
-            <button onClick={(event) => handleBuyNow(event)} className='bg-green-500 py-1 rounded-md text-white w-1/2 hover:bg-green-400'>Buy now</button>
+        <div className='flex justify-between items-center w/full gap-3 py-2'>
+            <button onClick={(event) => handleBuyNow(event)} className='text-sm bg-green-500 py-1.5 rounded-md text-white w-1/2 hover:bg-green-400'>Buy Now</button>
             {
               isProductAddedInCart ? 
-              <Link to={"/cart"} className='text-center bg-blue-500 py-1 rounded-md text-white w-1/2 hover:bg-blue-400'>Go to cart</Link>
+              <Link to={"/cart"} className='text-sm rounded-md border-2 border-gray-300 w-1/2 py-1.5 flex items-center justify-center gap-2 font-medium'>Visit<MdAddShoppingCart className='text-gray-500 text-xl'/></Link>
               :
-              <button onClick={(event) => handleAddToCart(event)} className='bg-blue-500 py-1 rounded-md text-white w-1/2 hover:bg-blue-400'>Add to cart</button>
+              <button onClick={(event) => handleAddToCart(event)} className='text-sm rounded-md border-2 border-gray-300 w-1/2 py-1.5 flex items-center justify-center gap-2 font-medium'>Add <MdAddShoppingCart className='text-gray-500 text-xl'/></button>
             }
         </div>
       </div>
@@ -283,3 +284,4 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
 }
 
 export default UserProductCard
+

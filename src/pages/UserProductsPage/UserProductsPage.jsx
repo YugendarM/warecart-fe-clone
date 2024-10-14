@@ -192,10 +192,10 @@ const UserProductsPage = () => {
     }, [pathname])   
 
   return (
-    <div className='px-5 md:px:20 lg:px-56 py-10'>
+    <div className='px-5 md:px:20 lg:px-56 py-10 bg-[#F4F5F5]'>
       <div className=''>
         <div className=' search-filter-container flex items-center justify-between gap-4'>
-          <div className='rounded-md py-1 px-2 shadow-custom-medium flex items-center gap-2 w-full lg:w-1/2'>
+          <div className='rounded-md py-1 px-2 shadow-custom-medium flex items-center gap-2 w-full lg:w-1/2 bg-white'>
             <IoSearch className='text-xl text-gray-400'/>
             <input 
               className=' focus:outline-none w-full text-lg' 
@@ -224,7 +224,7 @@ const UserProductsPage = () => {
         </div> 
         {
             productsData.length > 0 ?
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 py-10'>
+            <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 gap-y-10 py-10'>
                 {
                     Array.isArray(filteredProductData) && filteredProductData.length > 0 ?
                     filteredProductData?.map((product, index) => (

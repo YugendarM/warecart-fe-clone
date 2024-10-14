@@ -34,14 +34,14 @@ const UserWishlistPage = () => {
       catch (error) {
         if (error.response) {
           if (error.response.status === 500) {
-            toast.error("An error occurred while fetching Wishlist data");
+            console.error("An error occurred while fetching order data");
           } else {
-            toast.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
+            console.error(`An error occurred: ${error.response.status} ${error.response.data.message}`);
           }
         } else if (error.request) {
-          toast.error("No response from server. Please try again.");
+          console.error("No response from server. Please try again.");
         } else {
-          toast.error("An unexpected error occurred. Please try again.");
+          console.error("An unexpected error occurred. Please try again.");
         }
       }
     }
@@ -100,7 +100,7 @@ const UserWishlistPage = () => {
       {
         wishlistData && Array.isArray(wishlistData) && wishlistData.length > 0 ?
 
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 py-10'>
+        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 py-10'>
           {
               wishlistData?.map((product, index) => (
                   <UserProductCard isProductWishListed={isProductWishListed(product._id)} key={index} product={product}/>

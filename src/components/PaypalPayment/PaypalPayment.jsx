@@ -51,7 +51,7 @@ function PaypalPayment({cartAmount, orderDetails}) {
               )
             )) 
             toast.success('Order placed Successfully') 
-            navigate("/")
+            navigate("/orders")
           } catch (error) {
             console.error('Error tracking user activity:', error) 
             toast.warn('Order placed, but tracking failed.') 

@@ -123,8 +123,8 @@ const UserCheckOutPage = () => {
 
     const handlePaymentMethodChange = (e) => {
         const value = e.target.value 
-        if (value === 'cash') {
-            setSelectedPayment({ method: value, sub: "cash" })  // Cash on Delivery
+        if (value === 'cod') {
+            setSelectedPayment({ method: value, sub: "cod" })  // cod on Delivery
         } else {
             setSelectedPayment({ method: value, sub: null })  // Reset sub-options for other methods
         }
@@ -155,7 +155,7 @@ const UserCheckOutPage = () => {
             payableAmount: orderDetails.priceDetails.totalPayable,
             paymentInfo: {
                 paymentMethod: paymentMethod,
-                paymentStatus: paymentMethod === "cash" ? "pending" : "completed",
+                paymentStatus: paymentMethod === "cod" ? "pending" : "completed",
             },
         } 
 
@@ -179,7 +179,7 @@ const UserCheckOutPage = () => {
                     )
                 )) 
                 toast.success("Order placed Successfully") 
-                navigate("/") 
+                navigate("/orders") 
             }
         } catch (error) {
             if (error.response) {
@@ -239,7 +239,7 @@ const UserCheckOutPage = () => {
                         )
                     )) 
                     toast.success('Order placed Successfully') 
-                    navigate("/") 
+                    navigate("/orders") 
                 } catch (error) {
                     console.error('Error tracking user activity:', error) 
                     toast.warn('Order placed, but tracking failed.') 
@@ -452,7 +452,7 @@ const UserCheckOutPage = () => {
                                                     </div>
                                                 )}
                                             </Radio>
-                                            <Radio className='inline-block  border-b border-b-gray-300 pb-5' value="cash">Cash On Delivery</Radio>
+                                            <Radio className='inline-block  border-b border-b-gray-300 pb-5' value="cod">Cash On Delivery</Radio>
                                         </div>
                                     </Radio.Group>
                                     <div className='flex justify-end'>
@@ -463,7 +463,7 @@ const UserCheckOutPage = () => {
                                             selectedPayment && selectedPayment.sub && selectedPayment.sub === "stripe" ?
                                             <StripePayment userData={userData} cartAmount={orderDetails && orderDetails.priceDetails && orderDetails.priceDetails.totalPayable}/>
                                             :
-                                            selectedPayment && selectedPayment.sub && selectedPayment.sub === "cash" ?
+                                            selectedPayment && selectedPayment.sub && selectedPayment.sub === "cod" ?
                                             <button onClick={() => processOrder("cod")} className={`rounded-sm px-6 py-2 transition ${!selectedPayment?.sub || !isOrderSummaryContinue ? " bg-gray-100 text-gray-300 cursor-not-allowed" : "bg-yellow-500 text-white hover:bg-yellow-300"}`} >Place Order</button>
                                             :
 

@@ -22,7 +22,7 @@ const AddProductModal = ({isAddModalOpen, handleAddCancel}) => {
         if (Array.isArray(e)) {
           return e 
         }
-        return e && e.fileList 
+        return e?.fileList 
       } 
 
       const beforeUpload = (file) => {

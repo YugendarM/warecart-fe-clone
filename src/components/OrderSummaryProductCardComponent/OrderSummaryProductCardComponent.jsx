@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 
 const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, onQuantityChange}) => {
 
-    const [quantity, setQuantity] = useState(productData && productData.quantity)
+    const [quantity, setQuantity] = useState(productData?.quantity)
     const [isOffersTabOpen, setIsOffersTabOpen] = useState(false)
 
     const {pathname} = useLocation()
@@ -80,7 +80,7 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
     }
 
     const totalDiscountedPrice = useMemo(() => {
-        if (productData && productData.productDetails && quantity) {
+        if (productData?.productDetails && quantity) {
             return ((productData.productDetails.price * quantity) - productData.discountPrice) || 0 
         }
         return 0  
@@ -111,11 +111,11 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
         <div className='px-5 py-3 w-[80%] flex flex-col gap-1'>
             <div className='flex items-center justify-between w-full'>
                 <div>
-                    <h1 className='text-lg font-medium'>{productData && productData.productDetails && productData.productDetails.productName}</h1>
-                    <p className='text-gray-600 text-sm'>{productData && productData.productDetails && productData.productDetails.productDescription}</p>
+                    <h1 className='text-lg font-medium'>{productData?.productDetails && productData.productDetails.productName}</h1>
+                    <p className='text-gray-600 text-sm'>{productData?.productDetails && productData.productDetails.productDescription}</p>
                 </div>
                 {
-                    productData && productData.productDetails && productData.productDetails.rating>0 &&
+                    productData?.productDetails && productData.productDetails.rating>0 &&
                     // <p className={`flex items-center gap-1 text-white px-2 rounded-sm ${productData.productDetails.rating &&  productData.productDetails.rating >= 4 ? "bg-green-600" : productData?.productDetails?.rating === 3 || productData?.productDetails?.rating === 3.5 ? "bg-yellow-400" : "bg-red-500" }`}>
                     //     {productData && productData.productDetails &&  productData && productData.productDetails.rating && productData.productDetails.rating}
                     //     <FaStar className={`text-white text-sm`}/>
@@ -131,14 +131,14 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
                 }
             </div>
             <div className='flex items-center justify-between '>
-                <p className='text-gray-500 text-xs'>Category: <span className='text-gray-800 capitalize text-lg'>{productData && productData.productDetails && productData.productDetails.productType}</span></p>
+                <p className='text-gray-500 text-xs'>Category: <span className='text-gray-800 capitalize text-lg'>{productData?.productDetails && productData.productDetails.productType}</span></p>
                 <div className='flex items-center gap-2'>
                     <p className='text-sm border-r-[2px] px-3 border-r-gray-600'>Delivery by {deliveryDate(new Date())}</p>
                     <p className='text-sm text-green-500'>FREE</p>
                 </div>
             </div>
             <div className='flex items-center gap-3'>
-                <p className='font-normal text-lg text-gray-500 line-through'>{formatRupees((productData && productData.productDetails && productData.productDetails.price)*quantity)}</p>
+                <p className='font-normal text-lg text-gray-500 line-through'>{formatRupees((productData?.productDetails && productData.productDetails.price)*quantity)}</p>
                 <p className='font-semibold text-lg text-gray-800'>
                     {totalDiscountedPrice > 0 && formatRupees(totalDiscountedPrice)}/-
                 </p>
@@ -147,7 +147,7 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
                     <div className='flex-col parent relative w-full'>
                         <div className='flex items-center justify-between w-full'>
                             <div className='flex items-center gap-1 cursor-pointer' onMouseEnter={() => setIsOffersTabOpen(true)} onMouseLeave={() => setIsOffersTabOpen(false)}>
-                                <p className='text-green-600 text-sm font-medium'>{productData && productData.appliedRule.length} offer applied</p>
+                                <p className='text-green-600 text-sm font-medium'>{productData?.appliedRule.length} offer applied</p>
                                 <FaCircleInfo className='text-sm text-green-600' />
                             </div>
                             {
@@ -160,21 +160,21 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
                             <div className='absolute top-8 z-20 bg-white text-xs font-medium text-gray-500 w-72 shadow-custom-medium px-3 py-2 rounded-sm  transition-opacity duration-200'>
                                 <div className='child flex items-center justify-between w-full py-3'>
                                     <p>Selling Price</p>
-                                    <p className='text-black'>{formatRupees((productData && productData.productDetails && productData.productDetails.price)*quantity)}/-</p>
+                                    <p className='text-black'>{formatRupees((productData?.productDetails && productData.productDetails.price)*quantity)}/-</p>
                                 </div>
                                 <div className='flex flex-col gap-3 py-3'>
                                     {
-                                        productData && productData.appliedRule && productData.appliedRule.map((rule, index) => (
+                                        productData?.appliedRule && productData.appliedRule.map((rule, index) => (
                                             <div key={index} className='flex justify-between items-center gap-2'>
                                                 <p className='overflow-hidden text-ellipsis flex items-center gap-2'>{rule.name}<span className='text-black'>{rule.discountPercentage}% off</span></p>
-                                                <p className='text-green-600'>- {formatRupees(((productData && productData.productDetails && productData.productDetails.price) * (rule.discountPercentage / 100))*quantity)}/-</p>
+                                                <p className='text-green-600'>- {formatRupees(((productData?.productDetails && productData.productDetails.price) * (rule.discountPercentage / 100))*quantity)}/-</p>
                                             </div>
                                         ))
                                     }
                                 </div>
                                 <div className='child flex items-center justify-between w-full border-y border-y-gray-200 py-3'>
                                     <p>Total</p>
-                                    <p className='text-black'>{formatRupees((productData && productData.productDetails && productData.productDetails.price)*quantity - (productData && productData.discountPrice))}/-</p>
+                                    <p className='text-black'>{formatRupees((productData?.productDetails && productData.productDetails.price)*quantity - (productData?.discountPrice))}/-</p>
                                 </div>
                             </div>
                         }

@@ -35,19 +35,19 @@ const WarehousePage = () => {
     }
     
     useEffect(() => {
-      if(location.state && location.state.openAddModal){
+      if(location.state?.openAddModal){
         setIsAddModalOpen(true)
       }
       else{
         setIsAddModalOpen(false)
       }
-      if(location.state && location.state.openEditModal){
+      if(location.state?.openEditModal){
         setIsEditModalOpen(true)
       }
       else{
         setIsEditModalOpen(false)
       }
-      if(location.state && location.state.openDeleteModal){
+      if(location.state?.openDeleteModal){
         setIsDeleteModalOpen(true)
       }
       else{
@@ -138,7 +138,7 @@ const WarehousePage = () => {
                   title: <Link to={"/admin/warehouse"}>Warehouse</Link>,
                 },
                 {
-                  title: warehouseData && warehouseData.warehouseData && warehouseData.warehouseData.warehouseName,
+                  title: warehouseData?.warehouseData && warehouseData.warehouseData.warehouseName,
                 },
               ]}
             />
@@ -199,7 +199,7 @@ const WarehousePage = () => {
         <div className='h-full w-full flex items-center justify-center text-2xl font-semibold'>Warehouse Not found</div>
       }
       {
-        warehouseData && warehouseData.warehouseData &&
+        warehouseData?.warehouseData &&
         <div>
           <WarehouseEditModal warehouse={warehouseData.warehouseData} isModalOpen={isEditModalOpen} handleCancel={handleEditCancel}/>
           <WarehouseDeleteModal warehouse={warehouseData.warehouseData} isDeleteModalOpen={isDeleteModalOpen} handleDeleteCancel={handleDeleteCancel}/>

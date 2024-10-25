@@ -26,7 +26,7 @@ const ProductEditModal = ({ product, isEditModelOpen, handleEditCancel }) => {
     if (Array.isArray(e)) {
       return e 
     }
-    return e && e.fileList 
+    return e?.fileList 
   } 
 
   const beforeUpload = (file) => {

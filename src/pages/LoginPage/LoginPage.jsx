@@ -40,14 +40,14 @@ const LoginPage = () => {
 
             if(response.status === 200){
                 toast.success("User logged In")
-                if(location.state && location.state.products){
+                if(location.state?.products){
                   navigate("/checkout", {
                     state: {
                       products: location.state.products
                     }
                   })
                 }
-                else if(location.state && location.state.redirect){
+                else if(location.state?.redirect){
                   navigate(`${location.state.redirect}`)
                 }
                 else{

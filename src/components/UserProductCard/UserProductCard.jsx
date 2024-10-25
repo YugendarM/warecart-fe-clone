@@ -192,10 +192,7 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
         else{
             navigate("/login",{
                 state: {
-                    products: [{
-                        productDetails: product,
-                        quantity: 1
-                    }],
+                    redirect: "/products"
                 }
             })
         }
@@ -219,49 +216,62 @@ const UserProductCard = ({product, isProductWishListed, isProductAddedInCart}) =
         />
       </div>
       <div className='px-5 py-3 flex flex-col'>
-        <div>
-            <div className='flex items-start justify-between'>
-                <h1 className='text-base font-medium text-gray-800'>{product.productName}</h1>
-                    {
-                        isProductWishListed ? 
-                        <Tooltip title="Remove from wishlist">
-                            <button onClick={(event) => openRemoveModal(event)}>
-                                <FaHeart className={`text-xl transition hover:transform hover:scale-[120%] text-red-500`}/>
-                            </button>
-                        </Tooltip>
-                        :
-                        <Tooltip title="Add to wishlist">
-                            <button onClick={(event) => handleAddWishlist(event)}>
-                                <FaHeart className={`text-xl transition hover:transform hover:scale-[120%] text-gray-300`}/>
-                            </button>
-                        </Tooltip>
-                    }
-            </div>
-            <p className='text-xs text-gray-500 font-normal text-ellipsis whitespace-nowrap overflow-hidden'>{product.productDescription}</p>
-        </div>
-        <h1 className='text-xs text-gray-500'>Category:<span className='text-gray-700 capitalize text-sm'> {product.productType}</span></h1>
-        <div className='flex items-center justify-between'>
-            <h1 className='text-base text-gray-900 font-medium'>{formatRupees(product.price)}/-</h1>
+        <div className='h-28'>
+          <div>
+              <div className='flex items-start justify-between'>
+                  <h1 className='text-base font-medium text-gray-800 text-ellipsis overflow-hidden whitespace-nowrap'>{product.productName}</h1>
+                      {
+                          isProductWishListed ? 
+                          <Tooltip title="Remove from wishlist">
+                              <button onClick={(event) => openRemoveModal(event)}>
+                                  <FaHeart className={`text-xl transition hover:transform hover:scale-[120%] text-red-500`}/>
+                              </button>
+                          </Tooltip>
+                          :
+                          <Tooltip title="Add to wishlist">
+                              <button onClick={(event) => handleAddWishlist(event)}>
+                                  <FaHeart className={`text-xl transition hover:transform hover:scale-[120%] text-gray-300`}/>
+                              </button>
+                          </Tooltip>
+                      }
+              </div>
+              <p className='text-xs text-gray-500 font-normal text-ellipsis whitespace-nowrap overflow-hidden'>{product.productDescription}</p>
+          </div>
+          <h1 className='text-xs text-gray-500'>Category:<span className='text-gray-700 capitalize text-sm'> {product.productType}</span></h1>
+          <div className='flex items-center justify-between'>
+              <h1 className='text-base text-gray-900 font-medium'>{formatRupees(product.price)}/-</h1>
+              {
+                  product && product.rating > 0 &&
+                  <p className={`text-sm flex items-center gap-1 text-white px-1 rounded-sm ${
+                    product.rating >= 3.6 ? "bg-green-600" : 
+                    product.rating >= 2.5 && product.rating < 3.6 ? "bg-yellow-400" : 
+                    "bg-red-500"
+                }`}>
+                    {product.rating}
+                    <FaStar className={`text-white text-xs`} />
+                </p>
+              }
+          </div>
+
+          <div className='py-1'>
             {
-                product && product.rating > 0 &&
-                <p className={`text-sm flex items-center gap-1 text-white px-1 rounded-sm ${
-                  product.rating >= 3.6 ? "bg-green-600" : 
-                  product.rating >= 2.5 && product.rating < 3.6 ? "bg-yellow-400" : 
-                  "bg-red-500"
-              }`}>
-                  {product.rating}
-                  <FaStar className={`text-white text-xs`} />
-              </p>
+              product?.outOfStock ? 
+              <p className='text-xs text-pink-500'>Out of Stock</p>
+              :
+              !product?.deliverable ?
+              <p className='text-xs text-pink-500'>Not deliverable to your location</p>
+              : null
             }
+          </div>
         </div>
 
         <div className='flex justify-between items-center w/full gap-3 py-2'>
-            <button onClick={(event) => handleBuyNow(event)} className='text-sm bg-green-500 py-1.5 rounded-md text-white w-1/2 hover:bg-green-400'>Buy Now</button>
+            <button disabled={product?.outOfStock || !product?.deliverable} onClick={(event) => handleBuyNow(event)} className={`text-sm  py-1.5 rounded-md text-white w-1/2  ${product?.outOfStock || !product?.deliverable ? ' cursor-not-allowed bg-gray-300 ' : "cursor-pointer bg-green-500 hover:bg-green-400"}`}>Buy Now</button>
             {
               isProductAddedInCart ? 
-              <Link to={"/cart"} className='text-sm rounded-md border-2 border-gray-300 w-1/2 py-1.5 flex items-center justify-center gap-2 font-medium'>Visit<MdAddShoppingCart className='text-gray-500 text-xl'/></Link>
+              <Link disabled={product?.outOfStock || !product?.deliverable} to={"/cart"} className={`text-sm rounded-md border-2 border-gray-300 w-1/2 py-1.5 flex items-center justify-center gap-2 font-medium ${product?.outOfStock || !product?.deliverable ? ' cursor-not-allowed bg-gray-300 ' : "cursor-pointer"}`}>Visit<MdAddShoppingCart className='text-gray-500 text-xl'/></Link>
               :
-              <button onClick={(event) => handleAddToCart(event)} className='text-sm rounded-md border-2 border-gray-300 w-1/2 py-1.5 flex items-center justify-center gap-2 font-medium'>Add <MdAddShoppingCart className='text-gray-500 text-xl'/></button>
+              <button disabled={product?.outOfStock || !product?.deliverable} onClick={(event) => handleAddToCart(event)} className={`text-sm rounded-md border-2 border-gray-300 w-1/2 py-1.5 flex items-center justify-center gap-2 font-medium ${product?.outOfStock || !product?.deliverable ? ' cursor-not-allowed bg-gray-300 text-white' : "cursor-pointer "}`}>Add <MdAddShoppingCart className={`text-gray-500 text-xl ${product?.outOfStock || !product?.deliverable ? ' text-white' : ""}` }/></button>
             }
         </div>
       </div>

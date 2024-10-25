@@ -42,6 +42,7 @@ const UserProductsPage = () => {
                   withCredentials: true
                 }
               )
+
               if(response.status === 200){
                 setProductsData(response.data.data)
                 setFilteredProductData(response.data.data)
@@ -51,7 +52,7 @@ const UserProductsPage = () => {
             catch (error) {
               if (error.response) {
                 if (error.response.status === 500) {
-                  toast.error("An error occurred while fetching Products data") 
+                  toast.error(`An error occurreddddddd: ${error.response.status} ${error.response.data.message}`) 
                 } else {
                   toast.error(`An error occurreddddddd: ${error.response.status} ${error.response.data.message}`) 
                 }
@@ -224,7 +225,7 @@ const UserProductsPage = () => {
         </div> 
         {
             productsData.length > 0 ?
-            <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 gap-y-10 py-10'>
+            <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 gap-y-20 py-10'>
                 {
                     Array.isArray(filteredProductData) && filteredProductData.length > 0 ?
                     filteredProductData?.map((product, index) => (

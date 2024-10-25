@@ -93,6 +93,7 @@ const ProductPage = () => {
                 ...prevState,
                 productData: updatedProduct
             }))
+            console.log(updatedProduct)
         })
 
         return () => {
@@ -199,7 +200,7 @@ const ProductPage = () => {
                 </div>
             </div>
             :
-            <div className='h-full w-full flex items-center justify-center text-2xl font-semibold'>Warehouse Not found</div>
+            <div className='h-full w-full flex items-center justify-center text-2xl font-semibold'>Product Not found</div>
         }
         {
             productData && productData.productData &&

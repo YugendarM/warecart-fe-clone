@@ -35,14 +35,15 @@ function PaypalPayment({cartAmount, orderDetails}) {
         { withCredentials: true }) 
 
         if (response.status === 201) {
+          toast.success('Order placed Successfully') 
+            navigate("/orders")
           try {
-            // Using Promise.all to handle requests in parallel
             await Promise.all(orderDetails.orderItems.map(item =>
               axios.post(
                 '/userActivity/track',
                 {
                   action: 'purchase',
-                  productId: item.productDetails._id, // Track each product
+                  productId: item.productDetails._id, 
                   additionalInfo: { quantity: item.quantity, paymentMethod: paymentMethod },
                 },
                 {
@@ -50,11 +51,9 @@ function PaypalPayment({cartAmount, orderDetails}) {
                 }
               )
             )) 
-            toast.success('Order placed Successfully') 
-            navigate("/orders")
+            
           } catch (error) {
             console.error('Error tracking user activity:', error) 
-            toast.warn('Order placed, but tracking failed.') 
           }
         }
     } catch (error) {

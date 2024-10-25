@@ -25,7 +25,6 @@ const LoginPage = () => {
     }
 
     const handleSubmit = async(values) => {
-        console.log(values)
         const userData = {
             email: values.email,
             password: values.password

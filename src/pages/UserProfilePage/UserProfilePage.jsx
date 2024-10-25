@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { AiFillEdit } from 'react-icons/ai'
 import { FaBoxOpen, FaCartShopping, FaHeart, FaRegHeart } from 'react-icons/fa6'
 import { IoPowerSharp } from 'react-icons/io5'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Button, Form, Input, InputNumber, Radio } from 'antd' 
 import { toast } from 'react-toastify'
 
@@ -15,6 +15,7 @@ const UserProfilePage = () => {
 
     const [form] = Form.useForm() 
 
+    const location = useLocation()
 
     const handleLogout = async() => {
         try{
@@ -93,7 +94,22 @@ const UserProfilePage = () => {
     useEffect(() => {
       getUserDetails()
     }, [])
+
+    useEffect(() => {
+      if (location?.state?.isEditOpen) {
+          setIsEditOpen(true)
+      } else {
+          setIsEditOpen(false)
+      }
+  }, [location.state])
+
+  useEffect(() => {
+    if (Object.keys(userData).length > 0) {
+        form.setFieldsValue(userData)  
+    }
+  }, [userData, form])
     
+
   return (
     <div className='px-56 flex gap-5 py-10 w-full'>
       <div className='w-[30%] flex flex-col gap-6 min-h-[80vh]'>
@@ -154,9 +170,9 @@ const UserProfilePage = () => {
                     <Form.Item label="Phone Number" name="phoneNo" rules={[{ required: true, message: 'Please enter the Phone Number!' }]}>
                         <InputNumber style={{ width: '100%' }} />
                     </Form.Item>
-                    <Form.Item wrapperCol={{ offset: 17, span: 10 }} style={{ gap: "20px" }}>
-                        <Button htmlType="button" onClick={() => form.resetFields()}>
-                            Clear
+                    <Form.Item wrapperCol={{ offset: 16, span: 10 }} style={{ gap: "20px" }}>
+                        <Button htmlType="button" onClick={() => setIsEditOpen(false)}>
+                            Cancel
                         </Button>
                         <Button type="primary" htmlType="submit">
                             Update

@@ -11,7 +11,6 @@ const SignupPage = () => {
     const location = useLocation()
 
     const handleSubmit = async(values) => {
-        console.log(values)
         const userData = {
             firstName: values.firstName,
             lastName: values.lastName,

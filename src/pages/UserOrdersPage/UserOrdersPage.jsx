@@ -87,7 +87,7 @@ const UserOrdersPage = () => {
                       <p className='line-through text-gray-500'>{formatRupees((order?.totalAmount + order?.platformFee))}</p>
                       <p>{formatRupees(order?.payableAmount)}</p>
                     </div>
-                    <p>Order placed on {formatOrderDate(order?.createdAt)}</p>
+                    <p>Order placed on {order?.deliveryDate ? formatOrderDate(order?.deliveryDate) : formatOrderDate(order?.createdAt)}</p>
                   </div>
                   {
                     order?.products?.length > 0 &&

@@ -11,6 +11,14 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
 
     const {pathname} = useLocation()
 
+    function deliveryDate(dateString) {
+        const date = new Date(dateString);
+        date.setDate(date.getDate() + 7);
+        const options = { month: 'short', day: '2-digit' };
+        const newDate = date.toLocaleDateString('en-US', options);  
+        return newDate;
+      }
+
     const handleIncrease = () => {
         const newQuantity = Math.min(quantity + 1, 30)  
         setQuantity(newQuantity) 
@@ -125,7 +133,7 @@ const OrderSummaryProductCardComponent = ({productData, isOrderSummaryContinue, 
             <div className='flex items-center justify-between '>
                 <p className='text-gray-500 text-xs'>Category: <span className='text-gray-800 capitalize text-lg'>{productData && productData.productDetails && productData.productDetails.productType}</span></p>
                 <div className='flex items-center gap-2'>
-                    <p className='text-sm border-r-[2px] px-3 border-r-gray-600'>Delivery by Tue Oct 16</p>
+                    <p className='text-sm border-r-[2px] px-3 border-r-gray-600'>Delivery by {deliveryDate(new Date())}</p>
                     <p className='text-sm text-green-500'>FREE</p>
                 </div>
             </div>

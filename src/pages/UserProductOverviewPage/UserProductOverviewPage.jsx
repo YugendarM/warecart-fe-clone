@@ -50,10 +50,11 @@ const UserProductOverviewPage = () => {
         else{
             navigate("/login",{
                 state: {
-                    products: [{
-                        productDetails: productData,
-                        quantity: quantity
-                    }],
+                    // products: [{
+                    //     productDetails: productData,
+                    //     quantity: quantity
+                    // }],
+                    redirect: `/products/${productData._id}`
                 }
             })
         }
@@ -106,6 +107,14 @@ const UserProductOverviewPage = () => {
     }
 
     const handleAddWishlist = async() => {
+      if(!isLoggedIn){
+        navigate("/login", {
+          state: {
+            redirect: `/products/${productData._id}`
+          }
+        })
+        return
+      }
         try{
             const response = await axios.put(
               `/user/addProductToWishlist/${productData._id}`,
@@ -200,13 +209,18 @@ const UserProductOverviewPage = () => {
         } else {
           setIsLoggedIn(false) 
         }
-      }, [pathname]) 
+      }, [productData]) 
     
 
     useEffect(() => {
         const getProductData = async () => {
             try {
-                const response = await axios.get(`/product/users/${productId}`) 
+                const response = await axios.get(
+                  `/product/users/${productId}`,
+                  {
+                    withCredentials: true
+                  }
+                )
                 if (response.status === 200) {
                     setProductData(response.data.data) 
                 }
@@ -215,14 +229,14 @@ const UserProductOverviewPage = () => {
                     if (error.response.status === 409) {
                       toast.error("Warehouse already exists") 
                     } else if (error.response.status === 500) {
-                      toast.error("An error occurred while adding the warehouse") 
+                      toast.error(`An error occurred while fetching the warehouse: ${error.response.status} : ${error.response.data.message}`) 
                     } else {
                       toast.error(`An error occurred: ${error.response.status}`) 
                     }
                 } else if (error.request) {
                   toast.error("No response from server. Please try again.") 
                 } else {
-                  toast.error("An unexpected error occurred. Please try again.") 
+                  toast.error(`An error occurred: ${error}`) 
                 }
             }
         } 
@@ -306,10 +320,10 @@ const UserProductOverviewPage = () => {
             }
         }
     
-       if(isLoggedIn){
+      //  if(isLoggedIn){
         getAllCartItems()
         getAllWishlistedProducts()
-       }
+      //  }
         
         getOffersData() 
         getProductData() 
@@ -391,7 +405,7 @@ const UserProductOverviewPage = () => {
     return (
         <React.Fragment>
             {productData && 
-            <div className='px-5 md:px-20 lg:px-56 py-8 flex min-h-screen'>
+            <div className='px-5 md:px-20 lg:px-56 py-3 flex min-h-screen'>
                 <div className='w-[35%] flex flex-col gap-3 sticky top-16 h-screen overflow-y-auto '>
                   <div className='h-[430px]'>
                     {
@@ -439,13 +453,13 @@ const UserProductOverviewPage = () => {
                         <TiShoppingCart className='text-white text-2xl' />Go to cart
                       </Link>
                       :
-                      <button onClick={handleAddToCart} className='flex items-center justify-center gap-3 bg-blue-500 py-3 rounded-md text-white text-xl w-full hover:bg-blue-400'>
+                      <button disabled={productData?.outOfStock || !productData?.deliverable} onClick={handleAddToCart} className={`flex items-center justify-center gap-3  py-3 rounded-md text-white text-xl w-full  ${productData?.outOfStock || !productData?.deliverable ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-400"}`}>
                         <TiShoppingCart className='text-white text-2xl' />Add to cart
                       </button>
                   }
                 </div>
                 <div className='px-10 w-[65%] flex flex-col gap-2'>
-                    <div className='h-[450px] py-5 flex flex-col gap-1'>
+                    <div className='h-[500px] py-5 flex flex-col gap-1'>
                         <div className='flex items-center justify-between w-full'>
                             <div>
                                 <h1 className='text-2xl font-medium text-gray-800'>{productData.productName}</h1>
@@ -502,9 +516,35 @@ const UserProductOverviewPage = () => {
                                 ><FaPlus /></button>
                             </div>
                         </div>
+
+                        <div className='py-3'>
+                        {
+                          productData?.outOfStock ? 
+                          <p className='text-sm text-pink-500'>Out of Stock</p>
+                          :
+                          !productData?.deliverable ?
+                          <div>
+                            <p className='text-sm text-pink-500'>Not deliverable to your location</p>
+                            <button
+                              className='bg-blue-500 text-white px-3 py-1 rounded-sm my-1'
+                             onClick={() => {
+                              navigate("/profile", {
+                                state: {
+                                  isEditOpen: true 
+                                }
+                              })
+                             }} 
+                             to={"/profile"}
+                            >
+                              Change Location
+                            </button>
+                          </div>
+                          : null
+                        }
+                        </div>
                     </div>
                     <div className='flex justify-end gap-3'>
-                        <button onClick={handleBuyNow} className='bg-green-500 py-2 rounded-lg w-60 text-white text-xl hover:bg-green-400'>Buy now</button>
+                        <button disabled={productData?.outOfStock || !productData?.deliverable} onClick={handleBuyNow} className={` py-2 rounded-lg w-60 text-white text-xl  ${productData?.outOfStock || !productData?.deliverable ? "bg-gray-300 cursor-not-allowed" : "bg-green-500 hover:bg-green-400"}`}>Buy now</button>
 
                         {
                             isProductWishListed(productData._id) ? 

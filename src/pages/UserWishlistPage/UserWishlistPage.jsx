@@ -11,7 +11,7 @@ const UserWishlistPage = () => {
   const [userData, setUserData] = useState([])
 
   const isProductWishListed = (productId) =>{
-    if(userData && userData.wishlist){
+    if(userData?.wishlist){
       return userData.wishlist.includes(productId)
     }
   }

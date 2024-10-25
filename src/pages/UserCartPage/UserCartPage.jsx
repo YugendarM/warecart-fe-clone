@@ -46,7 +46,7 @@ const UserCartPage = () => {
         withCredentials: true,
       }) 
 
-      if (response.data && response.data.data) {
+      if (response.data?.data) {
         setCartItemData(response.data.data) 
         setProductsData(
           response.data.data.map((item) => ({

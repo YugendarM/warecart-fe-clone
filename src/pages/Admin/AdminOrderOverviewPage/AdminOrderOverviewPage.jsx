@@ -82,7 +82,7 @@ const AdminOrderOverviewPage = () => {
                     title: <Link to={"/admin/product"}>Orders</Link>,
                     },
                     {
-                    title: <p className='capitalize'>{orderData && orderData._id}</p>,
+                    title: <p className='capitalize'>{orderData?._id}</p>,
                     },
                 ]}
                 />

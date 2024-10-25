@@ -76,12 +76,12 @@ function PaypalPayment({cartAmount, orderDetails}) {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              cart: orderDetails.priceDetails && orderDetails.priceDetails.totalPayable,
+              cart: orderDetails.priceDetails?.totalPayable,
             }),
           })
             .then((response) => response.json())
             .then((data) => {
-              if (data && data.id) {
+              if (data?.id) {
                 return data.id 
               }
               throw new Error("Failed to create order") 

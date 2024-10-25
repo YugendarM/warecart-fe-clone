@@ -255,7 +255,7 @@ const UserCheckOutPage = () => {
     } 
 
     useEffect(() => {
-        if (selectedPayment && selectedPayment.sub && selectedPayment.sub === "stripe") {
+        if (selectedPayment?.sub && selectedPayment.sub === "stripe") {
             sessionStorage.setItem("checkoutState", JSON.stringify(location.state.products)) 
         }
     }, [selectedPayment, selectedPayment?.sub]) 
@@ -365,7 +365,7 @@ const UserCheckOutPage = () => {
                             </div>
                         ) : (
                             <div>
-                                {userData && userData.addressFirstLine && (
+                                {userData?.addressFirstLine && (
                                     <>
                                         <p className='capitalize'><span className='font-semibold'>{userData.firstName}</span>, {userData.addressFirstLine}, {userData.addressSecondLine}</p>
                                         <p>{userData.city}, {userData.state}</p>
@@ -391,7 +391,7 @@ const UserCheckOutPage = () => {
                                     <div className='flex flex-col '>
                                         <div className='py-5 flex flex-col gap-10'>
                                             {/* {productsData[0].productDetails.quantity} */}
-                                            {orderDetails && orderDetails.orderItems && orderDetails.orderItems.length > 0 ? (
+                                            {orderDetails?.orderItems && orderDetails.orderItems.length > 0 ? (
                                                 orderDetails.orderItems.map((productData, index) => (
                                                     <OrderSummaryProductCardComponent onQuantityChange={handleQuantityChange} isOrderSummaryContinue={isOrderSummaryContinue} key={index} productData={productData}  />
                                                 ))
@@ -415,7 +415,7 @@ const UserCheckOutPage = () => {
                         <div className='flex flex-col gap-4 w-full'>
                             <div className='flex items-center gap-4'>
                                 <h3 className='text-gray-400 font-semibold'>PAYMENT METHOD</h3>
-                                {selectedPayment && selectedPayment.sub && <MdDone className='text-blue-500 text-xl' />}
+                                {selectedPayment?.sub && <MdDone className='text-blue-500 text-xl' />}
                             </div>
                             {
                                 isOrderSummaryContinue &&
@@ -457,13 +457,13 @@ const UserCheckOutPage = () => {
                                     </Radio.Group>
                                     <div className='flex justify-end'>
                                         {
-                                            selectedPayment && selectedPayment.sub && selectedPayment.sub === "paypal" ?
-                                            <PaypalPayment cartAmount={orderDetails && orderDetails.priceDetails && orderDetails.priceDetails.totalPayable} orderDetails={orderDetails}/>
+                                            selectedPayment?.sub && selectedPayment.sub === "paypal" ?
+                                            <PaypalPayment cartAmount={orderDetails?.priceDetails && orderDetails.priceDetails.totalPayable} orderDetails={orderDetails}/>
                                             :
-                                            selectedPayment && selectedPayment.sub && selectedPayment.sub === "stripe" ?
-                                            <StripePayment userData={userData} cartAmount={orderDetails && orderDetails.priceDetails && orderDetails.priceDetails.totalPayable}/>
+                                            selectedPayment?.sub && selectedPayment.sub === "stripe" ?
+                                            <StripePayment userData={userData} cartAmount={orderDetails?.priceDetails && orderDetails.priceDetails.totalPayable}/>
                                             :
-                                            selectedPayment && selectedPayment.sub && selectedPayment.sub === "cod" ?
+                                            selectedPayment?.sub && selectedPayment.sub === "cod" ?
                                             <button onClick={() => processOrder("cod")} className={`rounded-sm px-6 py-2 transition ${!selectedPayment?.sub || !isOrderSummaryContinue ? " bg-gray-100 text-gray-300 cursor-not-allowed" : "bg-yellow-500 text-white hover:bg-yellow-300"}`} >Place Order</button>
                                             :
 
@@ -481,14 +481,14 @@ const UserCheckOutPage = () => {
                 <h1 className='text-gray-400 font-semibold border-b px-5 py-5 border-b-gray-200 w-full'>PRICE DETAILS</h1>
                 <div className='border-b border-b-gray-200 flex flex-col gap-4 py-5'>
                     <div className='flex items-center justify-between px-5'>
-                        <p>Price ({productsData && productsData.length} item)</p>
-                        <p>{orderDetails && orderDetails.priceDetails && formatRupees(orderDetails.priceDetails.totalPrice)}/-</p>
+                        <p>Price ({productsData?.length} item)</p>
+                        <p>{orderDetails?.priceDetails && formatRupees(orderDetails.priceDetails.totalPrice)}/-</p>
                     </div>
                     {
-                        orderDetails && orderDetails.priceDetails && orderDetails.priceDetails.totalDiscount > 0 &&
+                        orderDetails?.priceDetails && orderDetails.priceDetails.totalDiscount > 0 &&
                         <div className='flex items-center justify-between px-5'>
                             <p>Discounts </p>
-                            <p className='text-green-500'>- {orderDetails && orderDetails.priceDetails && formatRupees(orderDetails.priceDetails.totalDiscount)}/-</p>
+                            <p className='text-green-500'>- {orderDetails?.priceDetails && formatRupees(orderDetails.priceDetails.totalDiscount)}/-</p>
                         </div>
                     }
                     <div className='flex items-center justify-between px-5'>
@@ -498,22 +498,22 @@ const UserCheckOutPage = () => {
                 </div>
                 <div className='flex items-center justify-between px-5 py-5 border-b border-b-gray-200'>
                     <p>Platform Fee</p>
-                    <p className=''>{orderDetails && orderDetails.priceDetails && formatRupees(orderDetails.priceDetails.platformFee)}/-</p>
+                    <p className=''>{orderDetails?.priceDetails && formatRupees(orderDetails.priceDetails.platformFee)}/-</p>
                 </div>
                 <div className='flex items-center justify-between px-5 py-5 border-b-gray-200'>
                     <p className='font-semibold text-base'>Total Payable</p>
-                    <p className=''>{orderDetails && orderDetails.priceDetails && formatRupees(orderDetails.priceDetails.totalPayable)}/-</p>
+                    <p className=''>{orderDetails?.priceDetails && formatRupees(orderDetails.priceDetails.totalPayable)}/-</p>
                 </div>
 
                 {
-                    orderDetails && orderDetails.priceDetails && orderDetails.priceDetails.totalSavings > 0 &&
+                    orderDetails?.priceDetails && orderDetails.priceDetails.totalSavings > 0 &&
                     <div className='flex items-center justify-between px-5 py-5 border-b-gray-200'>
-                        <p className='font-medium text-base text-center w-full text-green-500'>You will save {orderDetails && orderDetails.priceDetails && formatRupees(orderDetails.priceDetails.totalSavings)}/- on this order</p>
+                        <p className='font-medium text-base text-center w-full text-green-500'>You will save {orderDetails?.priceDetails && formatRupees(orderDetails.priceDetails.totalSavings)}/- on this order</p>
                     </div>
                 }
             </div>
 
-            <UPIPaymentModal orderDetails={orderDetails} isUPIpaymentModalOpen={isUPIpaymentModalOpen} paymentMethod={selectedPayment && selectedPayment.sub && selectedPayment.sub} handleModalClose={handleUPIPaymentModalClose}/>
+            <UPIPaymentModal orderDetails={orderDetails} isUPIpaymentModalOpen={isUPIpaymentModalOpen} paymentMethod={selectedPayment?.sub && selectedPayment.sub} handleModalClose={handleUPIPaymentModalClose}/>
         </div>
     ) 
 } 

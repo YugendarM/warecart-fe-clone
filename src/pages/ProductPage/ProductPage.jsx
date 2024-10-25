@@ -40,13 +40,13 @@ const ProductPage = () => {
 
     useEffect(() => {
 
-        if(location.state && location.state.openEditModal){
+        if(location.state?.openEditModal){
             setIsEditModalOpen(true)
         }
         else{
             setIsEditModalOpen(false)
         }
-        if(location.state && location.state.openDeleteModal){
+        if(location.state?.openDeleteModal){
             setIsDeleteModalOpen(true)
         }
         else{
@@ -113,7 +113,7 @@ const ProductPage = () => {
                     title: <Link to={"/admin/products"}>Products</Link>,
                     },
                     {
-                    title: <p className='capitalize'>{productData && productData.productData && productData.productData.productName}</p>,
+                    title: <p className='capitalize'>{productData?.productData && productData.productData.productName}</p>,
                     },
                 ]}
                 />
@@ -203,7 +203,7 @@ const ProductPage = () => {
             <div className='h-full w-full flex items-center justify-center text-2xl font-semibold'>Product Not found</div>
         }
         {
-            productData && productData.productData &&
+            productData?.productData &&
             <div>
                 <ProductEditModal product={productData.productData} isEditModelOpen={isEditModalOpen} handleEditCancel={handleEditCancel}/>
                 <ProductDeleteModal product={productData.productData} isDeleteModalOpen={isDeleteModalOpen} handleDeleteCancel={handleDeleteCancel}/>
